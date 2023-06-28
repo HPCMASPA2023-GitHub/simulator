@@ -36,6 +36,7 @@ while true; do
         else
             FILE1_DIR="$prefix/configs"
             FILE1_BASE="$2"
+            FILE1="$FILE1_DIR/$FILE1_BASE"
         fi
         shift 2
         ;;
@@ -51,6 +52,7 @@ while true; do
         else
             FOLDER1_DIR="$prefix/experiments"
             FOLDER1_BASE="$2"
+            FOLDER1="$FOLDER1_DIR/$FOLDER1_BASE"
         fi
         shift 2
         ;;

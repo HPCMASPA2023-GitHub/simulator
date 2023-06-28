@@ -56,9 +56,9 @@ function git_ps1 ()
 	fi
 }
 # User specific environment
-PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/Install/bin:$HOME/python_env/bin:$PATH"
+PATH="$HOME/.local/bin:$HOME/go/bin:$HOME/simulator/Install/bin:$HOME/simulator/python_env/bin:$PATH"
 export PATH
-export LD_LIBRARY_PATH=/usr/local/lib64/:/usr/local/lib/:$HOME/Install/lib:$HOME/Install/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/local/lib64/:/usr/local/lib/:$HOME/simulator/Install/lib:$HOME/simulator/Install/lib64:$LD_LIBRARY_PATH
 bind '"\eu":previous-history'
 bind '"\em":next-history'
 bind '"\ey":history-search-backward'
