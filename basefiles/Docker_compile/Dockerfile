@@ -32,10 +32,10 @@ RUN \
 
 USER sim
 
-COPY ./boost_1_75_0 /home/sim/Downloads/boost_1_75_0
+COPY ./boost_1_75_0 /home/sim/simulator/Downloads/boost_1_75_0
 USER root
 RUN \
-    chown -R sim:sim /home/sim/Downloads
+    chown -R sim:sim /home/sim/simulator/Downloads
 ARG VERSION=1.0
 USER sim
 RUN \
@@ -49,7 +49,7 @@ USER root
 RUN \
     echo "root:root"| chpasswd 
 USER sim
-RUN mkdir /home/sim/experiments
+RUN mkdir /home/sim/simulator/experiments
 USER root
 RUN apt-get update && apt-get install iproute2 -y
 
@@ -58,5 +58,5 @@ USER sim
 COPY ./.bashrc /home/sim/.bashrc
 
 USER sim
-WORKDIR /home/sim/basefiles
+WORKDIR /home/sim/simulator/basefiles
 CMD ["/bin/bash"]

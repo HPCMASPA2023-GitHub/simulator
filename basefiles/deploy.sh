@@ -341,7 +341,7 @@ cat <<EOF
         Deployment Finished
 *****************************************
 
-You may want to run some tests using /home/sim/basefiles/tests/docker/tests.sh
+You may want to run some tests using /home/sim/simulator/basefiles/tests/docker/tests.sh
 EOF
 exit 0
 fi

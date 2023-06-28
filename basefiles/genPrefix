@@ -1,5 +1,5 @@
 export prefix=`sed -n 2p deploy.config`
-export basefiles_prefix=$prefix
+export basefiles_prefix=$prefix/basefiles
 export install_prefix=$prefix/Install
 mkdir -p $install_prefix
 export downloads_prefix=$prefix/Downloads
