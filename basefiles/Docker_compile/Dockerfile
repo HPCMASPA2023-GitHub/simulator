@@ -31,16 +31,15 @@ RUN \
     update-ca-certificates 
 
 USER sim
-
+RUN \
+    cd /home/sim && \
+    git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 COPY ./boost_1_75_0 /home/sim/simulator/Downloads/boost_1_75_0
 USER root
 RUN \
     chown -R sim:sim /home/sim/simulator/Downloads
 ARG VERSION=1.0
 USER sim
-RUN \
-    cd /home/sim && \
-    git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 RUN \
     cd /home/sim/simulator/basefiles && \
     ./deploy.sh --format bare-metal --prefix /home/sim/simulator --line-number 4
@@ -50,6 +49,7 @@ RUN \
     echo "root:root"| chpasswd 
 USER sim
 RUN mkdir /home/sim/simulator/experiments
+RUN mkdir /home/sim/simulator/configs
 USER root
 RUN apt-get update && apt-get install iproute2 -y
 

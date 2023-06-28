@@ -53,6 +53,8 @@ done
 # if format is not charliecloud but any of -nup is used
 # if format is charliecloud but -n is not used and -up are used
 # if format is charliecloud and -n is used but both -up are used or -n is used but neither -up are used
+echo "PREFIX=$PREFIX"
+echo "LINE=$LINE"
 if [ $HELP = true ] || [ $FORMAT = false ] || \
     ([ $FORMAT != 'bare-metal' ] && ( [ $PREFIX != false ] || [ $LINE != false ] )) || \
     ([ $FORMAT != 'charliecloud' ] && [ $FORMAT != 'bare-metal' ] && [ $FORMAT != 'docker' ]) || \
@@ -100,6 +102,7 @@ fi
 if [ $FORMAT = 'bare-metal' ];then
 
     myDir=`pwd`
+    echo "myDir=$myDir"
     touch $myDir/deploy.config
     line_number=`sed -n 1p $myDir/deploy.config`
     end_line=`cat $myDir/deploy_commands | wc -l`
@@ -128,7 +131,6 @@ if [ $FORMAT = 'bare-metal' ];then
             prefix=$PREFIX
         fi
         mkdir -p $prefix
-        line_number=1
         echo $line_number > $myDir/deploy.config
         echo "$prefix" >> $myDir/deploy.config
     fi
