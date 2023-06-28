@@ -120,6 +120,17 @@ if [ $FORMAT = 'bare-metal' ];then
     if [ $LINE != false ]
     then
     line_number=$LINE
+        if [ $PREFIX = false ]
+            then
+            echo "Enter the absolute folder you want to download and install things to:"
+            read prefix
+            else
+            prefix=$PREFIX
+        fi
+        mkdir -p $prefix
+        line_number=1
+        echo $line_number > $myDir/deploy.config
+        echo "$prefix" >> $myDir/deploy.config
     fi
     source genPrefix
     mkdir -p $downloads_prefix && \

@@ -42,8 +42,8 @@ RUN \
     cd /home/sim && \
     git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 RUN \
-    cd /home/sim/basefiles && \
-    ./deploy.sh --format bare-metal --prefix /home/sim --line-number 4
+    cd /home/sim/simulator/basefiles && \
+    ./deploy.sh --format bare-metal --prefix /home/sim/simulator --line-number 4
 
 USER root
 RUN \
