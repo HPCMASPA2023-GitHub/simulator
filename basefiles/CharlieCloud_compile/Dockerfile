@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 LABEL desc="Batsim simulator made ready"
 
 # get the right repos
-USER root
+
 RUN \
     apt-get update && \
     apt update && \
@@ -34,7 +34,7 @@ RUN \
 ARG VERSION=1.0
 
 RUN \
-    cd /home/sim/basefiles && \
+    cd /home/sim/simulator/basefiles && \
     export HOME=/home/sim && \
     ./deploy.sh --format bare-metal --prefix /home/sim --line-number 4
 #RUN \
@@ -46,7 +46,8 @@ RUN \
 #    export HOME=/home/sim && \
 #    /home/sim/Install/bin/go install -v framagit.org/batsim/batexpe/cmd/robin@latest
 
-RUN mkdir -p /home/sim/experiments
+RUN mkdir -p /home/sim/simulator/experiments
+RUN mkdir -p /home/sim/simulator/configs
 
 
 COPY ./.rootbashrc /root/.bashrc
