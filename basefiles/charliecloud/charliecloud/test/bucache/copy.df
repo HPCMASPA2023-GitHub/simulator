@@ -1,3 +1,0 @@
-# Context directory must be fixtures prepared in 55_cache.bats:COPY.
-FROM alpine:3.17
-COPY * /

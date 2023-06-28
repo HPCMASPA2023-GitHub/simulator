@@ -1,3 +1,0 @@
-This directory contains the compiled man pages. You can read them with:
-
-  $ man -l man/foo.1
