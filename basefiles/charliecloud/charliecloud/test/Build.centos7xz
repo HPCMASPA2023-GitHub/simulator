@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Download an xz-compressed CentOS 7 tarball. These are the base images for
+# the official CentOS Docker images.
+#
+# https://github.com/CentOS/sig-cloud-instance-images
+#
+# This GitHub repository is arranged with CentOS version and architecture in
+# different branches. We download the latest for a given architecture.
+#
+# To check what version is in a tarball (on any architecture):
+#
+#   $ tar xf centos-7-${arch}-docker.tar.xz --to-stdout ./etc/centos-release
+#
+# ch-test-scope: standard
+# ch-test-builder-exclude: none
+
+set -ex
+
+#srcdir=$1  # unused
+tarball=${2}.tar.xz
+#workdir=$3  # unused
+
+wget -nv -O "$tarball" "https://github.com/CentOS/sig-cloud-instance-images/blob/CentOS-7-$(uname -m)/docker/centos-7-$(uname -m)-docker.tar.xz?raw=true"

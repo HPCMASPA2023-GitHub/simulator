@@ -24,16 +24,15 @@ RUN \
 
 RUN \
     mkdir -p /home/sim
-
-COPY ./boost_1_75_0 /home/sim/Downloads/boost_1_75_0
-USER root
-RUN \
-    chmod -R 777 /home/sim/Downloads/boost_1_75_0
-ARG VERSION=1.0
-USER sim
 RUN \
     cd /home/sim && \
     git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
+
+COPY ./boost_1_75_0 /home/sim/simulator/Downloads/boost_1_75_0
+RUN \
+    chmod -R 777 /home/sim/simulator/Downloads/boost_1_75_0
+ARG VERSION=1.0
+
 RUN \
     cd /home/sim/basefiles && \
     export HOME=/home/sim && \
@@ -51,9 +50,8 @@ RUN mkdir -p /home/sim/experiments
 
 
 COPY ./.rootbashrc /root/.bashrc
-USER sim
 COPY ./.bashrc /home/sim/.bashrc
 
-USER sim
-WORKDIR /home/sim/basefiles
+
+WORKDIR /home/sim/simulator/basefiles
 CMD ["/bin/bash"]

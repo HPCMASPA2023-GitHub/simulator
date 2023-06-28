@@ -1,0 +1,49 @@
+source common.bash  # for ShellCheck; removed by ch-test
+
+@test 'custom build %(tag)s' {
+    scope %(scope)s
+    out="${ch_tardir}/%(tag)s"
+    pq="${ch_tardir}/%(tag)s.pq_missing"
+    workdir="${ch_tardir}/%(tag)s.tmp"
+    rm -f "$pq"
+    mkdir "$workdir"
+    cd "%(dirname)s"
+    run ./%(basename)s "$PWD" "$out" "$workdir"
+    echo "$output"
+    if [[ $status -eq 0 ]]; then
+        if [[ -f ${out}.tar.gz || -f ${out}.tar.xz ]]; then  # tarball
+            # Validate exactly one tarball came out.
+            tarballs=( "$out".tar.* )
+            [[ ${#tarballs[@]} -eq 1 ]]
+            tarball=${tarballs[0]}
+            # Convert to SquashFS if needed.
+            if [[ $CH_TEST_PACK_FMT = squash* ]]; then
+                ch-convert "$tarball" "${tarball/tar.?z/sqfs}"
+                rm "$tarball"
+            fi
+        elif [[ -d $out ]]; then                             # directory
+            case $CH_TEST_PACK_FMT in
+                squash-*)
+                    ext=sqsh
+                    ;;
+                tar-unpack)
+                    ext=tar.gz
+                    ;;
+                *)
+                    false  # unknown format
+                    ;;
+            esac
+            ch-convert "$out" "${out}.${ext}"
+        else
+            false  # unknown format
+        fi
+    fi
+    rm -Rf --one-file-system "$out" "$workdir"
+    if [[ $status -eq 65 ]]; then
+        touch "$pq"
+        rm -Rf --one-file-system "$out".tar.{gz,xz}
+        skip 'prerequisites not met'
+    else
+        return "$status"
+    fi
+}

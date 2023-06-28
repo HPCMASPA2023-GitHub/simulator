@@ -1,0 +1,6 @@
+# Use an almalinux:8 image because it can install some RPMs without --force.
+
+FROM almalinux:8
+WORKDIR /
+RUN dnf install -y ed  # doesn’t need --force
+WORKDIR /usr

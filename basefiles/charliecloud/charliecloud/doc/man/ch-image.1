@@ -1,0 +1,1635 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "CH-IMAGE" "1" "2023-06-28 11:54 -0400" "0.33" "Charliecloud"
+.SH NAME
+ch-image \- Build and manage images; completely unprivileged
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH SYNOPSIS
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] build [\-t TAG] [\-f DOCKERFILE] [...] CONTEXT
+$ ch\-image [...] build\-cache [...]
+$ ch\-image [...] delete IMAGE_GLOB [IMAGE_GLOB ...]
+$ ch\-image [...] gestalt [SELECTOR]
+$ ch\-image [...] import PATH IMAGE_REF
+$ ch\-image [...] list [\-l] [IMAGE_REF]
+$ ch\-image [...] pull [...] IMAGE_REF [DEST_REF]
+$ ch\-image [...] push [\-\-image DIR] IMAGE_REF [DEST_REF]
+$ ch\-image [...] reset
+$ ch\-image [...] undelete IMAGE_REF
+$ ch\-image { \-\-help | \-\-version | \-\-dependencies }
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH DESCRIPTION
+.sp
+\fBch\-image\fP is a tool for building and manipulating container images, but
+not running them (for that you want \fBch\-run\fP). It is completely
+unprivileged, with no setuid/setgid/setcap helpers. Many operations can use
+caching for speed. The action to take is specified by a sub\-command.
+.sp
+Options that print brief information and then exit:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-h\fP, \fB\-\-help\fP
+Print help and exit successfully. If specified before the sub\-command,
+print general help and list of sub\-commands; if after the sub\-command,
+print help specific to that sub\-command.
+.TP
+.B \fB\-\-dependencies\fP
+Report dependency problems on standard output, if any, and exit. If all is
+well, there is no output and the exit is successful; in case of problems,
+the exit is unsuccessful.
+.TP
+.B \fB\-\-version\fP
+Print version number and exit successfully.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Common options placed before or after the sub\-command:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-a\fP, \fB\-\-arch ARCH\fP
+Use \fBARCH\fP for architecture\-aware registry operations. (See section
+“Architecture” below for details.)
+.TP
+.B \fB\-\-always\-download\fP
+Download all files when pulling, even if they are already in builder
+storage. Note that \fBch\-image pull\fP will always retrieve the most
+up\-to\-date image; this option is mostly for debugging.
+.TP
+.B \fB\-\-auth\fP
+Authenticate with the remote repository, then (if successful) make all
+subsequent requests in authenticated mode. For most subcommands, the
+default is to never authenticate, i.e., make all requests anonymously. The
+exception is \fBpush\fP, which implies \fB\-\-auth\fP\&.
+.TP
+.B \fB\-\-cache\fP
+Enable build cache. Default if a sufficiently new Git is available.
+.TP
+.B \fB\-\-cache\-large SIZE\fP
+Set the cache’s large file threshold to \fBSIZE\fP MiB, or \fB0\fP for
+no large files, which is the default. This can speed up some builds.
+\fBExperimental.\fP See section “Build cache” for details.
+.TP
+.B \fB\-\-no\-cache\fP
+Disable build cache. Default if a sufficiently new Git is not available.
+This option turns off the cache completely; if you want to re\-execute a
+Dockerfile and store the new results in cache, use \fB\-\-rebuild\fP
+instead.
+.TP
+.B \fB\-\-no\-lock\fP
+Disable storage directory locking. This lets you run as many concurrent
+\fBch\-image\fP instances as you want against the same storage directory,
+which risks corruption but may be OK for some workloads.
+.TP
+.B \fB\-\-profile\fP
+Dump profile to files \fB/tmp/chofile.p\fP (\fBcProfile\fP dump
+format) and \fB/tmp/chofile.txt\fP (text summary). You can convert the
+former to a PDF call graph with \fBgprof2dot \-f pstats /tmp/chofile.p
+| dot \-Tpdf \-o /tmp/chofile.pdf\fP\&. This excludes time spend in
+subprocesses. Profile data should still be written on fatal errors, but
+not if the program crashes.
+.TP
+.B \fB\-\-rebuild\fP
+Execute all instructions, even if they are build cache hits, except for
+\fBFROM\fP which is retrieved from cache on hit.
+.TP
+.B \fB\-\-password\-many\fP
+Re\-prompt the user every time a registry password is needed.
+.TP
+.B \fB\-s\fP, \fB\-\-storage DIR\fP
+Set the storage directory (see below for important details).
+.TP
+.B \fB\-\-tls\-no\-verify\fP
+Don’t verify TLS certificates of the repository. (Do not use this option
+unless you understand the risks.)
+.TP
+.B \fB\-v\fP, \fB\-\-verbose\fP
+Print extra chatter; can be repeated.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH ARCHITECTURE
+.sp
+Charliecloud provides the option \fB\-\-arch ARCH\fP to specify the
+architecture for architecture\-aware registry operations. The argument
+\fBARCH\fP can be: (1) \fByolo\fP, to bypass architecture\-aware code and
+use the registry’s default architecture; (2) \fBhost\fP, to use the host’s
+architecture, obtained with the equivalent of \fBuname \-m\fP (default if
+\fB\-\-arch\fP not specified); or (3) an architecture name. If the specified
+architecture is not available, the error message will list which ones are.
+.sp
+\fBNotes:\fP
+.INDENT 0.0
+.IP 1. 3
+\fBch\-image\fP is limited to one image per image reference in
+builder storage at a time, regardless of architecture. For example, if
+you say \fBch\-image pull \-\-arch=foo baz\fP and then \fBch\-image
+pull \-\-arch=bar baz\fP, builder storage will contain one image called
+“baz”, with architecture “bar”.
+.IP 2. 3
+Images’ default architecture is usually \fBamd64\fP, so this is
+usually what you get with \fB\-\-arch=yolo\fP\&. Similarly, if a
+registry image is architecture\-unaware, it will still be pulled with
+\fB\-\-arch=amd64\fP and \fB\-\-arch=host\fP on x86\-64 hosts (other
+host architectures must specify \fB\-\-arch=yolo\fP to pull
+architecture\-unaware images).
+.IP 3. 3
+\fBuname \-m\fP and image registries often use different names for
+the same architecture. For example, what \fBuname \-m\fP reports as
+“x86_64” is known to registries as “amd64”. \fB\-\-arch=host\fP should
+translate if needed, but it’s useful to know this is happening.
+Directly specified architecture names are passed to the registry
+without translation.
+.IP 4. 3
+Registries treat architecture as a pair of items, architecture and
+sometimes variant (e.g., “arm” and “v7”). Charliecloud treats
+architecture as a simple string and converts to/from the registry view
+transparently.
+.UNINDENT
+.SH AUTHENTICATION
+.sp
+Charliecloud does not have configuration files; thus, it has no separate
+\fBlogin\fP subcommand to store secrets. Instead, Charliecloud will prompt
+for a username and password when authentication is needed. Note that some
+repositories refer to the secret as something other than a “password”; e.g.,
+GitLab calls it a “personal access token (PAT)”, Quay calls it an “application
+token”, and nVidia NGC calls it an “API token”.
+.sp
+For non\-interactive authentication, you can use environment variables
+\fBCH_IMAGE_USERNAME\fP and \fBCH_IMAGE_PASSWORD\fP\&. Only do this if you
+fully understand the implications for your specific use case, because it is
+difficult to securely store secrets in environment variables.
+.sp
+By default for most subcommands, all registry access is anonymous. To instead
+use authenticated access for everything, specify \fB\-\-auth\fP or set the
+environment variable \fB$CH_IMAGE_AUTH=yes\fP\&. The exception is
+\fBpush\fP, which always runs in authenticated mode. Even for pulling public
+images, it can be useful to authenticate for registries that have per\-user
+rate limits, such as \fI\%Docker Hub\fP\&. (Older versions
+of Charliecloud started with anonymous access, then tried to upgrade to
+authenticated if it seemed necessary. However, this turned out to be brittle;
+see issue \fI\%#1318\fP\&.)
+.sp
+The username and password are remembered for the life of the process and
+silently re\-offered to the registry if needed. One case when this happens is
+on push to a private registry: many registries will first offer a read\-only
+token when \fBch\-image\fP checks if something exists, then re\-authenticate
+when upgrading the token to read\-write for upload. If your site uses one\-time
+passwords such as provided by a security device, you can specify
+\fB\-\-password\-many\fP to provide a new secret each time.
+.sp
+These values are not saved persistently, e.g. in a file. Note that we do use
+normal Python variables for this information, without pinning them into
+physical RAM with \fI\%mlock(2)\fP or any other special
+treatment, so we cannot guarantee they will never reach non\-volatile storage.
+.INDENT 0.0
+.INDENT 3.5
+.IP "Technical details"
+.sp
+Most registries use something called \fI\%Bearer authentication\fP, where the client (e.g.,
+Charliecloud) includes a \fItoken\fP in the headers of every HTTP request.
+.sp
+The authorization dance is different from the typical UNIX approach, where
+there is a separate login sequence before any content requests are made.
+The client starts by simply making the HTTP request it wants (e.g., to
+\fBGET\fP an image manifest), and if the registry doesn’t like the
+client’s token (or if there is no token because the client doesn’t have one
+yet), it replies with HTTP 401 Unauthorized, but crucially it also provides
+instructions in the response header on how to get a token. The client then
+follows those instructions, obtains a token, re\-tries the request, and
+(hopefully) all is well. This approach also allows a client to upgrade a
+token if needed, e.g. when transitioning from asking if a layer exists to
+uploading its content.
+.sp
+The distinction between Charliecloud’s anonymous mode and authenticated
+modes is that it will only ask for anonymous tokens in anonymous mode and
+authenticated tokens in authenticated mode. That is, anonymous mode does
+involve an authentication procedure to obtain a token, but this
+“authentication” is done anonymously. (Yes, it’s confusing.)
+.sp
+Registries also often reply HTTP 401 when an image does not exist, rather
+than the seemingly more correct HTTP 404 Not Found. This is to avoid
+information leakage about the existence of images the client is not allowed
+to pull, and it’s why Charliecloud never says an image simply does not
+exist.
+.UNINDENT
+.UNINDENT
+.SH STORAGE DIRECTORY
+.sp
+\fBch\-image\fP maintains state using normal files and directories located in
+its \fIstorage directory\fP; contents include various caches and temporary images
+used for building.
+.sp
+In descending order of priority, this directory is located at:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-s\fP, \fB\-\-storage DIR\fP
+Command line option.
+.TP
+.B \fB$CH_IMAGE_STORAGE\fP
+Environment variable. The path must be absolute, because the variable is
+likely set in a very different context than when it’s used, which seems
+error\-prone on what a relative path is relative to.
+.TP
+.B \fB/var/tmp/$USER.ch\fP
+Default. (Previously, the default was \fB/var/tmp/$USER/ch\-image\fP\&. If
+a valid storage directory is found at the old default path,
+\fBch\-image\fP tries to move it to the new default path.)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Unlike many container implementations, there is no notion of storage drivers,
+graph drivers, etc., to select and/or configure.
+.sp
+The storage directory can reside on any single filesystem (i.e., it cannot be
+split across multiple filesystems). However, it contains lots of small files
+and metadata traffic can be intense. For example, the Charliecloud test suite
+uses approximately 400,000 files and directories in the storage directory as
+of this writing. Place it on a filesystem appropriate for this; tmpfs’es such
+as \fB/var/tmp\fP are a good choice if you have enough RAM (\fB/tmp\fP is
+not recommended because \fBch\-run\fP bind\-mounts it into containers by
+default).
+.sp
+While you can currently poke around in the storage directory and find unpacked
+images runnable with \fBch\-run\fP, this is not a supported use case. The
+supported workflow uses \fBch\-convert\fP to obtain a packed image; see the
+tutorial for details.
+.sp
+The storage directory format changes on no particular schedule.
+\fBch\-image\fP is normally able to upgrade directories produced by a given
+Charliecloud version up to one year after that version’s release. Upgrades
+outside this window and downgrades are not supported. In these cases,
+\fBch\-image\fP will refuse to run until you delete and re\-initialize the
+storage directory with \fBch\-image reset\fP\&.
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Network filesystems, especially Lustre, are typically bad choices for the
+storage directory. This is a site\-specific question and your local support
+will likely have strong opinions.
+.UNINDENT
+.UNINDENT
+.SH BUILD CACHE
+.SS Overview
+.sp
+Subcommands that create images, such as \fBbuild\fP and \fBpull\fP, can
+use a build cache to speed repeated operations. That is, an image is created
+by starting from the empty image and executing a sequence of instructions,
+largely Dockerfile instructions but also some others like “pull” and “import”.
+Some instructions are expensive to execute (e.g., \fBRUN wget
+http://slow.example.com/bigfile\fP or transferring data billed by the byte), so
+it’s often cheaper to retrieve their results from cache instead.
+.sp
+The build cache uses a relatively new Git under the hood; see the installation
+instructions for version requirements. Charliecloud implements workarounds for
+Git’s various storage limitations, so things like file metadata and Git
+repositories within the image should work. \fBImportant exception\fP: No files
+named \fB\&.git*\fP or other Git metadata are permitted in the image’s root
+directory.
+.sp
+The cache has three modes, \fIenabled\fP, \fIdisabled\fP, and a hybrid mode called
+\fIrebuild\fP where the cache is fully enabled for \fBFROM\fP instructions, but
+all other operations re\-execute and re\-cache their results. The purpose of
+\fIrebuild\fP is to do a clean rebuild of a Dockerfile atop a known\-good base
+image.
+.sp
+Enabled mode is selected with \fB\-\-cache\fP or setting
+\fB$CH_IMAGE_CACHE\fP to \fBenabled\fP, disabled mode with
+\fB\-\-no\-cache\fP or \fBdisabled\fP, and rebuild mode with
+\fB\-\-rebuild\fP or \fBrebuild\fP\&. The default mode is \fIenabled\fP if an
+appropriate Git is installed, otherwise \fIdisabled\fP\&.
+.SS Compared to other implementations
+.sp
+Other container implementations typically use build caches based on overlayfs,
+or fuse\-overlayfs in unprivileged situations (configured via a “storage
+driver”). This works by creating a new tmpfs for each instruction, layered
+atop the previous instruction’s tmpfs using overlayfs. Each layer can then be
+tarred up separately to form a tar\-based diff.
+.sp
+The Git\-based cache has two advantages over the overlayfs approach. First,
+kernel\-mode overlayfs is only available unprivileged in Linux 5.11 and higher,
+forcing the use of fuse\-overlayfs and its accompanying FUSE overhead for
+unprivileged use cases. Second, Git de\-duplicates and compresses files in a
+fairly sophisticated way across the entire build cache, not just between image
+states with an ancestry relationship (detailed in the next section).
+.sp
+A disadvantage is lowered performance in some cases. Preliminary experiments
+suggest this performance penalty is relatively modest, and sometimes
+Charliecloud is actually faster than alternatives. We have ongoing experiments
+to answer this performance question in more detail.
+.SS De\-duplication and garbage collection
+.sp
+Charliecloud’s build cache takes advantage of Git’s file de\-duplication
+features. This operates across the entire build cache, i.e., files are
+de\-duplicated no matter where in the cache they are found or the relationship
+between their container images. Files are de\-duplicated at different times
+depending on whether they are identical or merely similar.
+.sp
+\fIIdentical\fP files are de\-duplicated at \fBgit add\fP time; in
+\fBch\-image build\fP terms, that’s upon committing a successful instruction.
+That is, it’s impossible to store two files with the same content in the build
+cache. If you try — say with \fBRUN yum install \-y foo\fP in one Dockerfile
+and \fBRUN yum install \-y foo bar\fP in another, which are different
+instructions but both install RPM \fBfoo\fP’s files — the content is stored
+once and each copy gets its own metadata and a pointer to the content, much
+like filesystem hard links.
+.sp
+\fISimilar\fP files, however, are only de\-duplicated during Git’s garbage
+collection process. When files are initially added to a Git repository (with
+\fBgit add\fP), they are stored inside the repository as (possibly
+compressed) individual files, called \fIobjects\fP in Git jargon. Upon garbage
+collection, which happens both automatically when certain parameters are met
+and explicitly with \fBgit gc\fP, these files are archived and
+(re\-)compressed together into a single file called a \fIpackfile\fP\&. Also,
+existing packfiles may be re\-written into the new one.
+.sp
+During this process, similar files are identified, and each set of similar
+files is stored as one base file plus diffs to recover the others. (Similarity
+detection seems to be based primarily on file size.) This \fIdelta\fP process is
+agnostic to alignment, which is an advantage over alignment\-sensitive
+block\-level de\-duplicating filesystems. Exception: “Large” files are not
+compressed or de\-duplicated. We use the Git default threshold of 512 MiB (as
+of this writing).
+.sp
+Charliecloud runs Git garbage collection at two different times. First, a
+lighter\-weight garbage pass runs automatically when the number of loose files
+(objects) grows beyond a limit. This limit is in flux as we learn more about
+build cache performance, but it’s quite a bit higher than the Git default.
+This garbage runs in the background and can continue after the build
+completes; you may see Git processes using a lot of CPU.
+.sp
+An important limitation of the automatic garbage is that large packfiles
+(again, this is in flux, but it’s several GiB) will not be re\-packed, limiting
+the scope of similar file detection. To address this, a heavier garbage
+collection can be run manually with \fBch\-image build\-cache \-\-gc\fP\&. This
+will re\-pack (and re\-write) the entire build cache, de\-duplicating all similar
+files. In both cases, garbage uses all available cores.
+.sp
+\fBgit build\-cache\fP prints the specific garbage collection parameters in
+use, and \fB\-v\fP can be added for more detail.
+.SS Large file threshold
+.sp
+Because Git uses content\-addressed storage, upon commit, it must read in full
+all files modified by an instruction. This I/O cost can be a significant
+fraction of build time for some large images. Regular files larger than the
+experimental \fIlarge file threshold\fP are stored outside the Git repository,
+somewhat like \fI\%Git Large File Storage\fP\&.
+\fBch\-image\fP uses hard links to bring large files in and out of images as
+needed, which is a fast metadata operation that ignores file content.
+.sp
+Option \fB\-\-cache\-large\fP sets the threshold in MiB; if not set,
+environment variable \fBCH_IMAGE_CACHE_LARGE\fP is used; if that is not set
+either, the default value \fB0\fP indicates that no files are considered
+large.
+.sp
+There are two trade\-offs. First, large files in any image with the same path,
+mode, size, and mtime (to nanosecond precision if possible) are considered
+identical, \fIeven if their content is not actually identical\fP; e.g.,
+\fBtouch(1)\fP shenanigans can corrupt an image. Second, every version of a
+large file is stored verbatim and uncompressed (e.g., a large file with a
+one\-byte change will be stored in full twice), and large files do not
+participate in the build cache’s de\-duplication, so more storage space will
+likely be used. Unused versions \fIare\fP deleted by \fBch\-image build\-cache
+\-\-gc\fP\&.
+.sp
+(Note that Git has an unrelated setting called \fBcore.bigFileThreshold\fP\&.)
+.SS Example
+.sp
+Suppose we have this Dockerfile:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ cat a.df
+FROM alpine:3.17
+RUN echo foo
+RUN echo bar
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+On our first build, we get:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build \-t foo \-f a.df .
+  1. FROM alpine:3.17
+[ ... pull chatter omitted ... ]
+  2. RUN echo foo
+copying image ...
+foo
+  3. RUN echo bar
+bar
+grown in 3 instructions: foo
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Note the dot after each instruction’s line number. This means that the
+instruction was executed. You can also see this by the output of the two
+\fBecho\fP commands.
+.sp
+But on our second build, we get:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build \-t foo \-f a.df .
+  1* FROM alpine:3.17
+  2* RUN echo foo
+  3* RUN echo bar
+copying image ...
+grown in 3 instructions: foo
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Here, instead of being executed, each instruction’s results were retrieved
+from cache. (Charliecloud uses lazy retrieval; nothing is actually retrieved
+until the end, as seen by the “copying image” message.) Cache hit for each
+instruction is indicated by an asterisk (\fB*\fP) after the line number.
+Even for such a small and short Dockerfile, this build is noticeably faster
+than the first.
+.sp
+We can also try a second, slightly different Dockerfile. Note that the first
+three instructions are the same, but the third is different:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ cat c.df
+FROM alpine:3.17
+RUN echo foo
+RUN echo qux
+$ ch\-image build \-t c \-f c.df .
+  1* FROM alpine:3.17
+  2* RUN echo foo
+  3. RUN echo qux
+copying image ...
+qux
+grown in 3 instructions: c
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Here, the first two instructions are hits from the first Dockerfile, but the
+third is a miss, so Charliecloud retrieves that state and continues building.
+.sp
+We can also inspect the cache:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build\-cache \-\-tree
+*  (c) RUN echo qux
+| *  (a) RUN echo bar
+|/
+*  RUN echo foo
+*  (alpine+3.9) PULL alpine:3.17
+*  (root) ROOT
+
+named images:     4
+state IDs:        5
+commits:          5
+files:          317
+disk used:        3 MiB
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Here there are four named images: \fBa\fP and \fBc\fP that we built, the
+base image \fBalpine:3.17\fP (written as \fBalpine+3.9\fP because colon is
+not allowed in Git branch names), and the empty base of everything
+\fBroot\fP\&. Also note how \fBa\fP and \fBc\fP diverge after the last
+common instruction \fBRUN echo foo\fP\&.
+.SH BUILD
+.sp
+Build an image from a Dockerfile and put it in the storage directory.
+.SS Synopsis
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] build [\-t TAG] [\-f DOCKERFILE] [...] CONTEXT
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Description
+.sp
+Uses \fBch\-run \-w \-u0 \-g0 \-\-no\-passwd \-\-unsafe\fP to execute \fBRUN\fP
+instructions. Note that \fBFROM\fP implicitly pulls the base image if
+needed, so you may want to read about the \fBpull\fP subcommand below as
+well.
+.sp
+Required argument:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fBCONTEXT\fP
+Path to context directory. This is the root of \fBCOPY\fP instructions
+in the Dockerfile. If a single hyphen (\fB\-\fP) is specified: (a)\ read
+the Dockerfile from standard input, (b)\ specifying \fB\-\-file\fP is an
+error, and (c)\ there is no context, so \fBCOPY\fP will fail. (See
+\fB\-\-file\fP for how to provide the Dockerfile on standard input while
+also having a context.)
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Options:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-b\fP, \fB\-\-bind SRC[:DST]\fP
+For \fBRUN\fP instructions only, bind\-mount \fBSRC\fP at guest
+\fBDST\fP\&. The default destination if not specified is to use the same
+path as the host; i.e., the default is equivalent to
+\fB\-\-bind=SRC:SRC\fP\&. If \fBDST\fP does not exist, try to create it as
+an empty directory, though images do have ten directories
+\fB/mnt/[0\-9]\fP already available as mount points. Can be repeated.
+.sp
+\fBNote:\fP See documentation for \fBch\-run \-\-bind\fP for important
+caveats and gotchas.
+.sp
+\fBNote:\fP Other instructions that modify the image filesystem, e.g.
+\fBCOPY\fP, can only access host files from the context directory,
+regardless of this option.
+.TP
+.B \fB\-\-build\-arg KEY[=VALUE]\fP
+Set build\-time variable \fBKEY\fP defined by \fBARG\fP instruction
+to \fBVALUE\fP\&. If \fBVALUE\fP not specified, use the value of
+environment variable \fBKEY\fP\&.
+.TP
+.B \fB\-f\fP, \fB\-\-file DOCKERFILE\fP
+Use \fBDOCKERFILE\fP instead of \fBCONTEXT/Dockerfile\fP\&. If a single
+hyphen (\fB\-\fP) is specified, read the Dockerfile from standard input;
+like \fBdocker build\fP, the context directory is still available in
+this case.
+.TP
+.B \fB\-\-force[=MODE]\fP
+Use unprivileged build workarounds of mode \fBMODE\fP, which can be
+\fBfakeroot\fP or \fBseccomp\fP (the default). See section “Privilege
+model” below for details on what this does and when you might need it.
+.TP
+.B \fB\-\-force\-cmd=CMD,ARG1[,ARG2...]\fP
+If command \fBCMD\fP is found in a \fBRUN\fP instruction, add the
+comma\-separated \fBARGs\fP to it. For example,
+\fB\-\-force\-cmd=foo,\-a,\-\-bar=baz\fP would transform \fBRUN foo \-c\fP
+into \fBRUN foo \-a \-\-bar=baz \-c\fP\&. This is intended to suppress
+validation that defeats \fB\-\-force=seccomp\fP and implies that option.
+Can be repeated. If specified, replaces (does not extend) the default
+suppression options. Literal commas can be escaped with backslash;
+importantly however, backslash will need to be protected from the shell
+also. Section “Privilege model” below explains why you might need this.
+.TP
+.B \fB\-n\fP, \fB\-\-dry\-run\fP
+Don’t actually execute any Dockerfile instructions.
+.TP
+.B \fB\-\-parse\-only\fP
+Stop after parsing the Dockerfile.
+.TP
+.B \fB\-t\fP, \fB\-\-tag TAG\fP
+Name of image to create. If not specified, infer the name:
+.INDENT 7.0
+.IP 1. 3
+If Dockerfile named \fBDockerfile\fP with an extension: use the
+extension with invalid characters stripped, e.g.
+\fBDockerfile.@FOO.bar\fP → \fBfoo.bar\fP\&.
+.IP 2. 3
+If Dockerfile has extension \fBdockerfile\fP: use the basename with
+the same transformation, e.g. \fBbaz.@QUX.dockerfile\fP \->
+\fBbaz.qux\fP\&.
+.IP 3. 3
+If context directory is not \fB/\fP: use its name, i.e. the last
+component of the absolute path to the context directory, with the same
+transformation,
+.IP 4. 3
+Otherwise (context directory is \fB/\fP): use \fBroot\fP\&.
+.UNINDENT
+.sp
+If no colon present in the name, append \fB:latest\fP\&.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Privilege model
+.SS Overview
+.sp
+\fBch\-image\fP is a \fIfully\fP unprivileged image builder. It does not use any
+setuid or setcap helper programs, and it does not use configuration files
+\fB/etc/subuid\fP or \fB/etc/subgid\fP\&. This contrasts with the “rootless”
+or “\fI\%fakeroot\fP” modes
+of some competing builders, which do require privileged supporting code or
+utilities.
+.sp
+Without workarounds provided by \fB\-\-force\fP, this approach does confuse
+programs that expect to have real root privileges, most notably distribution
+package installers. This subsection describes why that happens and what you
+can do about it.
+.sp
+\fBch\-image\fP executes all instructions as the normal user who invokes it.
+For \fBRUN\fP, this is accomplished with \fBch\-run\fP arguments including
+\fB\-w \-\-uid=0 \-\-gid=0\fP\&. That is, your host EUID and EGID are both mapped
+to zero inside the container, and only one UID (zero) and GID (zero) are
+available inside the container. Under this arrangement, processes running in
+the container for each \fBRUN\fP \fIappear\fP to be running as root, but many
+privileged system calls will fail without the workarounds described below.
+\fBThis affects any fully unprivileged container build, not just
+Charliecloud.\fP
+.sp
+The most common time to see this is installing packages. For example, here is
+RPM failing to \fBchown(2)\fP a file, which makes the package update fail:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+  Updating   : 1:dbus\-1.10.24\-13.el7_6.x86_64                            2/4
+Error unpacking rpm package 1:dbus\-1.10.24\-13.el7_6.x86_64
+error: unpacking of archive failed on file /usr/libexec/dbus\-1/dbus\-daemon\-launch\-helper;5cffd726: cpio: chown
+  Cleanup    : 1:dbus\-libs\-1.10.24\-12.el7.x86_64                         3/4
+error: dbus\-1:1.10.24\-13.el7_6.x86_64: install failed
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+This one is (ironically) \fBapt\-get\fP failing to drop privileges:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+E: setgroups 65534 failed \- setgroups (1: Operation not permitted)
+E: setegid 65534 failed \- setegid (22: Invalid argument)
+E: seteuid 100 failed \- seteuid (22: Invalid argument)
+E: setgroups 0 failed \- setgroups (1: Operation not permitted)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Charliecloud provides two different mechanisms to avoid these problems. Both
+involve lying to the containerized process about privileged system calls, but
+at very different levels of complexity.
+.SS Workaround mode \fBfakeroot\fP
+.sp
+This mode uses \fBfakeroot(1)\fP to maintain an elaborate web of deceit that
+is internally consistent. This program intercepts both privileged system calls
+(e.g., \fBsetuid(2)\fP) as well as other system calls whose return values
+depend on those calls (e.g., \fBgetuid(2)\fP), faking success for privileged
+system calls (perhaps making no system call at all) and altering return values
+to be consistent with earlier fake success. Charliecloud automatically
+installs the \fBfakeroot(1)\fP program inside the container and then wraps
+\fBRUN\fP instructions having known privilege needs with it. Thus, this mode
+is only available for certain distributions.
+.sp
+The advantage of this mode is its consistency; e.g., careful programs that
+check the new UID after attempting to change it will not notice anything
+amiss. Its disadvantage is complexity: detailed knowledge and procedures for
+multiple Linux distributions.
+.sp
+This mode has three basic steps:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.IP 1. 3
+After \fBFROM\fP, analyze the image to see what distribution it
+contains, which determines the specific workarounds.
+.IP 2. 3
+Before the user command in the first \fBRUN\fP instruction where the
+injection seems needed, install \fBfakeroot(1)\fP in the image, if one
+is not already installed, as well as any other necessary initialization
+commands. For example, we turn off the \fBapt\fP sandbox (for Debian
+Buster) and configure EPEL but leave it disabled (for CentOS/RHEL).
+.IP 3. 3
+Prepend \fBfakeroot\fP to \fBRUN\fP instructions that seem to need
+it, e.g. ones that contain \fBapt\fP, \fBapt\-get\fP, \fBdpkg\fP for
+Debian derivatives and \fBdnf\fP, \fBrpm\fP, or \fByum\fP for
+RPM\-based distributions.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+\fBRUN\fP instructions that \fIdo not\fP seem to need modification are
+unaffected by this mode.
+.sp
+The details are specific to each distribution. \fBch\-image\fP analyzes image
+content (e.g., grepping \fB/etc/debian_version\fP) to select a
+configuration; see \fBlib/force.py\fP for details. \fBch\-image\fP prints
+exactly what it is doing.
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Because of \fBfakeroot\fP mode’s complexity, we plan to remove it if
+\fBseccomp\fP mode performs well enough. If you have a situation where
+\fBfakeroot\fP mode works and \fBseccomp\fP does not, please let us
+know.
+.UNINDENT
+.UNINDENT
+.SS Workaround mode \fBseccomp\fP (default)
+.sp
+This mode uses the kernel’s \fBseccomp(2)\fP system call filtering to
+intercept certain privileged system calls, do absolutely nothing, and return
+success to the program.
+.sp
+The quashed system calls are: \fBcapset(2)\fP; \fBchown(2)\fP and friends;
+\fBmknod(2)\fP and \fBmknodat(2)\fP; and \fBsetuid(2)\fP,
+\fBsetgid(2)\fP, and \fBsetgroups(2)\fP along with the other system calls
+that change user or group.
+.sp
+The advantages of this approach is that it’s much simpler, it’s faster, it’s
+completely agnostic to libc, and it’s mostly agnostic to distribution. The
+disadvantage is that it’s a very lazy liar; even the most cursory consistency
+checks will fail, e.g., \fBgetuid(2)\fP after \fBsetuid(2)\fP\&.
+.sp
+While this mode does not provide consistency, it does offer a hook to help
+prevent programs asking for consistency. For example, \fBapt\-get \-o
+APT::Sandbox::User=root\fP will prevent \fBapt\-get\fP from attempting to drop
+privileges, which \fI\%it verifies\fP,
+exiting with failure if the correct IDs are not found (which they won’t be
+under this approach). This can be expressed with
+\fB\-\-force\-cmd=apt\-get,\-o,APT::Sandbox::User=root\fP, though this particular
+case is built\-in and does not need to be specified. The full default
+configuration, which is applied regardless of the image distribution, can be
+examined in the source file \fBforce.py\fP\&. If any \fB\-\-force\-cmd\fP are
+specified, this replaces (rather than extends) the default configuration.
+.sp
+Note that because the substitutions are a simple regex with no knowledge of
+shell syntax, they can cause unwanted modifications. For example, \fBRUN
+apt\-get install \-y apt\-get\fP will be run as \fB/bin/sh \-c "apt\-get \-o
+APT::Sandbox::User=root install \-y apt\-get \-o APT::Sandbox::User=root"\fP\&. One
+workaround is to add escape syntax transparent to the shell; e.g., \fBRUN
+apt\-get install \-y a\ept\-get\fP\&.
+.sp
+This mode executes \fIall\fP \fBRUN\fP instructions with the \fBseccomp(2)\fP
+filter and has no knowledge of which instructions actually used the
+intercepted system calls. Therefore, the printed “instructions modified”
+number is only a count of instructions with a hook applied as described above.
+.SS Compatibility with other Dockerfile interpreters
+.sp
+\fBch\-image\fP is an independent implementation and shares no code with
+other Dockerfile interpreters. It uses a formal Dockerfile parsing grammar
+developed from the \fI\%Dockerfile reference documentation\fP and miscellaneous other
+sources, which you can examine in the source code.
+.sp
+We believe this independence is valuable for several reasons. First, it helps
+the community examine Dockerfile syntax and semantics critically, think
+rigorously about what is really needed, and build a more robust standard.
+Second, it yields disjoint sets of bugs (note that Podman, Buildah, and Docker
+all share the same Dockerfile parser). Third, because it is a much smaller
+code base, it illustrates how Dockerfiles work more clearly. Finally, it
+allows straightforward extensions if needed to support scientific computing.
+.sp
+\fBch\-image\fP tries hard to be compatible with Docker and other
+interpreters, though as an independent implementation, it is not
+bug\-compatible.
+.sp
+The following subsections describe differences from the Dockerfile reference
+that we expect to be approximately permanent. For not\-yet\-implemented features
+and bugs in this area, see \fI\%related issues\fP
+on GitHub.
+.sp
+None of these are set in stone. We are very interested in feedback on our
+assessments and open questions. This helps us prioritize new features and
+revise our thinking about what is needed for HPC containers.
+.SS Context directory
+.sp
+The context directory is bind\-mounted into the build, rather than copied like
+Docker. Thus, the size of the context is immaterial, and the build reads
+directly from storage like any other local process would. However, you still
+can’t access anything outside the context directory.
+.SS Variable substitution
+.sp
+Variable substitution happens for \fIall\fP instructions, not just the ones listed
+in the Dockerfile reference.
+.sp
+\fBARG\fP and \fBENV\fP cause cache misses upon \fIdefinition\fP, in contrast
+with Docker where these variables miss upon \fIuse\fP, except for certain
+cache\-excluded variables that never cause misses, listed below.
+.sp
+Note that \fBARG\fP and \fBENV\fP have different syntax despite very
+similar semantics.
+.sp
+\fBch\-image\fP passes the following proxy environment variables in to the
+build. Changes to these variables do not cause a cache miss. They do not
+require an \fBARG\fP instruction, as \fI\%documented\fP in the
+Dockerfile reference. Unlike Docker, they are available if the same\-named
+environment variable is defined; \fB\-\-build\-arg\fP is not required.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+HTTP_PROXY
+http_proxy
+HTTPS_PROXY
+https_proxy
+FTP_PROXY
+ftp_proxy
+NO_PROXY
+no_proxy
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+In addition to those listed in the Dockerfile reference, these environment
+variables are passed through in the same way:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+SSH_AUTH_SOCK
+USER
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Finally, these variables are also pre\-defined but are unrelated to the host
+environment:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+PATH=/ch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TAR_OPTIONS=\-\-no\-same\-owner
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS \fBARG\fP
+.sp
+Variables set with \fBARG\fP are available anywhere in the Dockerfile,
+unlike Docker, where they only work in \fBFROM\fP instructions, and possibly
+in other \fBARG\fP before the first \fBFROM\fP\&.
+.SS \fBFROM\fP
+.sp
+The \fBFROM\fP instruction accepts option \fB\-\-arg=NAME=VALUE\fP, which
+serves the same purpose as the \fBARG\fP instruction. It can be repeated.
+.SS \fBLABEL\fP
+.sp
+The \fBLABEL\fP instruction accepts \fBkey=value\fP pairs to
+add metadata for an image. Unlike Docker, multiline values are not supported;
+see issue \fI\%#1512\fP\&.
+Can be repeated.
+.SS \fBCOPY\fP
+.sp
+Especially for people used to UNIX \fBcp(1)\fP, the semantics of the
+Dockerfile \fBCOPY\fP instruction can be confusing.
+.sp
+Most notably, when a source of the copy is a directory, the \fIcontents\fP of that
+directory, not the directory itself, are copied. This is documented, but it’s
+a real gotcha because that’s not what \fBcp(1)\fP does, and it means that
+many things you can do in one \fBcp(1)\fP command require multiple
+\fBCOPY\fP instructions.
+.sp
+Also, the reference documentation is incomplete. In our experience, Docker
+also behaves as follows; \fBch\-image\fP does the same in an attempt to be
+bug\-compatible.
+.INDENT 0.0
+.IP 1. 3
+You can use absolute paths in the source; the root is the context
+directory.
+.IP 2. 3
+Destination directories are created if they don’t exist in the following
+situations:
+.INDENT 3.0
+.IP 1. 3
+If the destination path ends in slash. (Documented.)
+.IP 2. 3
+If the number of sources is greater than 1, either by wildcard or
+explicitly, regardless of whether the destination ends in slash. (Not
+documented.)
+.IP 3. 3
+If there is a single source and it is a directory. (Not documented.)
+.UNINDENT
+.IP 3. 3
+Symbolic links behave differently depending on how deep in the copied tree
+they are. (Not documented.)
+.INDENT 3.0
+.IP 1. 3
+Symlinks at the top level — i.e., named as the destination or the
+source, either explicitly or by wildcards —\ are dereferenced. They are
+followed, and whatever they point to is used as the destination or
+source, respectively.
+.IP 2. 3
+Symlinks at deeper levels are not dereferenced, i.e., the symlink
+itself is copied.
+.UNINDENT
+.IP 4. 3
+If a directory appears at the same path in source and destination, and is
+at the 2nd level or deeper, the source directory’s metadata (e.g.,
+permissions) are copied to the destination directory. (Not documented.)
+.IP 5. 3
+If an object appears in both the source and destination, and is at the 2nd
+level or deeper, and is of different types in the source and destination,
+then the source object will overwrite the destination object. (Not
+documented.) For example, if \fB/tmp/foo/bar\fP is a regular file, and
+\fB/tmp\fP is the context directory, then the following Dockerfile
+snippet will result in a \fIfile\fP in the container at \fB/foo/bar\fP
+(copied from \fB/tmp/foo/bar\fP); the directory and all its contents will
+be lost.
+.INDENT 3.0
+.INDENT 3.5
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+RUN mkdir \-p /foo/bar && touch /foo/bar/baz
+COPY foo /foo
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+We expect the following differences to be permanent:
+.INDENT 0.0
+.IP \(bu 2
+Wildcards use Python glob semantics, not the Go semantics.
+.IP \(bu 2
+\fBCOPY \-\-chown\fP is ignored, because it doesn’t make sense in an
+unprivileged build.
+.UNINDENT
+.SS Features we do not plan to support
+.INDENT 0.0
+.IP \(bu 2
+Parser directives are not supported. We have not identified a need for any
+of them.
+.IP \(bu 2
+\fBEXPOSE\fP: Charliecloud does not use the network namespace, so
+containerized processes can simply listen on a host port like other
+unprivileged processes.
+.IP \(bu 2
+\fBHEALTHCHECK\fP: This instruction’s main use case is monitoring server
+processes rather than applications. Also, implementing it requires a
+container supervisor daemon, which we have no plans to add.
+.IP \(bu 2
+\fBMAINTAINER\fP is deprecated.
+.IP \(bu 2
+\fBSTOPSIGNAL\fP requires a container supervisor daemon process, which we
+have no plans to add.
+.IP \(bu 2
+\fBUSER\fP does not make sense for unprivileged builds.
+.IP \(bu 2
+\fBVOLUME\fP: This instruction is not currently supported. Charliecloud
+has good support for bind mounts; we anticipate that it will continue to
+focus on that and will not introduce the volume management features that
+Docker has.
+.UNINDENT
+.SS Examples
+.sp
+Build image \fBbar\fP using \fB\&./foo/bar/Dockerfile\fP and context
+directory \fB\&./foo/bar\fP:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build \-t bar \-f ./foo/bar/Dockerfile ./foo/bar
+[...]
+grown in 4 instructions: bar
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same, but infer the image name and Dockerfile from the context directory
+path:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build ./foo/bar
+[...]
+grown in 4 instructions: bar
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Build using humongous vendor compilers you want to bind\-mount instead of
+installing into the image:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image build \-\-bind /opt/bigvendor:/opt .
+$ cat Dockerfile
+FROM centos:7
+
+RUN /opt/bin/cc hello.c
+#COPY /opt/lib/*.so /usr/local/lib   # fail: COPY doesn’t bind mount
+RUN cp /opt/lib/*.so /usr/local/lib  # possible workaround
+RUN ldconfig
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH BUILD-CACHE
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] build\-cache [...]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Print basic information about the cache. If \fB\-v\fP is given, also print
+some Git statistics and the Git repository configuration.
+.sp
+If any of the following options are given, do the corresponding operation
+before printing. Multiple options can be given, in which case they happen in
+this order.
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-\-dot\fP
+Create a DOT export of the tree named \fB\&./build\-cache.dot\fP and a PDF
+rendering \fB\&./build\-cache.pdf\fP\&. Requires \fBgraphviz\fP and
+\fBgit2dot\fP\&.
+.TP
+.B \fB\-\-gc\fP
+Run Git garbage collection on the cache, including full de\-duplication of
+similar files. This will immediately remove all cache entries not
+currently reachable from a named branch (which is likely to cause
+corruption if the build cache is being accessed concurrently by another
+process). The operation can take a long time on large caches.
+.TP
+.B \fB\-\-reset\fP
+Clear and re\-initialize the build cache.
+.TP
+.B \fB\-\-tree\fP
+Print a text tree of the cache using Git’s \fBgit log \-\-graph\fP
+feature. If \fB\-v\fP is also given, the tree has more detail.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH DELETE
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] delete IMAGE_GLOB [IMAGE_GLOB ... ]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Delete the image(s) described by each \fBIMAGE_GLOB\fP from the storage
+directory (including all build stages).
+.sp
+\fBIMAGE_GLOB\fP can be either a plain image reference or an image reference
+with glob characters to match multiple images. For example, \fBch\-image
+delete \(aqfoo*\(aq\fP will delete all images whose names start with \fBfoo\fP\&.
+Multiple images and/or globs can also be given in a single command line.
+.sp
+Importantly, this sub\-command \fIdoes not\fP also remove the image from the build
+cache. Therefore, it can be used to reduce the size of the storage directory,
+trading off the time needed to retrieve an image from cache.
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Glob characters must be quoted or otherwise protected from the shell, which
+also desires to interpret them and will do so incorrectly.
+.UNINDENT
+.UNINDENT
+.SH GESTALT
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] gestalt [SELECTOR]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Provide information about the \fI\%configuration and available features\fP of \fBch\-image\fP\&. End users
+generally will not need this; it is intended for testing and debugging.
+.sp
+\fBSELECTOR\fP is one of:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+\fBbucache\fP\&. Exit successfully if the build cache is available,
+unsuccessfully with an error message otherwise. With \fB\-v\fP, also
+print version information about dependencies.
+.IP \(bu 2
+\fBbucache\-dot\fP\&. Exit successfully if build cache DOT trees can be
+written, unsuccessfully with an error message otherwise. With \fB\-v\fP,
+also print version information about dependencies.
+.IP \(bu 2
+\fBpython\-path\fP\&. Print the path to the Python interpreter in use and
+exit successfully.
+.IP \(bu 2
+\fBstorage\-path\fP\&. Print the storage directory path and exit
+successfully.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH LIST
+.sp
+Print information about images. If no argument given, list the images in
+builder storage.
+.SS Synopsis
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] list [\-l] [IMAGE_REF]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Description
+.sp
+Optional argument:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-l\fP, \fB\-\-long\fP
+Use long format (name, last change timestamp) when listing images.
+.TP
+.B \fB\-u\fP, \fB\-\-undeletable\fP
+List images that can be undeleted. Can also be spelled \fB\-\-undeleteable\fP\&.
+.TP
+.B \fBIMAGE_REF\fP
+Print details of what’s known about \fBIMAGE_REF\fP, both locally and in
+the remote registry, if any.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Examples
+.sp
+List images in builder storage:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image list
+alpine:3.17 (amd64)
+alpine:latest (amd64)
+debian:buster (amd64)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Print details about Debian Buster image:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image list debian:buster
+details of image:    debian:buster
+in local storage:    no
+full remote ref:     registry\-1.docker.io:443/library/debian:buster
+available remotely:  yes
+remote arch\-aware:   yes
+host architecture:   amd64
+archs available:     386       bae2738ed83
+                     amd64     98285d32477
+                     arm/v7    97247fd4822
+                     arm64/v8  122a0342878
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+For remotely available images like Debian Buster, the associated digest is
+listed beside each available architecture. Importantly, this feature does
+\fInot\fP provide the hash of the local image, which is only calculated on push.
+.SH IMPORT
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] import PATH IMAGE_REF
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Copy the image at \fBPATH\fP into builder storage with name
+\fBIMAGE_REF\fP\&. \fBPATH\fP can be:
+.INDENT 0.0
+.IP \(bu 2
+an image directory
+.IP \(bu 2
+a tarball with no top\-level directory (a.k.a. a “\fI\%tarbomb\fP”)
+.IP \(bu 2
+a standard tarball with one top\-level directory
+.UNINDENT
+.sp
+If the imported image contains Charliecloud metadata, that will be imported
+unchanged, i.e., images exported from \fBch\-image\fP builder storage will be
+functionally identical when re\-imported.
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Descendant images (i.e., \fBFROM\fP the imported \fBIMAGE_REF\fP) are
+linked using \fBIMAGE_REF\fP only. If a new image is imported under a new
+\fBIMAGE_REF\fP, all instructions descending from that \fBIMAGE_REF\fP
+will still hit, even if the new image is different.
+.UNINDENT
+.UNINDENT
+.SH PULL
+.sp
+Pull the image described by the image reference \fBIMAGE_REF\fP from a
+repository to the local filesystem.
+.SS Synopsis
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] pull [...] IMAGE_REF [DEST_REF]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See the FAQ for the gory details on specifying image references.
+.SS Description
+.sp
+Destination:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fBDEST_REF\fP
+If specified, use this as the destination image reference, rather than
+\fBIMAGE_REF\fP\&. This lets you pull an image with a complicated
+reference while storing it locally with a simpler one.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Options:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-\-last\-layer N\fP
+Unpack only \fBN\fP layers, leaving an incomplete image. This option is
+intended for debugging.
+.TP
+.B \fB\-\-parse\-only\fP
+Parse \fBIMAGE_REF\fP, print a parse report, and exit successfully
+without talking to the internet or touching the storage directory.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+This script does a fair amount of validation and fixing of the layer tarballs
+before flattening in order to support unprivileged use despite image problems
+we frequently see in the wild. For example, device files are ignored, and file
+and directory permissions are increased to a minimum of \fBrwx\-\-\-\-\-\-\fP and
+\fBrw\-\-\-\-\-\-\-\fP respectively. Note, however, that symlinks pointing outside
+the image are permitted, because they are not resolved until runtime within a
+container.
+.sp
+The following metadata in the pulled image is retained; all other metadata is
+currently ignored. (If you have a need for additional metadata, please let us
+know!)
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+Current working directory set with \fBWORKDIR\fP is effective in
+downstream Dockerfiles.
+.IP \(bu 2
+Environment variables set with \fBENV\fP are effective in downstream
+Dockerfiles and also written to \fB/ch/environment\fP for use in
+\fBch\-run \-\-set\-env\fP\&.
+.IP \(bu 2
+Mount point directories specified with \fBVOLUME\fP are created in the
+image if they don’t exist, but no other action is taken.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Note that some images (e.g., those with a “version 1 manifest”) do not contain
+metadata. A warning is printed in this case.
+.SS Examples
+.sp
+Download the Debian Buster image matching the host’s architecture and place it
+in the storage directory:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ uname \-m
+aarch32
+pulling image:    debian:buster
+requesting arch:  arm64/v8
+manifest list: downloading
+manifest: downloading
+config: downloading
+layer 1/1: c54d940: downloading
+flattening image
+layer 1/1: c54d940: listing
+validating tarball members
+resolving whiteouts
+layer 1/1: c54d940: extracting
+image arch: arm64
+done
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same, specifying the architecture explicitly:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image \-\-arch=arm/v7 pull debian:buster
+pulling image:    debian:buster
+requesting arch:  arm/v7
+manifest list: downloading
+manifest: downloading
+config: downloading
+layer 1/1: 8947560: downloading
+flattening image
+layer 1/1: 8947560: listing
+validating tarball members
+resolving whiteouts
+layer 1/1: 8947560: extracting
+image arch: arm (may not match host arm64/v8)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH PUSH
+.sp
+Push the image described by the image reference \fBIMAGE_REF\fP from the
+local filesystem to a repository.
+.SS Synopsis
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] push [\-\-image DIR] IMAGE_REF [DEST_REF]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+See the FAQ for the gory details on specifying image references.
+.SS Description
+.sp
+Destination:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fBDEST_REF\fP
+If specified, use this as the destination image reference, rather than
+\fBIMAGE_REF\fP\&. This lets you push to a repository without permanently
+adding a tag to the image.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Options:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-\-image DIR\fP
+Use the unpacked image located at \fBDIR\fP rather than an image in the
+storage directory named \fBIMAGE_REF\fP\&.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Because Charliecloud is fully unprivileged, the owner and group of files in
+its images are not meaningful in the broader ecosystem. Thus, when pushed,
+everything in the image is flattened to user:group \fBroot:root\fP\&. Also,
+setuid/setgid bits are removed, to avoid surprises if the image is pulled by a
+privileged container implementation.
+.SS Examples
+.sp
+Push a local image to the registry \fBexample.com:5000\fP at path
+\fB/foo/bar\fP with tag \fBlatest\fP\&. Note that in this form, the local
+image must be named to match that remote reference.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image push example.com:5000/foo/bar:latest
+pushing image:   example.com:5000/foo/bar:latest
+layer 1/1: gathering
+layer 1/1: preparing
+preparing metadata
+starting upload
+layer 1/1: a1664c4: checking if already in repository
+layer 1/1: a1664c4: not present, uploading
+config: 89315a2: checking if already in repository
+config: 89315a2: not present, uploading
+manifest: uploading
+cleaning up
+done
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same, except use local image \fBalpine:3.17\fP\&. In this form, the local image
+name does not have to match the destination reference.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image push alpine:3.17 example.com:5000/foo/bar:latest
+pushing image:   alpine:3.17
+destination:     example.com:5000/foo/bar:latest
+layer 1/1: gathering
+layer 1/1: preparing
+preparing metadata
+starting upload
+layer 1/1: a1664c4: checking if already in repository
+layer 1/1: a1664c4: not present, uploading
+config: 89315a2: checking if already in repository
+config: 89315a2: not present, uploading
+manifest: uploading
+cleaning up
+done
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same, except use unpacked image located at \fB/var/tmp/image\fP rather than
+an image in \fBch\-image\fP storage. (Also, the sole layer is already present
+in the remote registry, so we don’t upload it again.)
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image push \-\-image /var/tmp/image example.com:5000/foo/bar:latest
+pushing image:   example.com:5000/foo/bar:latest
+image path:      /var/tmp/image
+layer 1/1: gathering
+layer 1/1: preparing
+preparing metadata
+starting upload
+layer 1/1: 892e38d: checking if already in repository
+layer 1/1: 892e38d: already present
+config: 546f447: checking if already in repository
+config: 546f447: not present, uploading
+manifest: uploading
+cleaning up
+done
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH RESET
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] reset
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Delete all images and cache from ch\-image builder storage.
+.SH UNDELETE
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-image [...] undelete IMAGE_REF
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If \fBIMAGE_REF\fP has been deleted but is in the build cache, recover it
+from the cache. Only available when the cache is enabled, and will not
+overwrite \fBIMAGE_REF\fP if it exists.
+.SH ENVIRONMENT VARIABLES
+.INDENT 0.0
+.TP
+.B \fBCH_IMAGE_USERNAME\fP, \fBCH_IMAGE_PASSWORD\fP
+Username and password for registry authentication. \fBSee important caveats
+in section “Authentication” above.\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \fBCH_LOG_FILE\fP
+If set, append log chatter to this file, rather than standard error. This is
+useful for debugging situations where standard error is consumed or lost.
+.sp
+Also sets verbose mode if not already set (equivalent to \fB\-\-verbose\fP).
+.TP
+.B \fBCH_LOG_FESTOON\fP
+If set, prepend PID and timestamp to logged chatter.
+.UNINDENT
+.SH REPORTING BUGS
+.sp
+If Charliecloud was obtained from your Linux distribution, use your
+distribution’s bug reporting procedures.
+.sp
+Otherwise, report bugs to: \fI\%https://github.com/hpc/charliecloud/issues\fP
+.SH SEE ALSO
+.sp
+charliecloud(7)
+.sp
+Full documentation at: <\fI\%https://hpc.github.io/charliecloud\fP>
+.SH COPYRIGHT
+2014–2022, Triad National Security, LLC and others
+.\" Generated by docutils manpage writer.
+.

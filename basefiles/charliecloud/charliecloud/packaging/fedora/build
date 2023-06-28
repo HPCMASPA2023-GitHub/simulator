@@ -1,0 +1,247 @@
+#!/usr/bin/env python3
+
+# See contributors’ guide for documentation of this script.
+
+from __future__ import print_function
+
+import argparse
+import errno
+import os
+import platform
+import pwd
+import re
+import shlex
+import shutil
+import socket
+import subprocess
+import sys
+import time
+
+CH_BASE = os.path.abspath(os.path.dirname(__file__) + "/../..")
+CH_RUN  = [CH_BASE + "/bin/ch-run"]
+PACKAGES = ["charliecloud",
+            "charliecloud-builder",
+            "charliecloud-debuginfo",
+            "charliecloud-doc",
+            "charliecloud-test"]
+ARCH = platform.machine()
+
+def main():
+
+   # Parse arguments.
+   ap = argparse.ArgumentParser()
+   ap.add_argument("image", metavar="DIR")
+   ap.add_argument("version"),
+   ap.add_argument("--install", action="store_true")
+   ap.add_argument("--rpmbuild", metavar="DIR",
+                   default="%s/rpmbuild" % os.getenv("HOME"))
+   args = ap.parse_args()
+   print("# Charliecloud root:  %s" % CH_BASE)
+   print("architecture:       %s" % ARCH)
+   print("""\
+version:            %(version)s
+image:              %(image)s
+install:            %(install)s
+rpmbuild root:      %(rpmbuild)s
+""" % args.__dict__)
+
+   # Use the generic base locale, rather than whatever the user has set, as
+   # that’s the only one guaranteed to be installed in the containers.
+   os.environ["LC_ALL"] = "C"
+
+   # What's the real Git version?
+   if (args.version == "HEAD"):
+      try:
+         # If we’re on a branch, we want to build on that branch so the branch
+         # name shows up in the version name.
+         commit = subprocess.check_output(["git", "symbolic-ref", "-q",
+                                           "--short", "HEAD"],
+                                           encoding="UTF-8")[:-1]
+      except subprocess.CalledProcessError as x:
+         if (x.returncode != 1): raise
+         # Detached HEAD (e.g. CI) is also fine; use commit hash.
+         commit = subprocess.check_output(["git", "rev-parse",
+                                           "--verify", "HEAD"],
+                                           encoding="UTF-8")[:-1]
+      rpm_release = "0"
+   else:
+      m           = re.search(r"([0-9.]+)-([0-9]+)", args.version)
+      commit      = "v" + m[1]
+      rpm_release = m[2]
+
+   # Create rpmbuild root
+   rpm_sources = args.rpmbuild + '/SOURCES'
+   rpm_specs   = args.rpmbuild + '/SPECS'
+   for d in (rpm_sources, rpm_specs):
+      print("# mkdir -p %s" % d)
+      try:
+         os.makedirs(d)
+      except OSError as x:
+         if (x.errno != errno.EEXIST): raise
+
+   # Determine distro.
+   rpms_dist = cmd_out(CH_RUN, args.image,
+                      '--', 'rpmbuild', '--eval', '%{?dist}')
+   rpms_dist = rpms_dist.split('.')[-1]
+
+   # FIXME: el8 doesn’t have bats; skip for now.
+   if (rpms_dist == 'el8'):
+        PACKAGES.remove('charliecloud-test')
+
+   # Get a clean Git checkout of the desired version. We do this by making a
+   # temporary clone so as not to mess up the WD.
+   git_tmp = rpm_sources + '/charliecloud'
+   print("# cloning into %s and checking out commit %s" % (git_tmp, commit))
+   cmd("git", "clone", '.', git_tmp)
+   cmd("git", "checkout", commit, cwd=git_tmp)
+
+   # Build tarball.
+   print("# building source tarball")
+   # FIXME: Why does this need --home?
+   cmd(CH_RUN, "--home", "-b", "%s:/mnt/0" % git_tmp, "-c", "/mnt/0", args.image,
+       "--", "./autogen.sh")
+   cmd(CH_RUN, "-b", "%s:/mnt/0" % git_tmp, "-c", "/mnt/0", args.image,
+       "--", "./configure")
+   cmd(CH_RUN, "-b", "%s:/mnt/0" % git_tmp, "-c", "/mnt/0", args.image,
+       "--", "make")
+   cmd(CH_RUN, "-b", "%s:/mnt/0" % git_tmp, "-c", "/mnt/0", args.image,
+       "--", "make", "dist")
+   ch_version = open(git_tmp + "/lib/version.txt").read()[:-1]
+   ch_tarball = "charliecloud-%s.tar.gz" % ch_version
+   print("# Charliecloud version: %s" % ch_version)
+   print("# source tarball: %s" % ch_tarball)
+   os.rename("%s/%s" % (git_tmp, ch_tarball),
+             "%s/%s" % (rpm_sources, ch_tarball))
+
+   # Copy lint configuration and patchs.
+   # FIXME: Put version into destination sometime?
+   shutil.copy("%s/packaging/fedora/charliecloud.rpmlintrc" % CH_BASE,
+               "%s/charliecloud.rpmlintrc" % rpm_specs)
+   shutil.copy("%s/packaging/fedora/el7-pkgdir.patch" % CH_BASE,
+               "%s/el7-pkgdir.patch" % rpm_sources)
+
+   # Remove temporary Git directory.
+   print("# rm -rf %s" % git_tmp)
+   shutil.rmtree(git_tmp)
+
+   # Copy and patch spec file.
+   rpm_vr = "%s-%s" % (ch_version, rpm_release)
+   # Fedora requires no version in spec file. Add a version for pre-release
+   # specs to make it hard to upload one to Fedora by mistake.
+   if ("~pre" not in ch_version):
+      spec = "charliecloud.spec"
+   else:
+      spec = "charliecloud-%s.spec" % rpm_vr
+   with open("%s/packaging/fedora/charliecloud.spec" % CH_BASE, "rt") as in_, \
+        open("%s/%s" % (rpm_specs, spec), "wt") as out:
+      print("# writing %s" % out.name)
+      t = in_.read()
+      t = t.replace("@VERSION@", ch_version)
+      t = t.replace("@RELEASE@", rpm_release)
+      if ("~pre" in ch_version):
+         # Add dummy changelog entry.
+         timestamp = time.strftime("%a %b %d %Y")  # required format
+         name = pwd.getpwuid(os.geteuid()).pw_gecos.split(",")[0]
+         moniker = pwd.getpwuid(os.geteuid()).pw_name
+         domain = re.sub(r"^[^.]+.", "", socket.getfqdn())
+         t = t.replace("%changelog\n", """\
+%%changelog
+* %s %s <%s@%s> %s
+- Pre-release package. See Git history for what is going on.
+""" % (timestamp, name, moniker, domain, rpm_vr))
+      else:
+         # Verify requested version matches changelog.
+         m = re.search(r"%changelog\n.+?([0-9.-]+)\n", t)
+         if (m[1] != rpm_vr):
+            print("requested version %s != changelog %s" % (rpm_vr, m[1]))
+            sys.exit(1)
+      out.write(t)
+
+   # Prepare build and rpmlint arguments.
+   container = []
+   rpmbuild_args = []
+   rpmlint_args = []
+   # Use /usr/local/src because rpmbuild fails with “%{_topdir}/BUILD”
+   # shorter than “/usr/src/debug” (yes, really!) [1,2].
+   #
+   # [1]: https://access.redhat.com/solutions/1426113
+   # [2]: https://gbenson.net/?p=367
+   rpms_src       = "/usr/local/src/RPMS"
+   rpms_arch      = "%s/%s" % (rpms_src, ARCH)
+   rpms_noarch    = "%s/noarch" % rpms_src
+   rpms = {'charliecloud':           [rpms_arch,   '%s.%s.rpm'     % (rpms_dist, ARCH)],
+           'charliecloud-builder':   [rpms_noarch, '%s.noarch.rpm' % rpms_dist],
+           'charliecloud-debuginfo': [rpms_arch,   '%s.%s.rpm'     % (rpms_dist, ARCH)],
+           'charliecloud-doc':       [rpms_noarch, '%s.noarch.rpm' % rpms_dist],
+           'charliecloud-test':      [rpms_arch,   '%s.%s.rpm'     % (rpms_dist, ARCH)]}
+   rpm_specs      = "/usr/local/src/SPECS"
+   rpm_sources    = "/usr/local/src/SOURCES"
+   rpmbuild_args += ["--define", "_topdir /usr/local/src"]
+   rpmlint_args  += ["--file", "%s/charliecloud.rpmlintrc" % rpm_specs]
+   container     += [CH_BASE + "/bin/ch-run", "-w",
+                     "-b", "%s:/usr/local/src" % args.rpmbuild,
+                     args.image, "--"]
+
+   # Build RPMs.
+   cmd(container, "rpmbuild", rpmbuild_args, "--version")
+   cmd(container, "rpmbuild", rpmbuild_args, "-ba", "%s/%s" % (rpm_specs, spec))
+   cmd(container, "ls", "-lh", rpms_arch)
+   cmd(container, "ls", "-lh", rpms_noarch)
+
+   # Install RPMs.
+   if (args.install):
+      print("# uninstalling (most errors can be ignored)")
+      cmd_ok(container, "rpm", "--erase", PACKAGES)
+      print("# installing")
+      for p in PACKAGES:
+         rpm_path = rpms[p][0]
+         rpm_ext  = rpms[p][-1]
+         file = '%s/%s-%s.%s' % (rpm_path, p, rpm_vr, rpm_ext)
+         cmd(container, "rpm", "--install", file)
+      cmd(container, "rpm", "-qa", "charliecloud*")
+
+   # Lint RPMs and spec file. Last so problems that don’t result in program
+   # returning error are more obvious.
+   print("# linting")
+   cmd(container, "rpmlint", rpmlint_args, "%s/%s" % (rpm_specs, spec))
+   for p in PACKAGES:
+      rpm_path = rpms[p][0]
+      rpm_ext  = rpms[p][-1]
+      file = '%s/%s-%s.%s' % (rpm_path, p, rpm_vr, rpm_ext)
+      cmd(container, "test", "-e", file)
+      cmd(container, "rpmlint", rpmlint_args, file)
+
+   # Success!
+   print("# done")
+
+
+def cmd(*args, **kwargs):
+   cmd_real(subprocess.check_call, *args, **kwargs)
+
+def cmd_ok(*args, **kwargs):
+   rc = cmd_real(subprocess.call, *args, **kwargs)
+   return (rc == 0)
+
+def cmd_out(*args, **kwargs):
+   out = cmd_real(subprocess.check_output, *args, encoding="UTF-8", **kwargs)
+   return out.rstrip()  # remove trailing newline
+
+def cmd_real(runf, *args, **kwargs):
+   # flatten any sub-lists (kludge)
+   args2 = []
+   for arg in args:
+      if (isinstance(arg, list)):
+         args2 += arg
+      else:
+         args2.append(arg)
+   # print and run
+   print("$", end="")
+   for arg in args2:
+      arg = shlex.quote(arg)
+      print(" " + arg, end="")
+   print()
+   return runf(args2, **kwargs)
+
+
+if (__name__ == "__main__"):
+   main()

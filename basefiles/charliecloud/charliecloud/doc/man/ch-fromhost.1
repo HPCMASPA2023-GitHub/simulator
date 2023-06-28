@@ -1,0 +1,573 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "CH-FROMHOST" "1" "2023-06-28 11:54 -0400" "0.33" "Charliecloud"
+.SH NAME
+ch-fromhost \- Inject files from the host into an image directory, with various magic
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH SYNOPSIS
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost [OPTION ...] [FILE_OPTION ...] IMGDIR
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH DESCRIPTION
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+This command is experimental. Features may be incomplete and/or buggy.
+Please report any issues you find, so we can fix them!
+.UNINDENT
+.UNINDENT
+.sp
+Inject files from the host into the Charliecloud image directory
+\fBIMGDIR\fP\&.
+.sp
+The purpose of this command is to inject arbitrary host files into a container
+necessary to access host specific resources; usually GPU or proprietary
+interconnets. \fBIt is not a general copy\-to\-image tool\fP; see further discussion
+on use cases below.
+.sp
+It should be run after:code:\fIch\-convert\fP and before \fBch\-run\fP\&. After
+invocation, the image is no longer portable to other hosts.
+.sp
+Injection is not atomic; if an error occurs partway through injection, the
+image is left in an undefined state and should be re\-unpacked from storage.
+Injection is currently implemented using a simple file copy, but that may
+change in the future.
+.sp
+Arbitrary file and libfabric injection are handled differently.
+.SS Arbitrary files
+.sp
+Arbitrary file paths that contain the strings \fB/bin\fP or
+\fB/sbin\fP are assumed to be executables and placed in \fB/usr/bin\fP
+within the container. Paths that are not loadable libfabric providers and
+contain the strings \fB/lib\fP or \fB\&.so\fP are assumed to be shared
+libraries and are placed in the first\-priority directory reported by
+\fBldconfig\fP (see \fB\-\-lib\-path\fP below). Other files are placed in the
+directory specified by \fB\-\-dest\fP\&.
+.sp
+If any shared libraries are injected, run \fBldconfig\fP inside the
+container (using \fBch\-run \-w\fP) after injection.
+.SS Libfabric
+.sp
+MPI implementations have numerous ways of communicating messages over
+interconnects. We use libfabric (OFI), an OpenFabric framework that
+exports fabric communication services to applications, to manage these
+communcations with built\-in, or loadable, fabric providers.
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.IP \(bu 2
+\fI\%https://ofiwg.github.io/libfabric\fP
+.IP \(bu 2
+\fI\%https://ofiwg.github.io/libfabric/v1.14.0/man/fi_provider.3.html\fP
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Using OFI, we can (a) uniformly manage fabric communcation services for both
+OpenMPI and MPICH, and (b) use simplified methods of accessing proprietary host
+hardware, e.g., Cray’s Gemini/Aries and Slingshot (CXI).
+.sp
+OFI providers implement the application facing software interfaces needed to
+access network specific protocols, drivers, and hardware. Loadable providers,
+i.e., compiled OFI libraries that end in \fB\-fi.so\fP, for example, Cray’s
+\fBlibgnix\-fi.so\fP, can be copied into, and used, by an image with a MPI
+configured against OFI. Alternatively, the image’s \fBlibfabric.so\fP can
+be overwritten with the host’s. See details and quirks below.
+.SH OPTIONS
+.SS To specify which files to inject
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-c\fP, \fB\-\-cmd CMD\fP
+Inject files listed in the standard output of command \fBCMD\fP\&.
+.TP
+.B \fB\-f\fP, \fB\-\-file FILE\fP
+Inject files listed in the file \fBFILE\fP\&.
+.TP
+.B \fB\-p\fP, \fB\-\-path PATH\fP
+Inject the file at \fBPATH\fP\&.
+.TP
+.B \fB\-\-cray\-mpi\-cxi\fP
+Inject cray\-libfabric for slingshot. This is equivalent to
+\fB\-\-path $CH_FROMHOST_OFI_CXI\fP, where \fB$CH_FROMHOST_OFI_CXI\fP is
+the path the Cray host libfabric \fBlibfabric.so\fP\&.
+.TP
+.B \fB\-\-cray\-mpi\-gni\fP
+Inject cray gemini/aries GNI libfabric provider \fBlibgnix\-fi.so\fP\&. This
+is equivalent to \fB\-\-fi\-provider $CH_FROMHOST_OFI_GNI\fP, where
+\fBCH_FROMHOST_OFI_GNI\fP is the path to the Cray host ugni provider
+\fBlibgnix\-fi.so\fP\&.
+.TP
+.B \fB\-\-nvidia\fP
+Use \fBnvidia\-container\-cli list\fP (from \fBlibnvidia\-container\fP)
+to find executables and libraries to inject.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+These can be repeated, and at least one must be specified.
+.SS To specify the destination within the image
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-d\fP, \fB\-\-dest DST\fP
+Place files specified later in directory \fBIMGDIR/DST\fP, overriding the
+inferred destination, if any. If a file’s destination cannot be inferred
+and \fB\-\-dest\fP has not been specified, exit with an error. This can be
+repeated to place files in varying destinations.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS Additional arguments
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B \fB\-\-fi\-path\fP
+Print the guest destination path for libfabric providers and replacement.
+.TP
+.B \fB\-\-lib\-path\fP
+Print the guest destination path for shared libraries inferred as
+described above.
+.TP
+.B \fB\-\-no\-ldconfig\fP
+Don’t run \fBldconfig\fP even if we appear to have injected shared
+libraries.
+.TP
+.B \fB\-h\fP, \fB\-\-help\fP
+Print help and exit.
+.TP
+.B \fB\-v\fP, \fB\-\-verbose\fP
+List the injected files.
+.TP
+.B \fB\-\-version\fP
+Print version and exit.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH WHEN TO USE CH-FROMHOST
+.sp
+This command does a lot of heuristic magic; while it \fIcan\fP copy arbitrary
+files into an image, this usage is discouraged and prone to error. Here are
+some use cases and the recommended approach:
+.INDENT 0.0
+.IP 1. 3
+\fII have some files on my build host that I want to include in the image.\fP
+Use the \fBCOPY\fP instruction within your Dockerfile. Note that it’s OK
+to build an image that meets your specific needs but isn’t generally
+portable, e.g., only runs on specific micro\-architectures you’re using.
+.IP 2. 3
+\fII have an already built image and want to install a program I compiled
+separately into the image.\fP Consider whether a building a new derived image
+with a Dockerfile is appropriate. Another good option is to bind\-mount the
+directory containing your program at run time. A less good option is to
+\fBcp(1)\fP the program into your image, because this permanently alters
+the image in a non\-reproducible way.
+.IP 3. 3
+\fII have some shared libraries that I need in the image for functionality or
+performance, and they aren’t available in a place where I can use\fP
+\fBCOPY\fP\&. This is the intended use case of \fBch\-fromhost\fP\&. You can
+use \fB\-\-cmd\fP, \fB\-\-file\fP, \fB\-\-ofi\fP, and/or \fB\-\-path\fP to
+put together a custom solution. But, please consider filing an issue so we
+can package your functionality with a tidy option like \fB\-\-nvidia\fP\&.
+.UNINDENT
+.SH LIBFABRIC USAGE AND QUIRKS
+.sp
+The implementation of libfabric provider injection and replacement is
+experimental and has a couple quirks.
+.INDENT 0.0
+.IP 1. 3
+Containers must have the following software installed:
+.INDENT 3.0
+.IP a. 3
+libfabric (\fI\%https://ofiwg.github.io/libfabric/\fP). See
+\fBcharliecloud/examples/Dockerfile.libfabric\fP\&.
+.IP b. 3
+Corresponding open source MPI implementation configured and built against
+the container libfabric, e.g.,
+\- \fI\%MPICH\fP, or
+\- \fI\%OpenMPI\fP\&.
+See \fBcharliecloud/examples/Dockerfile.mpich\fP and
+\fBcharliecloud/examples/Dockerfile.openmpi\fP\&.
+.UNINDENT
+.IP 2. 3
+At run time, a libfabric provider can be specified with the variable
+\fBFI_PROVIDER\fP\&. The path to search for shared providers can be specified
+with \fBFI_PROVIDER_PATH\fP\&. These variables can be inherited from the host
+or explicitly set with the container’s environment file
+\fB/ch/environent\fP via \fB\-\-set\-env\fP\&.
+.sp
+To avoid issues and reduce complexity, the inferred injection destination
+for libfabric providers and replacement will always at the path in the image
+where \fBlibfabric.so\fP is found.
+.IP 3. 3
+The Cray GNI loadable provider, \fBlibgnix\-fi.so\fP, will link to
+compiler(s) in the programming environment by default. For example, if it
+is built under the \fBPrgEnv\-intel\fP programming environment, it will have
+links to files at paths \fB/opt/gcc\fP and \fB/opt/intel\fP that
+\fBch\-run\fP will not bind automatically.
+.sp
+Managing all possible bind mount paths is untenable. Thus, this experimental
+implementation injects libraries linked to a \fBlibgnix\-fi.so\fP built
+with the minimal modules necessary to compile, i.e.:
+.INDENT 3.0
+.IP \(bu 2
+modules
+.IP \(bu 2
+craype\-network\-aries
+.IP \(bu 2
+eproxy
+.IP \(bu 2
+slurm
+.IP \(bu 2
+cray\-mpich
+.IP \(bu 2
+craype\-haswell
+.IP \(bu 2
+craype\-hugepages2M
+.UNINDENT
+.sp
+A Cray GNI provider linked against more complicated PE’s will still work,
+assuming 1) the user explicitly bind\-mounts missing libraries listed from
+its \fBldd\fP output, and 2) all such libraries do not conflict with
+container functionality, e.g., \fBglibc.so\fP, etc.
+.IP 4. 3
+At the time of this writing, a Cray Slingshot optimized provider is not
+available; however, recent libfabric source acitivity indicates there may be
+at some point, see: \fI\%https://github.com/ofiwg/libfabric/pull/7839We\fP\&.
+.sp
+For now, on Cray systems with Slingshot, CXI, we need overwrite the
+container’s \fBlibfabric.so\fP with the hosts using \fB\-\-path\fP\&. See
+examples for details.
+.IP 5. 3
+Tested only for C programs compiled with GCC. Additional bind mount or
+kludging may be needed for untested use cases. If you’d like to use another
+compiler or programming environment, please get in touch so we can implement
+the necessary support.
+.UNINDENT
+.sp
+Please file a bug if we missed anything above or if you know how to make the
+code better.
+.SH NOTES
+.sp
+Symbolic links are dereferenced, i.e., the files pointed to are injected, not
+the links themselves.
+.sp
+As a corollary, do not include symlinks to shared libraries. These will be
+re\-created by \fBldconfig\fP\&.
+.sp
+There are two alternate approaches for nVidia GPU libraries:
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.IP 1. 3
+Link \fBlibnvidia\-containers\fP into \fBch\-run\fP and call the
+library functions directly. However, this would mean that Charliecloud
+would either (a) need to be compiled differently on machines with and
+without nVidia GPUs or (b) have \fBlibnvidia\-containers\fP available
+even on machines without nVidia GPUs. Neither of these is consistent with
+Charliecloud’s philosophies of simplicity and minimal dependencies.
+.IP 2. 3
+Use \fBnvidia\-container\-cli configure\fP to do the injecting. This
+would require that containers have a half\-started state, where the
+namespaces are active and everything is mounted but \fBpivot_root(2)\fP
+has not been performed. This is not feasible because Charliecloud has no
+notion of a half\-started container.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.sp
+Further, while these alternate approaches would simplify or eliminate this
+script for nVidia GPUs, they would not solve the problem for other situations.
+.SH BUGS
+.sp
+File paths may not contain colons or newlines.
+.sp
+\fBldconfig\fP tends to print \fBstat\fP errors; these are typically
+non\-fatal and occur when trying to probe common library paths. See \fI\%issue #732\fP\&.
+.SH EXAMPLES
+.SS libfabric
+.sp
+Cray Slingshot CXI injection.
+.sp
+Replace image libabfric, i.e., \fBlibfabric.so\fP, with Cray host’s
+libfabric at host path \fB/opt/cray\-libfabric/lib64/libfabric.so\fP\&.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-v \-\-path /opt/cray\-libfabric/lib64/libfabric.so /tmp/ompi
+[ debug ] queueing files
+[ debug ]    cray libfabric: /opt/cray\-libfabric/lib64/libfabric.so
+[ debug ] searching image for inferred libfabric destiation
+[ debug ]    found /tmp/ompi/usr/local/lib/libfabric.so
+[ debug ] adding cray libfabric libraries
+[ debug ]    skipping /lib64/libcom_err.so.2
+[...]
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libcxi.so.1
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libcxi.so.1.2.1
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libjson\-c.so.3
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libjson\-c.so.3.0.1
+[...]
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libssh.so.4
+[ debug ] queueing files
+[ debug ]    shared library: /usr/lib64/libssh.so.4.7.4
+[...]
+[ debug ] inferred shared library destination: /tmp/ompi//usr/local/lib
+[ debug ] injecting into image: /tmp/ompi/
+[ debug ]    mkdir \-p /tmp/ompi//var/lib/hugetlbfs
+[ debug ]    mkdir \-p /tmp/ompi//var/spool/slurmd
+[ debug ]    echo \(aq/usr/lib64\(aq >> /tmp/ompi//etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    /opt/cray\-libfabric/lib64/libfabric.so \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libcxi.so.1 \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libcxi.so.1.2.1 \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libjson\-c.so.3 \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libjson\-c.so.3.0.1 \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libssh.so.4 \-> /usr/local/lib (inferred)
+[ debug ]    /usr/lib64/libssh.so.4.7.4 \-> /usr/local/lib (inferred)
+[ debug ] running ldconfig
+[ debug ]    ch\-run \-w /tmp/ompi/ \-\- /sbin/ldconfig
+[ debug ] validating ldconfig cache
+done
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same as above, except also inject Cray’s \fBfi_info\fP to verify Slingshot
+provider access.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-v \-\-path /opt/cray/libfabric/1.15.0.0/lib64/libfabric.so \e
+              \-d /usr/local/bin \e
+              \-\-path /opt/cray/libfabric/1.15.0.0/lib64/libfabric.so \e
+              /tmp/ompi
+[...]
+$ ch\-run /tmp/ompi/ \-\- fi_info \-p cxi
+provider: cxi
+  fabric: cxi
+  [...]
+  type: FI_EP_RDM
+  protocol: FI_PROTO_CXI
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Cray GNI shared provider injection.
+.sp
+Add Cray host built GNI provider \fBlibgnix\-fi.so\fP to the image and verify
+with \fBfi_info\fP\&.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-v \-\-path /home/ofi/libgnix\-fi.so /tmp/ompi
+[ debug ] queueing files
+[ debug ]    libfabric shared provider: /home/ofi/libgnix\-fi.so
+[ debug ] searching /tmp/ompi for libfabric shared provider destination
+[ debug ]    found: /tmp/ompi/usr/local/lib/libfabric.so
+[ debug ] inferred provider destination: //usr/local/lib/libfabric
+[ debug ] injecting into image: /tmp/ompi
+[ debug ]    mkdir \-p /tmp/ompi//usr/local/lib/libfabric
+[ debug ]    mkdir \-p /tmp/ompi/var/lib/hugetlbfs
+[ debug ]    mkdir \-p /tmp/ompi/var/opt/cray/alps/spool
+[ debug ]    mkdir \-p /tmp/ompi/opt/cray/wlm_detect
+[ debug ]    mkdir \-p /tmp/ompi/etc/opt/cray/wlm_detect
+[ debug ]    mkdir \-p /tmp/ompi/opt/cray/udreg
+[ debug ]    mkdir \-p /tmp/ompi/opt/cray/xpmem
+[ debug ]    mkdir \-p /tmp/ompi/opt/cray/ugni
+[ debug ]    mkdir \-p /tmp/ompi/opt/cray/alps
+[ debug ]    echo \(aq/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/opt/cray/alps/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/opt/cray/udreg/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/opt/cray/ugni/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/opt/cray/wlm_detect/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/opt/cray/xpmem/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    echo \(aq/usr/lib64\(aq >> /tmp/ompi/etc/ld.so.conf.d/ch\-ofi.conf
+[ debug ]    /home/ofi/libgnix\-fi.so \-> //usr/local/lib/libfabric (inferred)
+[ debug ] running ldconfig
+[ debug ]    ch\-run \-w /tmp/ompi \-\- /sbin/ldconfig
+[ debug ] validating ldconfig cache
+done
+
+$ ch\-run /tmp/ompi \-\- fi_info \-p gni
+provider: gni
+  fabric: gni
+  [...]
+  type: FI_EP_RDM
+  protocol: FI_PROTO_GNI
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Arbitrary
+.sp
+Place shared library \fB/usr/lib64/libfoo.so\fP at path
+\fB/usr/lib/libfoo.so\fP (assuming \fB/usr/lib\fP is the first directory
+searched by the dynamic loader in the image), within the image
+\fB/var/tmp/baz\fP and executable \fB/bin/bar\fP at path
+\fB/usr/bin/bar\fP\&. Then, create appropriate symlinks to \fBlibfoo\fP and
+update the \fBld.so\fP cache.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ cat qux.txt
+/bin/bar
+/usr/lib64/libfoo.so
+$ ch\-fromhost \-\-file qux.txt /var/tmp/baz
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same as above:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-\-cmd \(aqcat qux.txt\(aq /var/tmp/baz
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same as above:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-\-path /bin/bar \-\-path /usr/lib64/libfoo.so /var/tmp/baz
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same as above, but place the files into \fB/corge\fP instead (and the shared
+library will not be found by \fBldconfig\fP):
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-\-dest /corge \-\-file qux.txt /var/tmp/baz
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Same as above, and also place file \fB/etc/quux\fP at \fB/etc/quux\fP
+within the container:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-\-file qux.txt \-\-dest /etc \-\-path /etc/quux /var/tmp/baz
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Inject the executables and libraries recommended by nVidia into the image, and
+then run \fBldconfig\fP:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ ch\-fromhost \-\-nvidia /var/tmp/baz
+asking ldconfig for shared library destination
+/sbin/ldconfig: Can’t stat /libx32: No such file or directory
+/sbin/ldconfig: Can’t stat /usr/libx32: No such file or directory
+shared library destination: /usr/lib64//bind9\-export
+injecting into image: /var/tmp/baz
+  /usr/bin/nvidia\-smi \-> /usr/bin (inferred)
+  /usr/bin/nvidia\-debugdump \-> /usr/bin (inferred)
+  /usr/bin/nvidia\-persistenced \-> /usr/bin (inferred)
+  /usr/bin/nvidia\-cuda\-mps\-control \-> /usr/bin (inferred)
+  /usr/bin/nvidia\-cuda\-mps\-server \-> /usr/bin (inferred)
+  /usr/lib64/libnvidia\-ml.so.460.32.03 \-> /usr/lib64//bind9\-export (inferred)
+  /usr/lib64/libnvidia\-cfg.so.460.32.03 \-> /usr/lib64//bind9\-export (inferred)
+[...]
+  /usr/lib64/libGLESv2_nvidia.so.460.32.03 \-> /usr/lib64//bind9\-export (inferred)
+  /usr/lib64/libGLESv1_CM_nvidia.so.460.32.03 \-> /usr/lib64//bind9\-export (inferred)
+running ldconfig
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH ACKNOWLEDGEMENTS
+.sp
+This command was inspired by the similar \fI\%Shifter\fP feature
+that allows Shifter containers to use the Cray Aries network. We particularly
+appreciate the help provided by Shane Canon and Doug Jacobsen during our
+implementation of \fB\-\-cray\-mpi\fP\&.
+.sp
+We appreciate the advice of Ryan Olson at nVidia on implementing
+\fB\-\-nvidia\fP\&.
+.SH REPORTING BUGS
+.sp
+If Charliecloud was obtained from your Linux distribution, use your
+distribution’s bug reporting procedures.
+.sp
+Otherwise, report bugs to: \fI\%https://github.com/hpc/charliecloud/issues\fP
+.SH SEE ALSO
+.sp
+charliecloud(7)
+.sp
+Full documentation at: <\fI\%https://hpc.github.io/charliecloud\fP>
+.SH COPYRIGHT
+2014–2022, Triad National Security, LLC and others
+.\" Generated by docutils manpage writer.
+.
