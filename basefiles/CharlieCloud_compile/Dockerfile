@@ -36,7 +36,7 @@ ARG VERSION=1.0
 RUN \
     cd /home/sim/simulator/basefiles && \
     export HOME=/home/sim && \
-    ./deploy.sh --format bare-metal --prefix /home/sim --line-number 4
+    ./deploy.sh --format bare-metal --prefix /home/sim/simulator --line-number 4
 #RUN \
 #    cd /home/sim/basefiles && \
 #    export GOROOT=/home/sim/Downloads/go && \
