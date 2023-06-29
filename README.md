@@ -7,16 +7,17 @@ We have added:
 - a node fault model with repair times
 - checkpointing
 - reservations
-- some work with cores.
+- some work with cores
+- other useful additions
 
-These and other additions were added to 4 algorithms:
+These were added to 4 algorithms:
 
 - fcfs_fast2
 - easy_bf_fast2
 - easy_bf_fast2_holdback
-- conservative_bf
+- conservative_bf &nbsp; &nbsp; &nbsp; <span style="color:darkred"><--- &nbsp; reservations only work with this algorithm</span>
 
-To this is also a framework for spinning up simulations and for post processing.
+In addition to this is also a framework for spinning up simulations and for post processing.
 
 Scripts are provided to apply patches to the original Batsim source and run experiments congruent with those presented in our article.  The initial deployment of our code is all handled by one deploy script.  The running of a simulation or simulations can all be done by writing a config file and running a single script.
 
@@ -29,7 +30,22 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
     - [Docker](#deploy_docker)
     - [CharlieCloud with Internet](#deploy_charliecloud_with_internet)
     - [CharlieCloud without Internet](#deploy_charliecloud_without_internet)
-  - [Run Test](#run_test)
+- [Run Tests](#run_tests)
+    - [Everything Works](#run_tests_works)
+        - [bare-metal works](#run_tests_works_bare_metal)
+        - [Docker works](#run_tests_works_docker)
+        - [CharlieCloud with Internet works](#run_tests_works_charliecloud_with_internet)
+        - [CharlieCloud without Internet works](#run_tests_works_charliecloud_without_internet)
+    - [Verifying Paper](#run_tests_verify)
+        - [bare-metal verification](#run_tests_verify_bare_metal)
+            - [parallel](#run_tests_verify_bare_metal_parallel)
+            - [serial](#run_tests_verify_bare_metal_serial)
+        - [Docker verification](#run_tests_verify_docker)
+            - [parallel](#run_tests_verify_docker_parallel)
+            - [serial](#run_tests_verify_docker_serial)
+        - [CharlieCloud verification](#run_tests_verify_charliecloud)
+            - [parallel](#run_tests_verify_charliecloud_parallel)
+            - [serial](#run_tests_verify_charliecloud_serial)
   - [Basic Steps](#basic_steps)
 - [Explanation Of total_makespan.csv](#total_makespan)
 - [Steps To Run Simulations](#steps_to_run)
@@ -62,16 +78,49 @@ There are 4 methods of building and deploying our batsim applications.
 ```
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
-./deploy.sh -f bare-metal --prefix 
+./deploy.sh -f bare-metal
 ```
 
 
 
 ### <a name="deploy_docker"></a> Docker
+- obtain the code
+- change directories
+- deploy
+```
+git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
+cd simulator/basefiles
+./deploy.sh -f docker
+```
 
 ### <a name="deploy_charliecloud_with_internet"></a> CharlieCloud with Internet
-
+- obtain the code
+- change directories
+- deploy
+```
+git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
+cd simulator/basefiles
+./deploy.sh -f charliecloud
+```
 ### <a name="deploy_charliecloud_without_internet"></a> CharlieCloud without Internet
+- obtain the code
+- change directories
+- deploy package
+- scp folder
+- ssh to remote
+- change directories
+- unpackage
+```
+git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
+cd simulator/basefiles
+./deploy.sh -f charliecloud --no-internet --package
+scp -r user@remote.org ./batsim_packaged /home/USER/
+ssh user@remote.org
+cd /home/USER/batsim_packaged
+./deploy.sh -f charliecloud --no-internet --un-package
+```
+
+
 
 clone this repo:<br/>
 ```git clone https://github.com/hpec-2021-ccu-lanl/simulator.git``` <br/>
