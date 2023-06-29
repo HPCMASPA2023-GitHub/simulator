@@ -2,6 +2,15 @@ cd $downloads_prefix
 wget --no-check-certificate https://sourceforge.net/projects/boost/files/boost/1.75.0/boost_1_75_0.tar.gz/download
 tar -xf ./download
 line_number=$i
+cd $downloads_prefix
+git clone https://github.com/oar-team/batsim.git
+cd $downloads_prefix/batsim
+patch -p2 < $basefiles_prefix/batsim.patch
+cd $downloads_prefix
+git clone https://github.com/oar-team/batsched.git
+cd $downloads_prefix/batsched
+patch -p2 < $basefiles_prefix/batsched.patch
+
 echo "gobin=$GOBIN     gopath=$GOPATH     goroot=$GOROOT    go111module=$GO111MODULE"
 cd $downloads_prefix
 cd ./boost_1_75_0/

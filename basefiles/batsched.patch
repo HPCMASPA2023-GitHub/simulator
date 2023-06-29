@@ -1,5 +1,5 @@
-diff -NcrB ./batsched/.clang-format ./new_batsched/.clang-format
-*** ./batsched/.clang-format	2023-06-29 05:16:39.983181430 -0400
+diff -NcrB '--exclude=.git*' ./batsched/.clang-format ./new_batsched/.clang-format
+*** ./batsched/.clang-format	2023-06-29 06:13:52.531011317 -0400
 --- ./new_batsched/.clang-format	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,105 ****
@@ -109,1032 +109,8 @@ diff -NcrB ./batsched/.clang-format ./new_batsched/.clang-format
 - TabWidth:        8
 - UseTab:          Never
 --- 0 ----
-diff -NcrB ./batsched/.git/config ./new_batsched/.git/config
-*** ./batsched/.git/config	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/config	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,11 ****
-- [core]
-- 	repositoryformatversion = 0
-- 	filemode = true
-- 	bare = false
-- 	logallrefupdates = true
-- [remote "origin"]
-- 	url = https://github.com/oar-team/batsched.git
-- 	fetch = +refs/heads/*:refs/remotes/origin/*
-- [branch "master"]
-- 	remote = origin
-- 	merge = refs/heads/master
---- 0 ----
-diff -NcrB ./batsched/.git/description ./new_batsched/.git/description
-*** ./batsched/.git/description	2023-06-29 05:16:39.236501746 -0400
---- ./new_batsched/.git/description	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- Unnamed repository; edit this file 'description' to name the repository.
---- 0 ----
-diff -NcrB ./batsched/.git/HEAD ./new_batsched/.git/HEAD
-*** ./batsched/.git/HEAD	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/HEAD	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- ref: refs/heads/master
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/applypatch-msg.sample ./new_batsched/.git/hooks/applypatch-msg.sample
-*** ./batsched/.git/hooks/applypatch-msg.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/applypatch-msg.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,15 ****
-- #!/bin/sh
-- #
-- # An example hook script to check the commit log message taken by
-- # applypatch from an e-mail message.
-- #
-- # The hook should exit with non-zero status after issuing an
-- # appropriate message if it wants to stop the commit.  The hook is
-- # allowed to edit the commit message file.
-- #
-- # To enable this hook, rename this file to "applypatch-msg".
-- 
-- . git-sh-setup
-- commitmsg="$(git rev-parse --git-path hooks/commit-msg)"
-- test -x "$commitmsg" && exec "$commitmsg" ${1+"$@"}
-- :
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/commit-msg.sample ./new_batsched/.git/hooks/commit-msg.sample
-*** ./batsched/.git/hooks/commit-msg.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,24 ****
-- #!/bin/sh
-- #
-- # An example hook script to check the commit log message.
-- # Called by "git commit" with one argument, the name of the file
-- # that has the commit message.  The hook should exit with non-zero
-- # status after issuing an appropriate message if it wants to stop the
-- # commit.  The hook is allowed to edit the commit message file.
-- #
-- # To enable this hook, rename this file to "commit-msg".
-- 
-- # Uncomment the below to add a Signed-off-by line to the message.
-- # Doing this in a hook is a bad idea in general, but the prepare-commit-msg
-- # hook is more suited to it.
-- #
-- # SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-- # grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
-- 
-- # This example catches duplicate Signed-off-by lines.
-- 
-- test "" = "$(grep '^Signed-off-by: ' "$1" |
-- 	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
-- 	echo >&2 Duplicate Signed-off-by lines.
-- 	exit 1
-- }
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/fsmonitor-watchman.sample ./new_batsched/.git/hooks/fsmonitor-watchman.sample
-*** ./batsched/.git/hooks/fsmonitor-watchman.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/fsmonitor-watchman.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,173 ****
-- #!/usr/bin/perl
-- 
-- use strict;
-- use warnings;
-- use IPC::Open2;
-- 
-- # An example hook script to integrate Watchman
-- # (https://facebook.github.io/watchman/) with git to speed up detecting
-- # new and modified files.
-- #
-- # The hook is passed a version (currently 2) and last update token
-- # formatted as a string and outputs to stdout a new update token and
-- # all files that have been modified since the update token. Paths must
-- # be relative to the root of the working tree and separated by a single NUL.
-- #
-- # To enable this hook, rename this file to "query-watchman" and set
-- # 'git config core.fsmonitor .git/hooks/query-watchman'
-- #
-- my ($version, $last_update_token) = @ARGV;
-- 
-- # Uncomment for debugging
-- # print STDERR "$0 $version $last_update_token\n";
-- 
-- # Check the hook interface version
-- if ($version ne 2) {
-- 	die "Unsupported query-fsmonitor hook version '$version'.\n" .
-- 	    "Falling back to scanning...\n";
-- }
-- 
-- my $git_work_tree = get_working_dir();
-- 
-- my $retry = 1;
-- 
-- my $json_pkg;
-- eval {
-- 	require JSON::XS;
-- 	$json_pkg = "JSON::XS";
-- 	1;
-- } or do {
-- 	require JSON::PP;
-- 	$json_pkg = "JSON::PP";
-- };
-- 
-- launch_watchman();
-- 
-- sub launch_watchman {
-- 	my $o = watchman_query();
-- 	if (is_work_tree_watched($o)) {
-- 		output_result($o->{clock}, @{$o->{files}});
-- 	}
-- }
-- 
-- sub output_result {
-- 	my ($clockid, @files) = @_;
-- 
-- 	# Uncomment for debugging watchman output
-- 	# open (my $fh, ">", ".git/watchman-output.out");
-- 	# binmode $fh, ":utf8";
-- 	# print $fh "$clockid\n@files\n";
-- 	# close $fh;
-- 
-- 	binmode STDOUT, ":utf8";
-- 	print $clockid;
-- 	print "\0";
-- 	local $, = "\0";
-- 	print @files;
-- }
-- 
-- sub watchman_clock {
-- 	my $response = qx/watchman clock "$git_work_tree"/;
-- 	die "Failed to get clock id on '$git_work_tree'.\n" .
-- 		"Falling back to scanning...\n" if $? != 0;
-- 
-- 	return $json_pkg->new->utf8->decode($response);
-- }
-- 
-- sub watchman_query {
-- 	my $pid = open2(\*CHLD_OUT, \*CHLD_IN, 'watchman -j --no-pretty')
-- 	or die "open2() failed: $!\n" .
-- 	"Falling back to scanning...\n";
-- 
-- 	# In the query expression below we're asking for names of files that
-- 	# changed since $last_update_token but not from the .git folder.
-- 	#
-- 	# To accomplish this, we're using the "since" generator to use the
-- 	# recency index to select candidate nodes and "fields" to limit the
-- 	# output to file names only. Then we're using the "expression" term to
-- 	# further constrain the results.
-- 	if (substr($last_update_token, 0, 1) eq "c") {
-- 		$last_update_token = "\"$last_update_token\"";
-- 	}
-- 	my $query = <<"	END";
-- 		["query", "$git_work_tree", {
-- 			"since": $last_update_token,
-- 			"fields": ["name"],
-- 			"expression": ["not", ["dirname", ".git"]]
-- 		}]
-- 	END
-- 
-- 	# Uncomment for debugging the watchman query
-- 	# open (my $fh, ">", ".git/watchman-query.json");
-- 	# print $fh $query;
-- 	# close $fh;
-- 
-- 	print CHLD_IN $query;
-- 	close CHLD_IN;
-- 	my $response = do {local $/; <CHLD_OUT>};
-- 
-- 	# Uncomment for debugging the watch response
-- 	# open ($fh, ">", ".git/watchman-response.json");
-- 	# print $fh $response;
-- 	# close $fh;
-- 
-- 	die "Watchman: command returned no output.\n" .
-- 	"Falling back to scanning...\n" if $response eq "";
-- 	die "Watchman: command returned invalid output: $response\n" .
-- 	"Falling back to scanning...\n" unless $response =~ /^\{/;
-- 
-- 	return $json_pkg->new->utf8->decode($response);
-- }
-- 
-- sub is_work_tree_watched {
-- 	my ($output) = @_;
-- 	my $error = $output->{error};
-- 	if ($retry > 0 and $error and $error =~ m/unable to resolve root .* directory (.*) is not watched/) {
-- 		$retry--;
-- 		my $response = qx/watchman watch "$git_work_tree"/;
-- 		die "Failed to make watchman watch '$git_work_tree'.\n" .
-- 		    "Falling back to scanning...\n" if $? != 0;
-- 		$output = $json_pkg->new->utf8->decode($response);
-- 		$error = $output->{error};
-- 		die "Watchman: $error.\n" .
-- 		"Falling back to scanning...\n" if $error;
-- 
-- 		# Uncomment for debugging watchman output
-- 		# open (my $fh, ">", ".git/watchman-output.out");
-- 		# close $fh;
-- 
-- 		# Watchman will always return all files on the first query so
-- 		# return the fast "everything is dirty" flag to git and do the
-- 		# Watchman query just to get it over with now so we won't pay
-- 		# the cost in git to look up each individual file.
-- 		my $o = watchman_clock();
-- 		$error = $output->{error};
-- 
-- 		die "Watchman: $error.\n" .
-- 		"Falling back to scanning...\n" if $error;
-- 
-- 		output_result($o->{clock}, ("/"));
-- 		$last_update_token = $o->{clock};
-- 
-- 		eval { launch_watchman() };
-- 		return 0;
-- 	}
-- 
-- 	die "Watchman: $error.\n" .
-- 	"Falling back to scanning...\n" if $error;
-- 
-- 	return 1;
-- }
-- 
-- sub get_working_dir {
-- 	my $working_dir;
-- 	if ($^O =~ 'msys' || $^O =~ 'cygwin') {
-- 		$working_dir = Win32::GetCwd();
-- 		$working_dir =~ tr/\\/\//;
-- 	} else {
-- 		require Cwd;
-- 		$working_dir = Cwd::cwd();
-- 	}
-- 
-- 	return $working_dir;
-- }
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/post-update.sample ./new_batsched/.git/hooks/post-update.sample
-*** ./batsched/.git/hooks/post-update.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/post-update.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,8 ****
-- #!/bin/sh
-- #
-- # An example hook script to prepare a packed repository for use over
-- # dumb transports.
-- #
-- # To enable this hook, rename this file to "post-update".
-- 
-- exec git update-server-info
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-applypatch.sample ./new_batsched/.git/hooks/pre-applypatch.sample
-*** ./batsched/.git/hooks/pre-applypatch.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-applypatch.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,14 ****
-- #!/bin/sh
-- #
-- # An example hook script to verify what is about to be committed
-- # by applypatch from an e-mail message.
-- #
-- # The hook should exit with non-zero status after issuing an
-- # appropriate message if it wants to stop the commit.
-- #
-- # To enable this hook, rename this file to "pre-applypatch".
-- 
-- . git-sh-setup
-- precommit="$(git rev-parse --git-path hooks/pre-commit)"
-- test -x "$precommit" && exec "$precommit" ${1+"$@"}
-- :
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-commit.sample ./new_batsched/.git/hooks/pre-commit.sample
-*** ./batsched/.git/hooks/pre-commit.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-commit.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,49 ****
-- #!/bin/sh
-- #
-- # An example hook script to verify what is about to be committed.
-- # Called by "git commit" with no arguments.  The hook should
-- # exit with non-zero status after issuing an appropriate message if
-- # it wants to stop the commit.
-- #
-- # To enable this hook, rename this file to "pre-commit".
-- 
-- if git rev-parse --verify HEAD >/dev/null 2>&1
-- then
-- 	against=HEAD
-- else
-- 	# Initial commit: diff against an empty tree object
-- 	against=$(git hash-object -t tree /dev/null)
-- fi
-- 
-- # If you want to allow non-ASCII filenames set this variable to true.
-- allownonascii=$(git config --type=bool hooks.allownonascii)
-- 
-- # Redirect output to stderr.
-- exec 1>&2
-- 
-- # Cross platform projects tend to avoid non-ASCII filenames; prevent
-- # them from being added to the repository. We exploit the fact that the
-- # printable range starts at the space character and ends with tilde.
-- if [ "$allownonascii" != "true" ] &&
-- 	# Note that the use of brackets around a tr range is ok here, (it's
-- 	# even required, for portability to Solaris 10's /usr/bin/tr), since
-- 	# the square bracket bytes happen to fall in the designated range.
-- 	test $(git diff --cached --name-only --diff-filter=A -z $against |
-- 	  LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
-- then
-- 	cat <<\EOF
-- Error: Attempt to add a non-ASCII file name.
-- 
-- This can cause problems if you want to work with people on other platforms.
-- 
-- To be portable it is advisable to rename the file.
-- 
-- If you know what you are doing you can disable this check using:
-- 
--   git config hooks.allownonascii true
-- EOF
-- 	exit 1
-- fi
-- 
-- # If there are whitespace errors, print the offending file names and fail.
-- exec git diff-index --check --cached $against --
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-merge-commit.sample ./new_batsched/.git/hooks/pre-merge-commit.sample
-*** ./batsched/.git/hooks/pre-merge-commit.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-merge-commit.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,13 ****
-- #!/bin/sh
-- #
-- # An example hook script to verify what is about to be committed.
-- # Called by "git merge" with no arguments.  The hook should
-- # exit with non-zero status after issuing an appropriate message to
-- # stderr if it wants to stop the merge commit.
-- #
-- # To enable this hook, rename this file to "pre-merge-commit".
-- 
-- . git-sh-setup
-- test -x "$GIT_DIR/hooks/pre-commit" &&
--         exec "$GIT_DIR/hooks/pre-commit"
-- :
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/prepare-commit-msg.sample ./new_batsched/.git/hooks/prepare-commit-msg.sample
-*** ./batsched/.git/hooks/prepare-commit-msg.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/prepare-commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,42 ****
-- #!/bin/sh
-- #
-- # An example hook script to prepare the commit log message.
-- # Called by "git commit" with the name of the file that has the
-- # commit message, followed by the description of the commit
-- # message's source.  The hook's purpose is to edit the commit
-- # message file.  If the hook fails with a non-zero status,
-- # the commit is aborted.
-- #
-- # To enable this hook, rename this file to "prepare-commit-msg".
-- 
-- # This hook includes three examples. The first one removes the
-- # "# Please enter the commit message..." help message.
-- #
-- # The second includes the output of "git diff --name-status -r"
-- # into the message, just before the "git status" output.  It is
-- # commented because it doesn't cope with --amend or with squashed
-- # commits.
-- #
-- # The third example adds a Signed-off-by line to the message, that can
-- # still be edited.  This is rarely a good idea.
-- 
-- COMMIT_MSG_FILE=$1
-- COMMIT_SOURCE=$2
-- SHA1=$3
-- 
-- /usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
-- 
-- # case "$COMMIT_SOURCE,$SHA1" in
-- #  ,|template,)
-- #    /usr/bin/perl -i.bak -pe '
-- #       print "\n" . `git diff --cached --name-status -r`
-- # 	 if /^#/ && $first++ == 0' "$COMMIT_MSG_FILE" ;;
-- #  *) ;;
-- # esac
-- 
-- # SOB=$(git var GIT_COMMITTER_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-- # git interpret-trailers --in-place --trailer "$SOB" "$COMMIT_MSG_FILE"
-- # if test -z "$COMMIT_SOURCE"
-- # then
-- #   /usr/bin/perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
-- # fi
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-push.sample ./new_batsched/.git/hooks/pre-push.sample
-*** ./batsched/.git/hooks/pre-push.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-push.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,53 ****
-- #!/bin/sh
-- 
-- # An example hook script to verify what is about to be pushed.  Called by "git
-- # push" after it has checked the remote status, but before anything has been
-- # pushed.  If this script exits with a non-zero status nothing will be pushed.
-- #
-- # This hook is called with the following parameters:
-- #
-- # $1 -- Name of the remote to which the push is being done
-- # $2 -- URL to which the push is being done
-- #
-- # If pushing without using a named remote those arguments will be equal.
-- #
-- # Information about the commits which are being pushed is supplied as lines to
-- # the standard input in the form:
-- #
-- #   <local ref> <local oid> <remote ref> <remote oid>
-- #
-- # This sample shows how to prevent push of commits where the log message starts
-- # with "WIP" (work in progress).
-- 
-- remote="$1"
-- url="$2"
-- 
-- zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
-- 
-- while read local_ref local_oid remote_ref remote_oid
-- do
-- 	if test "$local_oid" = "$zero"
-- 	then
-- 		# Handle delete
-- 		:
-- 	else
-- 		if test "$remote_oid" = "$zero"
-- 		then
-- 			# New branch, examine all commits
-- 			range="$local_oid"
-- 		else
-- 			# Update to existing branch, examine new commits
-- 			range="$remote_oid..$local_oid"
-- 		fi
-- 
-- 		# Check for WIP commit
-- 		commit=$(git rev-list -n 1 --grep '^WIP' "$range")
-- 		if test -n "$commit"
-- 		then
-- 			echo >&2 "Found WIP commit in $local_ref, not pushing"
-- 			exit 1
-- 		fi
-- 	fi
-- done
-- 
-- exit 0
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-rebase.sample ./new_batsched/.git/hooks/pre-rebase.sample
-*** ./batsched/.git/hooks/pre-rebase.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-rebase.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,169 ****
-- #!/bin/sh
-- #
-- # Copyright (c) 2006, 2008 Junio C Hamano
-- #
-- # The "pre-rebase" hook is run just before "git rebase" starts doing
-- # its job, and can prevent the command from running by exiting with
-- # non-zero status.
-- #
-- # The hook is called with the following parameters:
-- #
-- # $1 -- the upstream the series was forked from.
-- # $2 -- the branch being rebased (or empty when rebasing the current branch).
-- #
-- # This sample shows how to prevent topic branches that are already
-- # merged to 'next' branch from getting rebased, because allowing it
-- # would result in rebasing already published history.
-- 
-- publish=next
-- basebranch="$1"
-- if test "$#" = 2
-- then
-- 	topic="refs/heads/$2"
-- else
-- 	topic=`git symbolic-ref HEAD` ||
-- 	exit 0 ;# we do not interrupt rebasing detached HEAD
-- fi
-- 
-- case "$topic" in
-- refs/heads/??/*)
-- 	;;
-- *)
-- 	exit 0 ;# we do not interrupt others.
-- 	;;
-- esac
-- 
-- # Now we are dealing with a topic branch being rebased
-- # on top of master.  Is it OK to rebase it?
-- 
-- # Does the topic really exist?
-- git show-ref -q "$topic" || {
-- 	echo >&2 "No such branch $topic"
-- 	exit 1
-- }
-- 
-- # Is topic fully merged to master?
-- not_in_master=`git rev-list --pretty=oneline ^master "$topic"`
-- if test -z "$not_in_master"
-- then
-- 	echo >&2 "$topic is fully merged to master; better remove it."
-- 	exit 1 ;# we could allow it, but there is no point.
-- fi
-- 
-- # Is topic ever merged to next?  If so you should not be rebasing it.
-- only_next_1=`git rev-list ^master "^$topic" ${publish} | sort`
-- only_next_2=`git rev-list ^master           ${publish} | sort`
-- if test "$only_next_1" = "$only_next_2"
-- then
-- 	not_in_topic=`git rev-list "^$topic" master`
-- 	if test -z "$not_in_topic"
-- 	then
-- 		echo >&2 "$topic is already up to date with master"
-- 		exit 1 ;# we could allow it, but there is no point.
-- 	else
-- 		exit 0
-- 	fi
-- else
-- 	not_in_next=`git rev-list --pretty=oneline ^${publish} "$topic"`
-- 	/usr/bin/perl -e '
-- 		my $topic = $ARGV[0];
-- 		my $msg = "* $topic has commits already merged to public branch:\n";
-- 		my (%not_in_next) = map {
-- 			/^([0-9a-f]+) /;
-- 			($1 => 1);
-- 		} split(/\n/, $ARGV[1]);
-- 		for my $elem (map {
-- 				/^([0-9a-f]+) (.*)$/;
-- 				[$1 => $2];
-- 			} split(/\n/, $ARGV[2])) {
-- 			if (!exists $not_in_next{$elem->[0]}) {
-- 				if ($msg) {
-- 					print STDERR $msg;
-- 					undef $msg;
-- 				}
-- 				print STDERR " $elem->[1]\n";
-- 			}
-- 		}
-- 	' "$topic" "$not_in_next" "$not_in_master"
-- 	exit 1
-- fi
-- 
-- <<\DOC_END
-- 
-- This sample hook safeguards topic branches that have been
-- published from being rewound.
-- 
-- The workflow assumed here is:
-- 
--  * Once a topic branch forks from "master", "master" is never
--    merged into it again (either directly or indirectly).
-- 
--  * Once a topic branch is fully cooked and merged into "master",
--    it is deleted.  If you need to build on top of it to correct
--    earlier mistakes, a new topic branch is created by forking at
--    the tip of the "master".  This is not strictly necessary, but
--    it makes it easier to keep your history simple.
-- 
--  * Whenever you need to test or publish your changes to topic
--    branches, merge them into "next" branch.
-- 
-- The script, being an example, hardcodes the publish branch name
-- to be "next", but it is trivial to make it configurable via
-- $GIT_DIR/config mechanism.
-- 
-- With this workflow, you would want to know:
-- 
-- (1) ... if a topic branch has ever been merged to "next".  Young
--     topic branches can have stupid mistakes you would rather
--     clean up before publishing, and things that have not been
--     merged into other branches can be easily rebased without
--     affecting other people.  But once it is published, you would
--     not want to rewind it.
-- 
-- (2) ... if a topic branch has been fully merged to "master".
--     Then you can delete it.  More importantly, you should not
--     build on top of it -- other people may already want to
--     change things related to the topic as patches against your
--     "master", so if you need further changes, it is better to
--     fork the topic (perhaps with the same name) afresh from the
--     tip of "master".
-- 
-- Let's look at this example:
-- 
-- 		   o---o---o---o---o---o---o---o---o---o "next"
-- 		  /       /           /           /
-- 		 /   a---a---b A     /           /
-- 		/   /               /           /
-- 	       /   /   c---c---c---c B         /
-- 	      /   /   /             \         /
-- 	     /   /   /   b---b C     \       /
-- 	    /   /   /   /             \     /
--     ---o---o---o---o---o---o---o---o---o---o---o "master"
-- 
-- 
-- A, B and C are topic branches.
-- 
--  * A has one fix since it was merged up to "next".
-- 
--  * B has finished.  It has been fully merged up to "master" and "next",
--    and is ready to be deleted.
-- 
--  * C has not merged to "next" at all.
-- 
-- We would want to allow C to be rebased, refuse A, and encourage
-- B to be deleted.
-- 
-- To compute (1):
-- 
-- 	git rev-list ^master ^topic next
-- 	git rev-list ^master        next
-- 
-- 	if these match, topic has not merged in next at all.
-- 
-- To compute (2):
-- 
-- 	git rev-list master..topic
-- 
-- 	if this is empty, it is fully merged to "master".
-- 
-- DOC_END
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/pre-receive.sample ./new_batsched/.git/hooks/pre-receive.sample
-*** ./batsched/.git/hooks/pre-receive.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/pre-receive.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,24 ****
-- #!/bin/sh
-- #
-- # An example hook script to make use of push options.
-- # The example simply echoes all push options that start with 'echoback='
-- # and rejects all pushes when the "reject" push option is used.
-- #
-- # To enable this hook, rename this file to "pre-receive".
-- 
-- if test -n "$GIT_PUSH_OPTION_COUNT"
-- then
-- 	i=0
-- 	while test "$i" -lt "$GIT_PUSH_OPTION_COUNT"
-- 	do
-- 		eval "value=\$GIT_PUSH_OPTION_$i"
-- 		case "$value" in
-- 		echoback=*)
-- 			echo "echo from the pre-receive-hook: ${value#*=}" >&2
-- 			;;
-- 		reject)
-- 			exit 1
-- 		esac
-- 		i=$((i + 1))
-- 	done
-- fi
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/push-to-checkout.sample ./new_batsched/.git/hooks/push-to-checkout.sample
-*** ./batsched/.git/hooks/push-to-checkout.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/push-to-checkout.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,78 ****
-- #!/bin/sh
-- 
-- # An example hook script to update a checked-out tree on a git push.
-- #
-- # This hook is invoked by git-receive-pack(1) when it reacts to git
-- # push and updates reference(s) in its repository, and when the push
-- # tries to update the branch that is currently checked out and the
-- # receive.denyCurrentBranch configuration variable is set to
-- # updateInstead.
-- #
-- # By default, such a push is refused if the working tree and the index
-- # of the remote repository has any difference from the currently
-- # checked out commit; when both the working tree and the index match
-- # the current commit, they are updated to match the newly pushed tip
-- # of the branch. This hook is to be used to override the default
-- # behaviour; however the code below reimplements the default behaviour
-- # as a starting point for convenient modification.
-- #
-- # The hook receives the commit with which the tip of the current
-- # branch is going to be updated:
-- commit=$1
-- 
-- # It can exit with a non-zero status to refuse the push (when it does
-- # so, it must not modify the index or the working tree).
-- die () {
-- 	echo >&2 "$*"
-- 	exit 1
-- }
-- 
-- # Or it can make any necessary changes to the working tree and to the
-- # index to bring them to the desired state when the tip of the current
-- # branch is updated to the new commit, and exit with a zero status.
-- #
-- # For example, the hook can simply run git read-tree -u -m HEAD "$1"
-- # in order to emulate git fetch that is run in the reverse direction
-- # with git push, as the two-tree form of git read-tree -u -m is
-- # essentially the same as git switch or git checkout that switches
-- # branches while keeping the local changes in the working tree that do
-- # not interfere with the difference between the branches.
-- 
-- # The below is a more-or-less exact translation to shell of the C code
-- # for the default behaviour for git's push-to-checkout hook defined in
-- # the push_to_deploy() function in builtin/receive-pack.c.
-- #
-- # Note that the hook will be executed from the repository directory,
-- # not from the working tree, so if you want to perform operations on
-- # the working tree, you will have to adapt your code accordingly, e.g.
-- # by adding "cd .." or using relative paths.
-- 
-- if ! git update-index -q --ignore-submodules --refresh
-- then
-- 	die "Up-to-date check failed"
-- fi
-- 
-- if ! git diff-files --quiet --ignore-submodules --
-- then
-- 	die "Working directory has unstaged changes"
-- fi
-- 
-- # This is a rough translation of:
-- #
-- #   head_has_history() ? "HEAD" : EMPTY_TREE_SHA1_HEX
-- if git cat-file -e HEAD 2>/dev/null
-- then
-- 	head=HEAD
-- else
-- 	head=$(git hash-object -t tree --stdin </dev/null)
-- fi
-- 
-- if ! git diff-index --quiet --cached --ignore-submodules $head --
-- then
-- 	die "Working directory has staged changes"
-- fi
-- 
-- if ! git read-tree -u -m "$commit"
-- then
-- 	die "Could not update working tree to new HEAD"
-- fi
---- 0 ----
-diff -NcrB ./batsched/.git/hooks/update.sample ./new_batsched/.git/hooks/update.sample
-*** ./batsched/.git/hooks/update.sample	2023-06-29 05:16:39.233168354 -0400
---- ./new_batsched/.git/hooks/update.sample	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,128 ****
-- #!/bin/sh
-- #
-- # An example hook script to block unannotated tags from entering.
-- # Called by "git receive-pack" with arguments: refname sha1-old sha1-new
-- #
-- # To enable this hook, rename this file to "update".
-- #
-- # Config
-- # ------
-- # hooks.allowunannotated
-- #   This boolean sets whether unannotated tags will be allowed into the
-- #   repository.  By default they won't be.
-- # hooks.allowdeletetag
-- #   This boolean sets whether deleting tags will be allowed in the
-- #   repository.  By default they won't be.
-- # hooks.allowmodifytag
-- #   This boolean sets whether a tag may be modified after creation. By default
-- #   it won't be.
-- # hooks.allowdeletebranch
-- #   This boolean sets whether deleting branches will be allowed in the
-- #   repository.  By default they won't be.
-- # hooks.denycreatebranch
-- #   This boolean sets whether remotely creating branches will be denied
-- #   in the repository.  By default this is allowed.
-- #
-- 
-- # --- Command line
-- refname="$1"
-- oldrev="$2"
-- newrev="$3"
-- 
-- # --- Safety check
-- if [ -z "$GIT_DIR" ]; then
-- 	echo "Don't run this script from the command line." >&2
-- 	echo " (if you want, you could supply GIT_DIR then run" >&2
-- 	echo "  $0 <ref> <oldrev> <newrev>)" >&2
-- 	exit 1
-- fi
-- 
-- if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
-- 	echo "usage: $0 <ref> <oldrev> <newrev>" >&2
-- 	exit 1
-- fi
-- 
-- # --- Config
-- allowunannotated=$(git config --type=bool hooks.allowunannotated)
-- allowdeletebranch=$(git config --type=bool hooks.allowdeletebranch)
-- denycreatebranch=$(git config --type=bool hooks.denycreatebranch)
-- allowdeletetag=$(git config --type=bool hooks.allowdeletetag)
-- allowmodifytag=$(git config --type=bool hooks.allowmodifytag)
-- 
-- # check for no description
-- projectdesc=$(sed -e '1q' "$GIT_DIR/description")
-- case "$projectdesc" in
-- "Unnamed repository"* | "")
-- 	echo "*** Project description file hasn't been set" >&2
-- 	exit 1
-- 	;;
-- esac
-- 
-- # --- Check types
-- # if $newrev is 0000...0000, it's a commit to delete a ref.
-- zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
-- if [ "$newrev" = "$zero" ]; then
-- 	newrev_type=delete
-- else
-- 	newrev_type=$(git cat-file -t $newrev)
-- fi
-- 
-- case "$refname","$newrev_type" in
-- 	refs/tags/*,commit)
-- 		# un-annotated tag
-- 		short_refname=${refname##refs/tags/}
-- 		if [ "$allowunannotated" != "true" ]; then
-- 			echo "*** The un-annotated tag, $short_refname, is not allowed in this repository" >&2
-- 			echo "*** Use 'git tag [ -a | -s ]' for tags you want to propagate." >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	refs/tags/*,delete)
-- 		# delete tag
-- 		if [ "$allowdeletetag" != "true" ]; then
-- 			echo "*** Deleting a tag is not allowed in this repository" >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	refs/tags/*,tag)
-- 		# annotated tag
-- 		if [ "$allowmodifytag" != "true" ] && git rev-parse $refname > /dev/null 2>&1
-- 		then
-- 			echo "*** Tag '$refname' already exists." >&2
-- 			echo "*** Modifying a tag is not allowed in this repository." >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	refs/heads/*,commit)
-- 		# branch
-- 		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
-- 			echo "*** Creating a branch is not allowed in this repository" >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	refs/heads/*,delete)
-- 		# delete branch
-- 		if [ "$allowdeletebranch" != "true" ]; then
-- 			echo "*** Deleting a branch is not allowed in this repository" >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	refs/remotes/*,commit)
-- 		# tracking branch
-- 		;;
-- 	refs/remotes/*,delete)
-- 		# delete tracking branch
-- 		if [ "$allowdeletebranch" != "true" ]; then
-- 			echo "*** Deleting a tracking branch is not allowed in this repository" >&2
-- 			exit 1
-- 		fi
-- 		;;
-- 	*)
-- 		# Anything else (is there anything else?)
-- 		echo "*** Update hook: unknown type of update to ref $refname of type $newrev_type" >&2
-- 		exit 1
-- 		;;
-- esac
-- 
-- # --- Finished
-- exit 0
---- 0 ----
-Binary files ./batsched/.git/index and ./new_batsched/.git/index differ
-diff -NcrB ./batsched/.git/info/exclude ./new_batsched/.git/info/exclude
-*** ./batsched/.git/info/exclude	2023-06-29 05:16:39.236501746 -0400
---- ./new_batsched/.git/info/exclude	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,6 ****
-- # git ls-files --others --exclude-from=.git/info/exclude
-- # Lines that start with '#' are comments.
-- # For a project mostly in C, the following would be a good set of
-- # exclude patterns (uncomment them if you want to use them):
-- # *.[oa]
-- # *~
---- 0 ----
-diff -NcrB ./batsched/.git/logs/HEAD ./new_batsched/.git/logs/HEAD
-*** ./batsched/.git/logs/HEAD	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/logs/HEAD	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
---- 0 ----
-diff -NcrB ./batsched/.git/logs/refs/heads/master ./new_batsched/.git/logs/refs/heads/master
-*** ./batsched/.git/logs/refs/heads/master	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/logs/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
---- 0 ----
-diff -NcrB ./batsched/.git/logs/refs/remotes/origin/HEAD ./new_batsched/.git/logs/refs/remotes/origin/HEAD
-*** ./batsched/.git/logs/refs/remotes/origin/HEAD	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/logs/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
---- 0 ----
-Binary files ./batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.idx and ./new_batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.idx differ
-Binary files ./batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.pack and ./new_batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.pack differ
-diff -NcrB ./batsched/.git/packed-refs ./new_batsched/.git/packed-refs
-*** ./batsched/.git/packed-refs	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/packed-refs	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,15 ****
-- # pack-refs with: peeled fully-peeled sorted 
-- bab23fa5aa9c117d20fa74469147c1ce5fe58160 refs/remotes/origin/master
-- eb8e0af961a5a16c83d2c1f212d9d15b26278ad1 refs/remotes/origin/releases
-- deecb1f6b54fea8d2f87e07c76fa4551bf93c1a1 refs/tags/v1.0.0
-- ^2205ee51777ddd959ea5d0b99279ccc35d3bb238
-- c1f8bf2b75d1c4bfcc7d0a84debbd4450e96984b refs/tags/v1.1.0
-- ^9173ec6704213cb5d1ea632f44795f4bb88228b8
-- 777cdcd5aa3eaf2ead5eb6b60c5064af705a2525 refs/tags/v1.2.0
-- ^60e71723b454b977f752d3624a7e5d56f9a15e22
-- d089e757cdba8abb43fea9e120a42e4427ec4c7d refs/tags/v1.2.1
-- ^588e53ddc6919028253781a71831c34bfb570d31
-- c70fc67bbddd1909644198d664617c052fc63847 refs/tags/v1.3.0
-- ^b74b81f56fc540885525d0a19439319951a4d569
-- a46fd8ea5149c2671ed7856a2d74704b7844841f refs/tags/v1.4.0
-- ^b020e48b89a675ae681eb5bcead01035405b571e
---- 0 ----
-diff -NcrB ./batsched/.git/refs/heads/master ./new_batsched/.git/refs/heads/master
-*** ./batsched/.git/refs/heads/master	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- bab23fa5aa9c117d20fa74469147c1ce5fe58160
---- 0 ----
-diff -NcrB ./batsched/.git/refs/remotes/origin/HEAD ./new_batsched/.git/refs/remotes/origin/HEAD
-*** ./batsched/.git/refs/remotes/origin/HEAD	2023-06-29 05:16:39.979848037 -0400
---- ./new_batsched/.git/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1 ****
-- ref: refs/remotes/origin/master
---- 0 ----
-diff -NcrB ./batsched/.gitignore ./new_batsched/.gitignore
-*** ./batsched/.gitignore	2023-06-29 05:16:39.983181430 -0400
---- ./new_batsched/.gitignore	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,6 ****
-- *.user
-- build
-- test-out
-- test-instances
-- cover
-- result
---- 0 ----
-diff -NcrB ./batsched/.gitlab-ci.yml ./new_batsched/.gitlab-ci.yml
-*** ./batsched/.gitlab-ci.yml	2023-06-29 05:16:39.983181430 -0400
---- ./new_batsched/.gitlab-ci.yml	1969-12-31 19:00:00.000000000 -0500
-***************
-*** 1,36 ****
-- image: oarteam/batsim_ci
-- 
-- variables:
--   GIT_SUBMODULE_STRATEGY: none
-- 
-- stages:
--   - big_stage
--   - deploy
-- 
-- ###############################################################################
-- # Do most tasks
-- ###############################################################################
-- build_and_test:
--   stage: big_stage
--   script:
--     # Build batsched
--     - nix-shell --pure ./release.nix -A batsched --command ${CI_PROJECT_DIR}/ci/list-store-paths-for-cachix.bash | cachix push batsim
--     - nix-build ./release.nix -A batsched && cp -rL result ./batsched
-- #    # Test against pinned batsim
-- #    - nix-shell --pure ./release.nix -A integration_tests --command ${CI_PROJECT_DIR}/ci/list-store-paths-for-cachix.bash | cachix push batsim
-- #    - nix-build ./release.nix -A integration_tests && cp -rL result ./integration_tests
-- #    # Test against up-to-date batsim
-- #    - nix-shell --pure ./release.nix -A integration_tests_batlatest --command ${CI_PROJECT_DIR}/ci/list-store-paths-for-cachix.bash | cachix push batsim
-- #    - nix-build ./release.nix -A integration_tests_batlatest && rm result
-- #    # Fail job if tests failed
-- #    - if [[ "$(cat ./integration_tests/pytest_returncode)" -ne 0 ]] ; then echo "pytest returned non-zero (against pinned batsim), aborting" ; exit 1 ; fi
-- #    - if [[ "$(cat ./integration_tests_batlatest/pytest_returncode)" -ne 0 ]] ; then echo "pytest returned non-zero (against latest batsim), aborting" ; exit 1 ; fi
-- #    # Send coverage results to codecov.io
-- #    - nix-env -i gcc
-- #    - mkdir -p merged
-- #    - cp ./batsched/gcno/* ./integration_tests/gcda/* merged/
-- #    - bash <(curl -s https://codecov.io/bash)
-- #  artifacts:
-- #    when: always
-- #    paths:
-- #      - /builds/batsim/batsched/integration_tests
---- 0 ----
-diff -NcrB ./batsched/meson.build ./new_batsched/meson.build
-*** ./batsched/meson.build	2023-06-29 05:16:39.983181430 -0400
+diff -NcrB '--exclude=.git*' ./batsched/meson.build ./new_batsched/meson.build
+*** ./batsched/meson.build	2023-06-29 06:13:52.531011317 -0400
 --- ./new_batsched/meson.build	2023-06-28 08:26:02.127166524 -0400
 ***************
 *** 1,15 ****
@@ -1351,8 +327,8 @@ diff -NcrB ./batsched/meson.build ./new_batsched/meson.build
   ]
   include_dir = include_directories('src')
   
-diff -NcrB ./batsched/src/algo/conservative_bf.cpp ./new_batsched/src/algo/conservative_bf.cpp
-*** ./batsched/src/algo/conservative_bf.cpp	2023-06-29 05:16:39.983181430 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/conservative_bf.cpp ./new_batsched/src/algo/conservative_bf.cpp
+*** ./batsched/src/algo/conservative_bf.cpp	2023-06-29 06:13:52.531011317 -0400
 --- ./new_batsched/src/algo/conservative_bf.cpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 3,9 ****
@@ -2833,8 +1809,8 @@ diff -NcrB ./batsched/src/algo/conservative_bf.cpp ./new_batsched/src/algo/conse
       }
   }
 + 
-diff -NcrB ./batsched/src/algo/conservative_bf.hpp ./new_batsched/src/algo/conservative_bf.hpp
-*** ./batsched/src/algo/conservative_bf.hpp	2023-06-29 05:16:39.983181430 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/conservative_bf.hpp ./new_batsched/src/algo/conservative_bf.hpp
+*** ./batsched/src/algo/conservative_bf.hpp	2023-06-29 06:13:52.531011317 -0400
 --- ./new_batsched/src/algo/conservative_bf.hpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 3,29 ****
@@ -2947,7 +1923,7 @@ diff -NcrB ./batsched/src/algo/conservative_bf.hpp ./new_batsched/src/algo/conse
 +     
 + 
   };
-diff -NcrB ./batsched/src/algo/easy_bf_fast2.cpp ./new_batsched/src/algo/easy_bf_fast2.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/easy_bf_fast2.cpp ./new_batsched/src/algo/easy_bf_fast2.cpp
 *** ./batsched/src/algo/easy_bf_fast2.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/easy_bf_fast2.cpp	2023-06-28 08:26:02.130499916 -0400
 ***************
@@ -4386,7 +3362,7 @@ diff -NcrB ./batsched/src/algo/easy_bf_fast2.cpp ./new_batsched/src/algo/easy_bf
 +     // Swap between Document and Value
 +     d1.Swap(o);
 + */
-diff -NcrB ./batsched/src/algo/easy_bf_fast2_holdback.cpp ./new_batsched/src/algo/easy_bf_fast2_holdback.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/easy_bf_fast2_holdback.cpp ./new_batsched/src/algo/easy_bf_fast2_holdback.cpp
 *** ./batsched/src/algo/easy_bf_fast2_holdback.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/easy_bf_fast2_holdback.cpp	2023-06-28 08:26:02.133833308 -0400
 ***************
@@ -5987,7 +4963,7 @@ diff -NcrB ./batsched/src/algo/easy_bf_fast2_holdback.cpp ./new_batsched/src/alg
 +     // Swap between Document and Value
 +     d1.Swap(o);
 + */
-diff -NcrB ./batsched/src/algo/easy_bf_fast2_holdback.hpp ./new_batsched/src/algo/easy_bf_fast2_holdback.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/easy_bf_fast2_holdback.hpp ./new_batsched/src/algo/easy_bf_fast2_holdback.hpp
 *** ./batsched/src/algo/easy_bf_fast2_holdback.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/easy_bf_fast2_holdback.hpp	2023-06-28 08:26:02.127166524 -0400
 ***************
@@ -6130,7 +5106,7 @@ diff -NcrB ./batsched/src/algo/easy_bf_fast2_holdback.hpp ./new_batsched/src/alg
 +     IntervalSet _heldback_machines;
 + 
 + };
-diff -NcrB ./batsched/src/algo/easy_bf_fast2.hpp ./new_batsched/src/algo/easy_bf_fast2.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/easy_bf_fast2.hpp ./new_batsched/src/algo/easy_bf_fast2.hpp
 *** ./batsched/src/algo/easy_bf_fast2.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/easy_bf_fast2.hpp	2023-06-28 08:26:02.127166524 -0400
 ***************
@@ -6268,8 +5244,8 @@ diff -NcrB ./batsched/src/algo/easy_bf_fast2.hpp ./new_batsched/src/algo/easy_bf
 +     b_log *_myBLOG;
 + 
 + };
-diff -NcrB ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp ./new_batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp
-*** ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-29 05:16:39.986514820 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp ./new_batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp
+*** ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-28 08:26:02.130499916 -0400
 ***************
 *** 2,9 ****
@@ -6282,7 +5258,7 @@ diff -NcrB ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp ./new_
   {
   public:
 --- 2,7 ----
-diff -NcrB ./batsched/src/algo/fcfs_fast2.cpp ./new_batsched/src/algo/fcfs_fast2.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/fcfs_fast2.cpp ./new_batsched/src/algo/fcfs_fast2.cpp
 *** ./batsched/src/algo/fcfs_fast2.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/fcfs_fast2.cpp	2023-06-28 08:26:02.130499916 -0400
 ***************
@@ -7347,7 +6323,7 @@ diff -NcrB ./batsched/src/algo/fcfs_fast2.cpp ./new_batsched/src/algo/fcfs_fast2
 +     // Swap between Document and Value
 +     d1.Swap(o);
 + */
-diff -NcrB ./batsched/src/algo/fcfs_fast2.hpp ./new_batsched/src/algo/fcfs_fast2.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/fcfs_fast2.hpp ./new_batsched/src/algo/fcfs_fast2.hpp
 *** ./batsched/src/algo/fcfs_fast2.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/algo/fcfs_fast2.hpp	2023-06-28 08:26:02.133833308 -0400
 ***************
@@ -7445,8 +6421,8 @@ diff -NcrB ./batsched/src/algo/fcfs_fast2.hpp ./new_batsched/src/algo/fcfs_fast2
 +     b_log *_myBLOG;
 + 
 + };
-diff -NcrB ./batsched/src/algo/submitter.cpp ./new_batsched/src/algo/submitter.cpp
-*** ./batsched/src/algo/submitter.cpp	2023-06-29 05:16:39.986514820 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/submitter.cpp ./new_batsched/src/algo/submitter.cpp
+*** ./batsched/src/algo/submitter.cpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/algo/submitter.cpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 72,77 ****
@@ -7458,8 +6434,8 @@ diff -NcrB ./batsched/src/algo/submitter.cpp ./new_batsched/src/algo/submitter.c
   }
   
   void Submitter::on_simulation_end(double date)
-diff -NcrB ./batsched/src/algo/submitter.hpp ./new_batsched/src/algo/submitter.hpp
-*** ./batsched/src/algo/submitter.hpp	2023-06-29 05:16:39.986514820 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/algo/submitter.hpp ./new_batsched/src/algo/submitter.hpp
+*** ./batsched/src/algo/submitter.hpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/algo/submitter.hpp	2023-06-28 08:26:02.130499916 -0400
 ***************
 *** 44,49 ****
@@ -7471,7 +6447,7 @@ diff -NcrB ./batsched/src/algo/submitter.hpp ./new_batsched/src/algo/submitter.h
       bool finished_submitting_sent = false;
   
       std::set<std::string> profiles_already_sent;
-diff -NcrB ./batsched/src/batsched_tools.cpp ./new_batsched/src/batsched_tools.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/batsched_tools.cpp ./new_batsched/src/batsched_tools.cpp
 *** ./batsched/src/batsched_tools.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/batsched_tools.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
@@ -7525,7 +6501,7 @@ diff -NcrB ./batsched/src/batsched_tools.cpp ./new_batsched/src/batsched_tools.c
 +     return separation;
 + }
 \ No newline at end of file
-diff -NcrB ./batsched/src/batsched_tools.hpp ./new_batsched/src/batsched_tools.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/batsched_tools.hpp ./new_batsched/src/batsched_tools.hpp
 *** ./batsched/src/batsched_tools.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/batsched_tools.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
@@ -7579,7 +6555,7 @@ diff -NcrB ./batsched/src/batsched_tools.hpp ./new_batsched/src/batsched_tools.h
 + 
 + #endif
 \ No newline at end of file
-diff -NcrB ./batsched/src/data_storage.cpp ./new_batsched/src/data_storage.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/data_storage.cpp ./new_batsched/src/data_storage.cpp
 *** ./batsched/src/data_storage.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/data_storage.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -7723,7 +6699,7 @@ diff -NcrB ./batsched/src/data_storage.cpp ./new_batsched/src/data_storage.cpp
 +     return key_latin1;*/
 +     return boost::locale::conv::utf_to_utf<char>(key);
 + }
-diff -NcrB ./batsched/src/data_storage.hpp ./new_batsched/src/data_storage.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/data_storage.hpp ./new_batsched/src/data_storage.hpp
 *** ./batsched/src/data_storage.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/data_storage.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
@@ -7839,8 +6815,8 @@ diff -NcrB ./batsched/src/data_storage.hpp ./new_batsched/src/data_storage.hpp
 +     std::string _instance_key_prefix = ""; //!< The instance key prefix, which is added before to every user-given key.
 +     std::string _key_subparts_separator = ":"; //!< The key subparts separator, which is put between the instance key prefix and the user-given key.
 + };
-diff -NcrB ./batsched/src/decision.cpp ./new_batsched/src/decision.cpp
-*** ./batsched/src/decision.cpp	2023-06-29 05:16:39.986514820 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/decision.cpp ./new_batsched/src/decision.cpp
+*** ./batsched/src/decision.cpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/decision.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 3,8 ****
@@ -8331,8 +7307,8 @@ diff -NcrB ./batsched/src/decision.cpp ./new_batsched/src/decision.cpp
 +     _redis_enabled = enabled;
 +     _redis = redis;
 + }
-diff -NcrB ./batsched/src/decision.hpp ./new_batsched/src/decision.hpp
-*** ./batsched/src/decision.hpp	2023-06-29 05:16:39.986514820 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/decision.hpp ./new_batsched/src/decision.hpp
+*** ./batsched/src/decision.hpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/decision.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 4,11 ****
@@ -8415,7 +7391,7 @@ diff -NcrB ./batsched/src/decision.hpp ./new_batsched/src/decision.hpp
 +     bool _redis_enabled = false;
 +     RedisStorage * _redis = nullptr;
   };
-diff -NcrB ./batsched/src/external/batsched_job.cpp ./new_batsched/src/external/batsched_job.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_job.cpp ./new_batsched/src/external/batsched_job.cpp
 *** ./batsched/src/external/batsched_job.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_job.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -8884,7 +7860,7 @@ diff -NcrB ./batsched/src/external/batsched_job.cpp ./new_batsched/src/external/
 + }
 + }
 + 
-diff -NcrB ./batsched/src/external/batsched_job.hpp ./new_batsched/src/external/batsched_job.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_job.hpp ./new_batsched/src/external/batsched_job.hpp
 *** ./batsched/src/external/batsched_job.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_job.hpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -9104,7 +8080,7 @@ diff -NcrB ./batsched/src/external/batsched_job.hpp ./new_batsched/src/external/
 + }
 + 
 + #endif
-diff -NcrB ./batsched/src/external/batsched_profile.cpp ./new_batsched/src/external/batsched_profile.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_profile.cpp ./new_batsched/src/external/batsched_profile.cpp
 *** ./batsched/src/external/batsched_profile.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_profile.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -9863,7 +8839,7 @@ diff -NcrB ./batsched/src/external/batsched_profile.cpp ./new_batsched/src/exter
 + }
 + 
 + }
-diff -NcrB ./batsched/src/external/batsched_profile.hpp ./new_batsched/src/external/batsched_profile.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_profile.hpp ./new_batsched/src/external/batsched_profile.hpp
 *** ./batsched/src/external/batsched_profile.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_profile.hpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -10091,7 +9067,7 @@ diff -NcrB ./batsched/src/external/batsched_profile.hpp ./new_batsched/src/exter
 + }
 + 
 + #endif
-diff -NcrB ./batsched/src/external/batsched_workload.cpp ./new_batsched/src/external/batsched_workload.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_workload.cpp ./new_batsched/src/external/batsched_workload.cpp
 *** ./batsched/src/external/batsched_workload.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_workload.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -10357,7 +9333,7 @@ diff -NcrB ./batsched/src/external/batsched_workload.cpp ./new_batsched/src/exte
 + }
 + }
 + 
-diff -NcrB ./batsched/src/external/batsched_workload.hpp ./new_batsched/src/external/batsched_workload.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/batsched_workload.hpp ./new_batsched/src/external/batsched_workload.hpp
 *** ./batsched/src/external/batsched_workload.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/batsched_workload.hpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -10572,7 +9548,7 @@ diff -NcrB ./batsched/src/external/batsched_workload.hpp ./new_batsched/src/exte
 + 
 + 
 + #endif
-diff -NcrB ./batsched/src/external/pointers.hpp ./new_batsched/src/external/pointers.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/external/pointers.hpp ./new_batsched/src/external/pointers.hpp
 *** ./batsched/src/external/pointers.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/external/pointers.hpp	2023-06-28 08:26:02.137166701 -0400
 ***************
@@ -10589,8 +9565,8 @@ diff -NcrB ./batsched/src/external/pointers.hpp ./new_batsched/src/external/poin
 + typedef std::shared_ptr<Profile> ProfilePtr; //!< A smart pointer towards a Profile.
 + 
 + }
-diff -NcrB ./batsched/src/isalgorithm.cpp ./new_batsched/src/isalgorithm.cpp
-*** ./batsched/src/isalgorithm.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/isalgorithm.cpp ./new_batsched/src/isalgorithm.cpp
+*** ./batsched/src/isalgorithm.cpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/isalgorithm.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
 *** 1,6 ****
@@ -10703,8 +9679,8 @@ diff -NcrB ./batsched/src/isalgorithm.cpp ./new_batsched/src/isalgorithm.cpp
   void ISchedulingAlgorithm::on_query_estimate_waiting_time(double date, const string &job_id)
   {
       (void) date;
-diff -NcrB ./batsched/src/isalgorithm.hpp ./new_batsched/src/isalgorithm.hpp
-*** ./batsched/src/isalgorithm.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/isalgorithm.hpp ./new_batsched/src/isalgorithm.hpp
+*** ./batsched/src/isalgorithm.hpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/isalgorithm.hpp	2023-06-28 08:26:02.147166876 -0400
 ***************
 *** 5,10 ****
@@ -10848,8 +9824,8 @@ diff -NcrB ./batsched/src/isalgorithm.hpp ./new_batsched/src/isalgorithm.hpp
 !     bool _consumed_joules_updated_recently;
 !     double _consumed_joules;
   };
-diff -NcrB ./batsched/src/json_workload.cpp ./new_batsched/src/json_workload.cpp
-*** ./batsched/src/json_workload.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/json_workload.cpp ./new_batsched/src/json_workload.cpp
+*** ./batsched/src/json_workload.cpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/json_workload.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 4,11 ****
@@ -10996,8 +9972,8 @@ diff -NcrB ./batsched/src/json_workload.cpp ./new_batsched/src/json_workload.cpp
       return j;
   }
   
-diff -NcrB ./batsched/src/json_workload.hpp ./new_batsched/src/json_workload.hpp
-*** ./batsched/src/json_workload.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/json_workload.hpp ./new_batsched/src/json_workload.hpp
+*** ./batsched/src/json_workload.hpp	2023-06-29 06:13:52.534344709 -0400
 --- ./new_batsched/src/json_workload.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 5,11 ****
@@ -11093,8 +10069,8 @@ diff -NcrB ./batsched/src/json_workload.hpp ./new_batsched/src/json_workload.hpp
 +    
   };
 + 
-diff -NcrB ./batsched/src/locality.cpp ./new_batsched/src/locality.cpp
-*** ./batsched/src/locality.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/locality.cpp ./new_batsched/src/locality.cpp
+*** ./batsched/src/locality.cpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/locality.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 37,43 ****
@@ -11156,8 +10132,8 @@ diff -NcrB ./batsched/src/locality.cpp ./new_batsched/src/locality.cpp
   
       return false;
   }
-diff -NcrB ./batsched/src/locality.hpp ./new_batsched/src/locality.hpp
-*** ./batsched/src/locality.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/locality.hpp ./new_batsched/src/locality.hpp
+*** ./batsched/src/locality.hpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/locality.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 10,15 ****
@@ -11199,7 +10175,7 @@ diff -NcrB ./batsched/src/locality.hpp ./new_batsched/src/locality.hpp
       void select_resources_to_sedate(int nb_resources, const IntervalSet & available, const IntervalSet & potentially_sedated, IntervalSet & to_sedate);
       void select_resources_to_awaken(int nb_resources, const IntervalSet & available, const IntervalSet & potentially_awaken, IntervalSet & to_awaken);
       void select_resources_to_awaken_to_make_job_fit(const Job * job, const IntervalSet & available, const IntervalSet & potentially_awaken, IntervalSet & to_awaken);
-diff -NcrB ./batsched/src/machine.cpp ./new_batsched/src/machine.cpp
+diff -NcrB '--exclude=.git*' ./batsched/src/machine.cpp ./new_batsched/src/machine.cpp
 *** ./batsched/src/machine.cpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/machine.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
@@ -11282,7 +10258,7 @@ diff -NcrB ./batsched/src/machine.cpp ./new_batsched/src/machine.cpp
 +     }
 + }
 +     
-diff -NcrB ./batsched/src/machine.hpp ./new_batsched/src/machine.hpp
+diff -NcrB '--exclude=.git*' ./batsched/src/machine.hpp ./new_batsched/src/machine.hpp
 *** ./batsched/src/machine.hpp	1969-12-31 19:00:00.000000000 -0500
 --- ./new_batsched/src/machine.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
@@ -11324,8 +10300,8 @@ diff -NcrB ./batsched/src/machine.hpp ./new_batsched/src/machine.hpp
 + 
 + #endif
 \ No newline at end of file
-diff -NcrB ./batsched/src/main.cpp ./new_batsched/src/main.cpp
-*** ./batsched/src/main.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/main.cpp ./new_batsched/src/main.cpp
+*** ./batsched/src/main.cpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/main.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 1,7 ****
@@ -11971,8 +10947,8 @@ diff -NcrB ./batsched/src/main.cpp ./new_batsched/src/main.cpp
           n.write(message_to_send);
       }
   }
-diff -NcrB ./batsched/src/protocol.cpp ./new_batsched/src/protocol.cpp
-*** ./batsched/src/protocol.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/protocol.cpp ./new_batsched/src/protocol.cpp
+*** ./batsched/src/protocol.cpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/protocol.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 4,9 ****
@@ -12187,8 +11163,8 @@ diff -NcrB ./batsched/src/protocol.cpp ./new_batsched/src/protocol.cpp
       event.AddMember("type", Value().SetString("NOTIFY"), _alloc);
       event.AddMember("data", data, _alloc);
   
-diff -NcrB ./batsched/src/protocol.hpp ./new_batsched/src/protocol.hpp
-*** ./batsched/src/protocol.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/protocol.hpp ./new_batsched/src/protocol.hpp
+*** ./batsched/src/protocol.hpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/protocol.hpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 6,13 ****
@@ -12328,8 +11304,8 @@ diff -NcrB ./batsched/src/protocol.hpp ./new_batsched/src/protocol.hpp
       // Management functions
       /**
        * @brief Clears inner content. Should be called directly after generate_current_message.
-diff -NcrB ./batsched/src/queue.cpp ./new_batsched/src/queue.cpp
-*** ./batsched/src/queue.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/queue.cpp ./new_batsched/src/queue.cpp
+*** ./batsched/src/queue.cpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/queue.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 39,44 ****
@@ -12398,8 +11374,8 @@ diff -NcrB ./batsched/src/queue.cpp ./new_batsched/src/queue.cpp
 +     sjob->release_date = release_date;
 + }
   
-diff -NcrB ./batsched/src/queue.hpp ./new_batsched/src/queue.hpp
-*** ./batsched/src/queue.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/queue.hpp ./new_batsched/src/queue.hpp
+*** ./batsched/src/queue.hpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/queue.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 10,15 ****
@@ -12476,8 +11452,8 @@ diff -NcrB ./batsched/src/queue.hpp ./new_batsched/src/queue.hpp
   
   private:
       std::list<SortableJob *> _jobs;
-diff -NcrB ./batsched/src/schedule.cpp ./new_batsched/src/schedule.cpp
-*** ./batsched/src/schedule.cpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/schedule.cpp ./new_batsched/src/schedule.cpp
+*** ./batsched/src/schedule.cpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/schedule.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 1,4 ****
@@ -14221,8 +13197,8 @@ diff -NcrB ./batsched/src/schedule.cpp ./new_batsched/src/schedule.cpp
   
               return;
           }
-diff -NcrB ./batsched/src/schedule.hpp ./new_batsched/src/schedule.hpp
-*** ./batsched/src/schedule.hpp	2023-06-29 05:16:39.989848212 -0400
+diff -NcrB '--exclude=.git*' ./batsched/src/schedule.hpp ./new_batsched/src/schedule.hpp
+*** ./batsched/src/schedule.hpp	2023-06-29 06:13:52.537678099 -0400
 --- ./new_batsched/src/schedule.hpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 16,25 ****
