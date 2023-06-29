@@ -10,7 +10,6 @@ cd $downloads_prefix
 git clone https://github.com/oar-team/batsched.git
 cd $downloads_prefix/batsched
 patch -p2 < $basefiles_prefix/batsched.patch
-
 echo "gobin=$GOBIN     gopath=$GOPATH     goroot=$GOROOT    go111module=$GO111MODULE"
 cd $downloads_prefix
 cd ./boost_1_75_0/
@@ -179,10 +178,7 @@ source $myDir/genGmpPC
 source $myDir/genEvPC
 source $myDir/genLoguruPC
 line_number=$i
-cd $downloads_prefix
-git clone https://github.com/oar-team/batsim.git
 cd $downloads_prefix/batsim
-patch -p2 < $basefiles_prefix/batsim.patch
 $python_prefix/bin/meson build --prefix=$install_prefix --buildtype release
 $python_prefix/bin/ninja -C build
 $python_prefix/bin/meson install -C build
@@ -194,10 +190,7 @@ g++ -std=c++11 -o libloguru.so -shared -pthread -fPIC loguru.cpp
 cp $downloads_prefix/loguru/libloguru.so $install_prefix/lib/
 cp $downloads_prefix/loguru/loguru.hpp $install_prefix/include/
 line_number=$i
-cd $downloads_prefix
-git clone https://github.com/oar-team/batsched.git
 cd $downloads_prefix/batsched
-patch -p2 < $basefiles_prefix/batsched.patch
 $python_prefix/bin/meson build --prefix=$install_prefix --buildtype release
 $python_prefix/bin/ninja -C build
 $python_prefix/bin/meson install -C build

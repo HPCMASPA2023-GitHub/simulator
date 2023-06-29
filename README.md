@@ -49,7 +49,6 @@ There are 4 methods of building and deploying our batsim applications.
     - charliecloud is a container technology that works when docker is not an option (think clusters without docker)
     - will compile and install everything you need into a directory
 - charliecloud without internet
-- 
     - charliecloud is a container technology that works when docker is not an option (think clusters without docker)
     - meant to be run where you have internet
         - will compile and install everything you need and will be packaged into a directory to be copied to your setup without internet
@@ -57,15 +56,15 @@ There are 4 methods of building and deploying our batsim applications.
 ## <a name="deploy_how_to"></a> Deploy How To...
 
 ### <a name="deploy_bare_metal"></a> bare-metal
-obtain the code <br />
-
+- obtain the code
+- change directories
+- deploy
 ```
-hello
+git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
+cd simulator/basefiles
+./deploy.sh -f bare-metal --prefix 
 ```
-    git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
-    git clone https
 
-`cd simulator/basefiles` <br />
 
 
 ### <a name="deploy_docker"></a> Docker
