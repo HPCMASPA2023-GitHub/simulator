@@ -15,7 +15,7 @@ These were added to 4 algorithms:
 - fcfs_fast2
 - easy_bf_fast2
 - easy_bf_fast2_holdback
-- conservative_bf $\space \space \space \space \space \space \mathcal{\color{darkred}\leftarrow} \text{\color{darkred} reservations only work with this algorithm}$
+- conservative_bf $\space \space \space \space \space \space \mathcal{\color{darkred}\longleftarrow} \text{\color{darkred} reservations only work with this algorithm}$
 
 In addition to this is also a framework for spinning up simulations and for post processing.
 
