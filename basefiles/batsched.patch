@@ -1,5 +1,5 @@
 diff -NcrB ./batsched/.clang-format ./new_batsched/.clang-format
-*** ./batsched/.clang-format	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.clang-format	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/.clang-format	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,105 ****
@@ -110,7 +110,7 @@ diff -NcrB ./batsched/.clang-format ./new_batsched/.clang-format
 - UseTab:          Never
 --- 0 ----
 diff -NcrB ./batsched/.git/config ./new_batsched/.git/config
-*** ./batsched/.git/config	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/config	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/config	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,11 ****
@@ -127,21 +127,21 @@ diff -NcrB ./batsched/.git/config ./new_batsched/.git/config
 - 	merge = refs/heads/master
 --- 0 ----
 diff -NcrB ./batsched/.git/description ./new_batsched/.git/description
-*** ./batsched/.git/description	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/description	2023-06-29 05:16:39.236501746 -0400
 --- ./new_batsched/.git/description	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - Unnamed repository; edit this file 'description' to name the repository.
 --- 0 ----
 diff -NcrB ./batsched/.git/HEAD ./new_batsched/.git/HEAD
-*** ./batsched/.git/HEAD	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/HEAD	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - ref: refs/heads/master
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/applypatch-msg.sample ./new_batsched/.git/hooks/applypatch-msg.sample
-*** ./batsched/.git/hooks/applypatch-msg.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/applypatch-msg.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/applypatch-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,15 ****
@@ -162,7 +162,7 @@ diff -NcrB ./batsched/.git/hooks/applypatch-msg.sample ./new_batsched/.git/hooks
 - :
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/commit-msg.sample ./new_batsched/.git/hooks/commit-msg.sample
-*** ./batsched/.git/hooks/commit-msg.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/commit-msg.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,24 ****
@@ -192,7 +192,7 @@ diff -NcrB ./batsched/.git/hooks/commit-msg.sample ./new_batsched/.git/hooks/com
 - }
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/fsmonitor-watchman.sample ./new_batsched/.git/hooks/fsmonitor-watchman.sample
-*** ./batsched/.git/hooks/fsmonitor-watchman.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/fsmonitor-watchman.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/fsmonitor-watchman.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,173 ****
@@ -371,7 +371,7 @@ diff -NcrB ./batsched/.git/hooks/fsmonitor-watchman.sample ./new_batsched/.git/h
 - }
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/post-update.sample ./new_batsched/.git/hooks/post-update.sample
-*** ./batsched/.git/hooks/post-update.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/post-update.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/post-update.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,8 ****
@@ -385,7 +385,7 @@ diff -NcrB ./batsched/.git/hooks/post-update.sample ./new_batsched/.git/hooks/po
 - exec git update-server-info
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-applypatch.sample ./new_batsched/.git/hooks/pre-applypatch.sample
-*** ./batsched/.git/hooks/pre-applypatch.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-applypatch.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-applypatch.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,14 ****
@@ -405,7 +405,7 @@ diff -NcrB ./batsched/.git/hooks/pre-applypatch.sample ./new_batsched/.git/hooks
 - :
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-commit.sample ./new_batsched/.git/hooks/pre-commit.sample
-*** ./batsched/.git/hooks/pre-commit.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-commit.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-commit.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,49 ****
@@ -460,7 +460,7 @@ diff -NcrB ./batsched/.git/hooks/pre-commit.sample ./new_batsched/.git/hooks/pre
 - exec git diff-index --check --cached $against --
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-merge-commit.sample ./new_batsched/.git/hooks/pre-merge-commit.sample
-*** ./batsched/.git/hooks/pre-merge-commit.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-merge-commit.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-merge-commit.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,13 ****
@@ -479,7 +479,7 @@ diff -NcrB ./batsched/.git/hooks/pre-merge-commit.sample ./new_batsched/.git/hoo
 - :
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/prepare-commit-msg.sample ./new_batsched/.git/hooks/prepare-commit-msg.sample
-*** ./batsched/.git/hooks/prepare-commit-msg.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/prepare-commit-msg.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/prepare-commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,42 ****
@@ -527,7 +527,7 @@ diff -NcrB ./batsched/.git/hooks/prepare-commit-msg.sample ./new_batsched/.git/h
 - # fi
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-push.sample ./new_batsched/.git/hooks/pre-push.sample
-*** ./batsched/.git/hooks/pre-push.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-push.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-push.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,53 ****
@@ -586,7 +586,7 @@ diff -NcrB ./batsched/.git/hooks/pre-push.sample ./new_batsched/.git/hooks/pre-p
 - exit 0
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-rebase.sample ./new_batsched/.git/hooks/pre-rebase.sample
-*** ./batsched/.git/hooks/pre-rebase.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-rebase.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-rebase.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,169 ****
@@ -761,7 +761,7 @@ diff -NcrB ./batsched/.git/hooks/pre-rebase.sample ./new_batsched/.git/hooks/pre
 - DOC_END
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/pre-receive.sample ./new_batsched/.git/hooks/pre-receive.sample
-*** ./batsched/.git/hooks/pre-receive.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/pre-receive.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/pre-receive.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,24 ****
@@ -791,7 +791,7 @@ diff -NcrB ./batsched/.git/hooks/pre-receive.sample ./new_batsched/.git/hooks/pr
 - fi
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/push-to-checkout.sample ./new_batsched/.git/hooks/push-to-checkout.sample
-*** ./batsched/.git/hooks/push-to-checkout.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/push-to-checkout.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/push-to-checkout.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,78 ****
@@ -875,7 +875,7 @@ diff -NcrB ./batsched/.git/hooks/push-to-checkout.sample ./new_batsched/.git/hoo
 - fi
 --- 0 ----
 diff -NcrB ./batsched/.git/hooks/update.sample ./new_batsched/.git/hooks/update.sample
-*** ./batsched/.git/hooks/update.sample	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/hooks/update.sample	2023-06-29 05:16:39.233168354 -0400
 --- ./new_batsched/.git/hooks/update.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,128 ****
@@ -1010,7 +1010,7 @@ diff -NcrB ./batsched/.git/hooks/update.sample ./new_batsched/.git/hooks/update.
 --- 0 ----
 Binary files ./batsched/.git/index and ./new_batsched/.git/index differ
 diff -NcrB ./batsched/.git/info/exclude ./new_batsched/.git/info/exclude
-*** ./batsched/.git/info/exclude	2023-06-29 03:11:55.447828596 -0400
+*** ./batsched/.git/info/exclude	2023-06-29 05:16:39.236501746 -0400
 --- ./new_batsched/.git/info/exclude	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,6 ****
@@ -1022,30 +1022,30 @@ diff -NcrB ./batsched/.git/info/exclude ./new_batsched/.git/info/exclude
 - # *~
 --- 0 ----
 diff -NcrB ./batsched/.git/logs/HEAD ./new_batsched/.git/logs/HEAD
-*** ./batsched/.git/logs/HEAD	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/logs/HEAD	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/logs/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688022716 -0400	clone: from https://github.com/oar-team/batsched.git
+- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
 --- 0 ----
 diff -NcrB ./batsched/.git/logs/refs/heads/master ./new_batsched/.git/logs/refs/heads/master
-*** ./batsched/.git/logs/refs/heads/master	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/logs/refs/heads/master	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/logs/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688022716 -0400	clone: from https://github.com/oar-team/batsched.git
+- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
 --- 0 ----
 diff -NcrB ./batsched/.git/logs/refs/remotes/origin/HEAD ./new_batsched/.git/logs/refs/remotes/origin/HEAD
-*** ./batsched/.git/logs/refs/remotes/origin/HEAD	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/logs/refs/remotes/origin/HEAD	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/logs/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688022716 -0400	clone: from https://github.com/oar-team/batsched.git
+- 0000000000000000000000000000000000000000 bab23fa5aa9c117d20fa74469147c1ce5fe58160 Craig Walker <cswalke1@coastal.edu> 1688030199 -0400	clone: from https://github.com/oar-team/batsched.git
 --- 0 ----
 Binary files ./batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.idx and ./new_batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.idx differ
 Binary files ./batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.pack and ./new_batsched/.git/objects/pack/pack-4dce4382e653f14632894c957ab647875aab9298.pack differ
 diff -NcrB ./batsched/.git/packed-refs ./new_batsched/.git/packed-refs
-*** ./batsched/.git/packed-refs	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/packed-refs	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/packed-refs	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,15 ****
@@ -1066,21 +1066,21 @@ diff -NcrB ./batsched/.git/packed-refs ./new_batsched/.git/packed-refs
 - ^b020e48b89a675ae681eb5bcead01035405b571e
 --- 0 ----
 diff -NcrB ./batsched/.git/refs/heads/master ./new_batsched/.git/refs/heads/master
-*** ./batsched/.git/refs/heads/master	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/refs/heads/master	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - bab23fa5aa9c117d20fa74469147c1ce5fe58160
 --- 0 ----
 diff -NcrB ./batsched/.git/refs/remotes/origin/HEAD ./new_batsched/.git/refs/remotes/origin/HEAD
-*** ./batsched/.git/refs/remotes/origin/HEAD	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.git/refs/remotes/origin/HEAD	2023-06-29 05:16:39.979848037 -0400
 --- ./new_batsched/.git/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - ref: refs/remotes/origin/master
 --- 0 ----
 diff -NcrB ./batsched/.gitignore ./new_batsched/.gitignore
-*** ./batsched/.gitignore	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.gitignore	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/.gitignore	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,6 ****
@@ -1092,7 +1092,7 @@ diff -NcrB ./batsched/.gitignore ./new_batsched/.gitignore
 - result
 --- 0 ----
 diff -NcrB ./batsched/.gitlab-ci.yml ./new_batsched/.gitlab-ci.yml
-*** ./batsched/.gitlab-ci.yml	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/.gitlab-ci.yml	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/.gitlab-ci.yml	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,36 ****
@@ -1134,7 +1134,7 @@ diff -NcrB ./batsched/.gitlab-ci.yml ./new_batsched/.gitlab-ci.yml
 - #      - /builds/batsim/batsched/integration_tests
 --- 0 ----
 diff -NcrB ./batsched/meson.build ./new_batsched/meson.build
-*** ./batsched/meson.build	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/meson.build	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/meson.build	2023-06-28 08:26:02.127166524 -0400
 ***************
 *** 1,15 ****
@@ -1352,7 +1352,7 @@ diff -NcrB ./batsched/meson.build ./new_batsched/meson.build
   include_dir = include_directories('src')
   
 diff -NcrB ./batsched/src/algo/conservative_bf.cpp ./new_batsched/src/algo/conservative_bf.cpp
-*** ./batsched/src/algo/conservative_bf.cpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/algo/conservative_bf.cpp	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/src/algo/conservative_bf.cpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 3,9 ****
@@ -2834,7 +2834,7 @@ diff -NcrB ./batsched/src/algo/conservative_bf.cpp ./new_batsched/src/algo/conse
   }
 + 
 diff -NcrB ./batsched/src/algo/conservative_bf.hpp ./new_batsched/src/algo/conservative_bf.hpp
-*** ./batsched/src/algo/conservative_bf.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/algo/conservative_bf.hpp	2023-06-29 05:16:39.983181430 -0400
 --- ./new_batsched/src/algo/conservative_bf.hpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 3,29 ****
@@ -6269,7 +6269,7 @@ diff -NcrB ./batsched/src/algo/easy_bf_fast2.hpp ./new_batsched/src/algo/easy_bf
 + 
 + };
 diff -NcrB ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp ./new_batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp
-*** ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-29 05:16:39.986514820 -0400
 --- ./new_batsched/src/algo/energy_bf_monitoring_inertial_shutdown.hpp	2023-06-28 08:26:02.130499916 -0400
 ***************
 *** 2,9 ****
@@ -7446,7 +7446,7 @@ diff -NcrB ./batsched/src/algo/fcfs_fast2.hpp ./new_batsched/src/algo/fcfs_fast2
 + 
 + };
 diff -NcrB ./batsched/src/algo/submitter.cpp ./new_batsched/src/algo/submitter.cpp
-*** ./batsched/src/algo/submitter.cpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/algo/submitter.cpp	2023-06-29 05:16:39.986514820 -0400
 --- ./new_batsched/src/algo/submitter.cpp	2023-06-28 08:26:02.133833308 -0400
 ***************
 *** 72,77 ****
@@ -7459,7 +7459,7 @@ diff -NcrB ./batsched/src/algo/submitter.cpp ./new_batsched/src/algo/submitter.c
   
   void Submitter::on_simulation_end(double date)
 diff -NcrB ./batsched/src/algo/submitter.hpp ./new_batsched/src/algo/submitter.hpp
-*** ./batsched/src/algo/submitter.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/algo/submitter.hpp	2023-06-29 05:16:39.986514820 -0400
 --- ./new_batsched/src/algo/submitter.hpp	2023-06-28 08:26:02.130499916 -0400
 ***************
 *** 44,49 ****
@@ -7840,7 +7840,7 @@ diff -NcrB ./batsched/src/data_storage.hpp ./new_batsched/src/data_storage.hpp
 +     std::string _key_subparts_separator = ":"; //!< The key subparts separator, which is put between the instance key prefix and the user-given key.
 + };
 diff -NcrB ./batsched/src/decision.cpp ./new_batsched/src/decision.cpp
-*** ./batsched/src/decision.cpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/decision.cpp	2023-06-29 05:16:39.986514820 -0400
 --- ./new_batsched/src/decision.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 3,8 ****
@@ -8332,7 +8332,7 @@ diff -NcrB ./batsched/src/decision.cpp ./new_batsched/src/decision.cpp
 +     _redis = redis;
 + }
 diff -NcrB ./batsched/src/decision.hpp ./new_batsched/src/decision.hpp
-*** ./batsched/src/decision.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/decision.hpp	2023-06-29 05:16:39.986514820 -0400
 --- ./new_batsched/src/decision.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 4,11 ****
@@ -10590,7 +10590,7 @@ diff -NcrB ./batsched/src/external/pointers.hpp ./new_batsched/src/external/poin
 + 
 + }
 diff -NcrB ./batsched/src/isalgorithm.cpp ./new_batsched/src/isalgorithm.cpp
-*** ./batsched/src/isalgorithm.cpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/isalgorithm.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/isalgorithm.cpp	2023-06-28 08:26:02.137166701 -0400
 ***************
 *** 1,6 ****
@@ -10704,7 +10704,7 @@ diff -NcrB ./batsched/src/isalgorithm.cpp ./new_batsched/src/isalgorithm.cpp
   {
       (void) date;
 diff -NcrB ./batsched/src/isalgorithm.hpp ./new_batsched/src/isalgorithm.hpp
-*** ./batsched/src/isalgorithm.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/isalgorithm.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/isalgorithm.hpp	2023-06-28 08:26:02.147166876 -0400
 ***************
 *** 5,10 ****
@@ -10849,7 +10849,7 @@ diff -NcrB ./batsched/src/isalgorithm.hpp ./new_batsched/src/isalgorithm.hpp
 !     double _consumed_joules;
   };
 diff -NcrB ./batsched/src/json_workload.cpp ./new_batsched/src/json_workload.cpp
-*** ./batsched/src/json_workload.cpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/json_workload.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/json_workload.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 4,11 ****
@@ -10997,7 +10997,7 @@ diff -NcrB ./batsched/src/json_workload.cpp ./new_batsched/src/json_workload.cpp
   }
   
 diff -NcrB ./batsched/src/json_workload.hpp ./new_batsched/src/json_workload.hpp
-*** ./batsched/src/json_workload.hpp	2023-06-29 03:11:56.367844122 -0400
+*** ./batsched/src/json_workload.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/json_workload.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 5,11 ****
@@ -11094,7 +11094,7 @@ diff -NcrB ./batsched/src/json_workload.hpp ./new_batsched/src/json_workload.hpp
   };
 + 
 diff -NcrB ./batsched/src/locality.cpp ./new_batsched/src/locality.cpp
-*** ./batsched/src/locality.cpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/locality.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/locality.cpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 37,43 ****
@@ -11157,7 +11157,7 @@ diff -NcrB ./batsched/src/locality.cpp ./new_batsched/src/locality.cpp
       return false;
   }
 diff -NcrB ./batsched/src/locality.hpp ./new_batsched/src/locality.hpp
-*** ./batsched/src/locality.hpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/locality.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/locality.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 10,15 ****
@@ -11325,7 +11325,7 @@ diff -NcrB ./batsched/src/machine.hpp ./new_batsched/src/machine.hpp
 + #endif
 \ No newline at end of file
 diff -NcrB ./batsched/src/main.cpp ./new_batsched/src/main.cpp
-*** ./batsched/src/main.cpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/main.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/main.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 1,7 ****
@@ -11972,7 +11972,7 @@ diff -NcrB ./batsched/src/main.cpp ./new_batsched/src/main.cpp
       }
   }
 diff -NcrB ./batsched/src/protocol.cpp ./new_batsched/src/protocol.cpp
-*** ./batsched/src/protocol.cpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/protocol.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/protocol.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 4,9 ****
@@ -12188,7 +12188,7 @@ diff -NcrB ./batsched/src/protocol.cpp ./new_batsched/src/protocol.cpp
       event.AddMember("data", data, _alloc);
   
 diff -NcrB ./batsched/src/protocol.hpp ./new_batsched/src/protocol.hpp
-*** ./batsched/src/protocol.hpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/protocol.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/protocol.hpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 6,13 ****
@@ -12329,7 +12329,7 @@ diff -NcrB ./batsched/src/protocol.hpp ./new_batsched/src/protocol.hpp
       /**
        * @brief Clears inner content. Should be called directly after generate_current_message.
 diff -NcrB ./batsched/src/queue.cpp ./new_batsched/src/queue.cpp
-*** ./batsched/src/queue.cpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/queue.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/queue.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 39,44 ****
@@ -12399,7 +12399,7 @@ diff -NcrB ./batsched/src/queue.cpp ./new_batsched/src/queue.cpp
 + }
   
 diff -NcrB ./batsched/src/queue.hpp ./new_batsched/src/queue.hpp
-*** ./batsched/src/queue.hpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/queue.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/queue.hpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 10,15 ****
@@ -12477,7 +12477,7 @@ diff -NcrB ./batsched/src/queue.hpp ./new_batsched/src/queue.hpp
   private:
       std::list<SortableJob *> _jobs;
 diff -NcrB ./batsched/src/schedule.cpp ./new_batsched/src/schedule.cpp
-*** ./batsched/src/schedule.cpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/schedule.cpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/schedule.cpp	2023-06-28 08:26:02.140500092 -0400
 ***************
 *** 1,4 ****
@@ -14222,7 +14222,7 @@ diff -NcrB ./batsched/src/schedule.cpp ./new_batsched/src/schedule.cpp
               return;
           }
 diff -NcrB ./batsched/src/schedule.hpp ./new_batsched/src/schedule.hpp
-*** ./batsched/src/schedule.hpp	2023-06-29 03:11:56.371177512 -0400
+*** ./batsched/src/schedule.hpp	2023-06-29 05:16:39.989848212 -0400
 --- ./new_batsched/src/schedule.hpp	2023-06-28 08:26:02.143833485 -0400
 ***************
 *** 16,25 ****

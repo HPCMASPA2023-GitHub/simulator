@@ -114,7 +114,7 @@ fi
 fi
 if [ $CLEAN = true ];then
     basefiles=$MY_PATH
-    rm -rf $basefiles/CharlieCloud_compile/download $basefiles/Charlie_compile/boost_1_75_0
+    rm -rf $basefiles/CharlieCloud_compile/download $basefiles/CharlieCloud_compile/boost_1_75_0
     rm -rf $basefiles/charliecloud
     rm -rf $basefiles/Docker_compile/download $basefiles/Docker_compile/boost_1_75_0
     rm -f $basefiles/deploy.config
@@ -336,7 +336,8 @@ cd $basefiles/CharlieCloud_compile
 wget --no-check-certificate https://sourceforge.net/projects/boost/files/boost/1.75.0/boost_1_75_0.tar.gz/download
 tar -xf ./download
 chmod -R 777 ./boost_1_75_0
-ch-image build --force -t batsim -f Dockerfile ./
+ch-image delete batsim
+ch-image build --force --no-cache -t batsim -f Dockerfile ./
 ch-convert batsim ${basefiles%/basefiles}/batsim_ch
 cd ${basefiles%/basefiles}
 mkdir -p experiments

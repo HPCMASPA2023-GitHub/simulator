@@ -9124,7 +9124,7 @@ diff -NcrB "./batsim/ccu-docs/How To Use Batsim Framework/Batsim_Framework.tex" 
 + 
 + \end{document}
 diff -NcrB ./batsim/default.nix ./new_batsim/default.nix
-*** ./batsim/default.nix	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/default.nix	2023-06-29 05:16:52.960074334 -0400
 --- ./new_batsim/default.nix	2023-06-28 08:03:20.086379342 -0400
 ***************
 *** 19,35 ****
@@ -11885,7 +11885,7 @@ diff -NcrB ./batsim/doc/doxygen_mainpage.md ./new_batsim/doc/doxygen_mainpage.md
 + If you are more interested about how to use Batsim or how it works,
 + you should visit [Batsim's main documentation](https://batsim.rtfd.io).
 diff -NcrB ./batsim/docs/changelog.rst ./new_batsim/docs/changelog.rst
-*** ./batsim/docs/changelog.rst	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/docs/changelog.rst	2023-06-29 05:16:52.960074334 -0400
 --- ./new_batsim/docs/changelog.rst	2023-06-28 08:03:20.099712912 -0400
 ***************
 *** 30,36 ****
@@ -11915,7 +11915,7 @@ diff -NcrB ./batsim/docs/changelog.rst ./new_batsim/docs/changelog.rst
   Miscellaneous
   ~~~~~~~~~~~~~
 diff -NcrB ./batsim/docs/ci.rst ./new_batsim/docs/ci.rst
-*** ./batsim/docs/ci.rst	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/docs/ci.rst	2023-06-29 05:16:52.960074334 -0400
 --- ./new_batsim/docs/ci.rst	2023-06-28 08:03:20.099712912 -0400
 ***************
 *** 9,20 ****
@@ -11945,7 +11945,7 @@ diff -NcrB ./batsim/docs/ci.rst ./new_batsim/docs/ci.rst
   .. _Batsim's Framagit Pipelines: https://framagit.org/batsim/batsim/pipelines
   .. _Dockerhub: https://hub.docker.com/repository/docker/oarteam/batsim
 diff -NcrB ./batsim/docs/doxygen/Doxyfile ./new_batsim/docs/doxygen/Doxyfile
-*** ./batsim/docs/doxygen/Doxyfile	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/docs/doxygen/Doxyfile	2023-06-29 05:16:52.960074334 -0400
 --- ./new_batsim/docs/doxygen/Doxyfile	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,2362 ****
@@ -14313,7 +14313,7 @@ diff -NcrB ./batsim/docs/doxygen/Doxyfile ./new_batsim/docs/doxygen/Doxyfile
 - DOT_CLEANUP            = YES
 --- 0 ----
 diff -NcrB ./batsim/docs/doxygen/doxygen_mainpage.md ./new_batsim/docs/doxygen/doxygen_mainpage.md
-*** ./batsim/docs/doxygen/doxygen_mainpage.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/docs/doxygen/doxygen_mainpage.md	2023-06-29 05:16:52.960074334 -0400
 --- ./new_batsim/docs/doxygen/doxygen_mainpage.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,8 ****
@@ -14327,7 +14327,7 @@ diff -NcrB ./batsim/docs/doxygen/doxygen_mainpage.md ./new_batsim/docs/doxygen/d
 - you should visit [Batsim's main documentation](https://batsim.rtfd.io).
 --- 0 ----
 diff -NcrB ./batsim/docs/tuto-first-simulation/show_versions.out ./new_batsim/docs/tuto-first-simulation/show_versions.out
-*** ./batsim/docs/tuto-first-simulation/show_versions.out	2023-06-29 03:10:19.562877082 -0400
+*** ./batsim/docs/tuto-first-simulation/show_versions.out	2023-06-29 05:16:52.973407898 -0400
 --- ./new_batsim/docs/tuto-first-simulation/show_versions.out	2023-06-28 08:03:20.139713624 -0400
 ***************
 *** 1,4 ****
@@ -14341,7 +14341,7 @@ diff -NcrB ./batsim/docs/tuto-first-simulation/show_versions.out ./new_batsim/do
   batsched: 1.4.0
   robin: v1.2.0
 diff -NcrB ./batsim/docs/tuto-result-analysis/tuto.rst ./new_batsim/docs/tuto-result-analysis/tuto.rst
-*** ./batsim/docs/tuto-result-analysis/tuto.rst	2023-06-29 03:10:19.562877082 -0400
+*** ./batsim/docs/tuto-result-analysis/tuto.rst	2023-06-29 05:16:52.973407898 -0400
 --- ./new_batsim/docs/tuto-result-analysis/tuto.rst	2023-06-28 08:03:20.133046837 -0400
 ***************
 *** 48,54 ****
@@ -14361,7 +14361,7 @@ diff -NcrB ./batsim/docs/tuto-result-analysis/tuto.rst ./new_batsim/docs/tuto-re
   
   
 diff -NcrB ./batsim/flake.nix ./new_batsim/flake.nix
-*** ./batsim/flake.nix	2023-06-29 03:10:19.569543861 -0400
+*** ./batsim/flake.nix	2023-06-29 05:16:52.986741464 -0400
 --- ./new_batsim/flake.nix	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,3 ****
@@ -14370,7 +14370,7 @@ diff -NcrB ./batsim/flake.nix ./new_batsim/flake.nix
 - }
 --- 0 ----
 diff -NcrB ./batsim/.git/config ./new_batsim/.git/config
-*** ./batsim/.git/config	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/config	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/config	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,11 ****
@@ -14387,21 +14387,21 @@ diff -NcrB ./batsim/.git/config ./new_batsim/.git/config
 - 	merge = refs/heads/master
 --- 0 ----
 diff -NcrB ./batsim/.git/description ./new_batsim/.git/description
-*** ./batsim/.git/description	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/description	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/description	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - Unnamed repository; edit this file 'description' to name the repository.
 --- 0 ----
 diff -NcrB ./batsim/.git/HEAD ./new_batsim/.git/HEAD
-*** ./batsim/.git/HEAD	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/HEAD	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - ref: refs/heads/master
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/applypatch-msg.sample ./new_batsim/.git/hooks/applypatch-msg.sample
-*** ./batsim/.git/hooks/applypatch-msg.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/applypatch-msg.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/applypatch-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,15 ****
@@ -14422,7 +14422,7 @@ diff -NcrB ./batsim/.git/hooks/applypatch-msg.sample ./new_batsim/.git/hooks/app
 - :
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/commit-msg.sample ./new_batsim/.git/hooks/commit-msg.sample
-*** ./batsim/.git/hooks/commit-msg.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/commit-msg.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,24 ****
@@ -14452,7 +14452,7 @@ diff -NcrB ./batsim/.git/hooks/commit-msg.sample ./new_batsim/.git/hooks/commit-
 - }
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/fsmonitor-watchman.sample ./new_batsim/.git/hooks/fsmonitor-watchman.sample
-*** ./batsim/.git/hooks/fsmonitor-watchman.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/fsmonitor-watchman.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/fsmonitor-watchman.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,173 ****
@@ -14631,7 +14631,7 @@ diff -NcrB ./batsim/.git/hooks/fsmonitor-watchman.sample ./new_batsim/.git/hooks
 - }
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/post-update.sample ./new_batsim/.git/hooks/post-update.sample
-*** ./batsim/.git/hooks/post-update.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/post-update.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/post-update.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,8 ****
@@ -14645,7 +14645,7 @@ diff -NcrB ./batsim/.git/hooks/post-update.sample ./new_batsim/.git/hooks/post-u
 - exec git update-server-info
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-applypatch.sample ./new_batsim/.git/hooks/pre-applypatch.sample
-*** ./batsim/.git/hooks/pre-applypatch.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-applypatch.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-applypatch.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,14 ****
@@ -14665,7 +14665,7 @@ diff -NcrB ./batsim/.git/hooks/pre-applypatch.sample ./new_batsim/.git/hooks/pre
 - :
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-commit.sample ./new_batsim/.git/hooks/pre-commit.sample
-*** ./batsim/.git/hooks/pre-commit.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-commit.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-commit.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,49 ****
@@ -14720,7 +14720,7 @@ diff -NcrB ./batsim/.git/hooks/pre-commit.sample ./new_batsim/.git/hooks/pre-com
 - exec git diff-index --check --cached $against --
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-merge-commit.sample ./new_batsim/.git/hooks/pre-merge-commit.sample
-*** ./batsim/.git/hooks/pre-merge-commit.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-merge-commit.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-merge-commit.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,13 ****
@@ -14739,7 +14739,7 @@ diff -NcrB ./batsim/.git/hooks/pre-merge-commit.sample ./new_batsim/.git/hooks/p
 - :
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/prepare-commit-msg.sample ./new_batsim/.git/hooks/prepare-commit-msg.sample
-*** ./batsim/.git/hooks/prepare-commit-msg.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/prepare-commit-msg.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/prepare-commit-msg.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,42 ****
@@ -14787,7 +14787,7 @@ diff -NcrB ./batsim/.git/hooks/prepare-commit-msg.sample ./new_batsim/.git/hooks
 - # fi
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-push.sample ./new_batsim/.git/hooks/pre-push.sample
-*** ./batsim/.git/hooks/pre-push.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-push.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-push.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,53 ****
@@ -14846,7 +14846,7 @@ diff -NcrB ./batsim/.git/hooks/pre-push.sample ./new_batsim/.git/hooks/pre-push.
 - exit 0
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-rebase.sample ./new_batsim/.git/hooks/pre-rebase.sample
-*** ./batsim/.git/hooks/pre-rebase.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-rebase.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-rebase.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,169 ****
@@ -15021,7 +15021,7 @@ diff -NcrB ./batsim/.git/hooks/pre-rebase.sample ./new_batsim/.git/hooks/pre-reb
 - DOC_END
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/pre-receive.sample ./new_batsim/.git/hooks/pre-receive.sample
-*** ./batsim/.git/hooks/pre-receive.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/pre-receive.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/pre-receive.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,24 ****
@@ -15051,7 +15051,7 @@ diff -NcrB ./batsim/.git/hooks/pre-receive.sample ./new_batsim/.git/hooks/pre-re
 - fi
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/push-to-checkout.sample ./new_batsim/.git/hooks/push-to-checkout.sample
-*** ./batsim/.git/hooks/push-to-checkout.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/push-to-checkout.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/push-to-checkout.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,78 ****
@@ -15135,7 +15135,7 @@ diff -NcrB ./batsim/.git/hooks/push-to-checkout.sample ./new_batsim/.git/hooks/p
 - fi
 --- 0 ----
 diff -NcrB ./batsim/.git/hooks/update.sample ./new_batsim/.git/hooks/update.sample
-*** ./batsim/.git/hooks/update.sample	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/hooks/update.sample	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/hooks/update.sample	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,128 ****
@@ -15270,7 +15270,7 @@ diff -NcrB ./batsim/.git/hooks/update.sample ./new_batsim/.git/hooks/update.samp
 --- 0 ----
 Binary files ./batsim/.git/index and ./new_batsim/.git/index differ
 diff -NcrB ./batsim/.git/info/exclude ./new_batsim/.git/info/exclude
-*** ./batsim/.git/info/exclude	2023-06-29 03:10:10.912731100 -0400
+*** ./batsim/.git/info/exclude	2023-06-29 05:16:44.723264067 -0400
 --- ./new_batsim/.git/info/exclude	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,6 ****
@@ -15282,30 +15282,30 @@ diff -NcrB ./batsim/.git/info/exclude ./new_batsim/.git/info/exclude
 - # *~
 --- 0 ----
 diff -NcrB ./batsim/.git/logs/HEAD ./new_batsim/.git/logs/HEAD
-*** ./batsim/.git/logs/HEAD	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/logs/HEAD	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/logs/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688022619 -0400	clone: from https://github.com/oar-team/batsim.git
+- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688030212 -0400	clone: from https://github.com/oar-team/batsim.git
 --- 0 ----
 diff -NcrB ./batsim/.git/logs/refs/heads/master ./new_batsim/.git/logs/refs/heads/master
-*** ./batsim/.git/logs/refs/heads/master	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/logs/refs/heads/master	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/logs/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688022619 -0400	clone: from https://github.com/oar-team/batsim.git
+- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688030212 -0400	clone: from https://github.com/oar-team/batsim.git
 --- 0 ----
 diff -NcrB ./batsim/.git/logs/refs/remotes/origin/HEAD ./new_batsim/.git/logs/refs/remotes/origin/HEAD
-*** ./batsim/.git/logs/refs/remotes/origin/HEAD	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/logs/refs/remotes/origin/HEAD	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/logs/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
-- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688022619 -0400	clone: from https://github.com/oar-team/batsim.git
+- 0000000000000000000000000000000000000000 e3dbc246c5e3acd117a84909d351b94bfb6e4a59 Craig Walker <cswalke1@coastal.edu> 1688030212 -0400	clone: from https://github.com/oar-team/batsim.git
 --- 0 ----
 Binary files ./batsim/.git/objects/pack/pack-255ee8a1141ca9e8d33bad72b015c7b3a6e66519.idx and ./new_batsim/.git/objects/pack/pack-255ee8a1141ca9e8d33bad72b015c7b3a6e66519.idx differ
 Binary files ./batsim/.git/objects/pack/pack-255ee8a1141ca9e8d33bad72b015c7b3a6e66519.pack and ./new_batsim/.git/objects/pack/pack-255ee8a1141ca9e8d33bad72b015c7b3a6e66519.pack differ
 diff -NcrB ./batsim/.git/packed-refs ./new_batsim/.git/packed-refs
-*** ./batsim/.git/packed-refs	2023-06-29 03:10:19.549543523 -0400
+*** ./batsim/.git/packed-refs	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/packed-refs	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,46 ****
@@ -15357,21 +15357,21 @@ diff -NcrB ./batsim/.git/packed-refs ./new_batsim/.git/packed-refs
 - ^da671ef8f74c953c90d91776add3ffbce55da32a
 --- 0 ----
 diff -NcrB ./batsim/.git/refs/heads/master ./new_batsim/.git/refs/heads/master
-*** ./batsim/.git/refs/heads/master	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/refs/heads/master	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/refs/heads/master	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - e3dbc246c5e3acd117a84909d351b94bfb6e4a59
 --- 0 ----
 diff -NcrB ./batsim/.git/refs/remotes/origin/HEAD ./new_batsim/.git/refs/remotes/origin/HEAD
-*** ./batsim/.git/refs/remotes/origin/HEAD	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.git/refs/remotes/origin/HEAD	2023-06-29 05:16:52.953407550 -0400
 --- ./new_batsim/.git/refs/remotes/origin/HEAD	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1 ****
 - ref: refs/remotes/origin/master
 --- 0 ----
 diff -NcrB ./batsim/.github/ISSUE_TEMPLATE/bug_report.md ./new_batsim/.github/ISSUE_TEMPLATE/bug_report.md
-*** ./batsim/.github/ISSUE_TEMPLATE/bug_report.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.github/ISSUE_TEMPLATE/bug_report.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.github/ISSUE_TEMPLATE/bug_report.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,24 ****
@@ -15401,7 +15401,7 @@ diff -NcrB ./batsim/.github/ISSUE_TEMPLATE/bug_report.md ./new_batsim/.github/IS
 - (Share any insight you have about the bug.)
 --- 0 ----
 diff -NcrB ./batsim/.github/ISSUE_TEMPLATE/feature_request.md ./new_batsim/.github/ISSUE_TEMPLATE/feature_request.md
-*** ./batsim/.github/ISSUE_TEMPLATE/feature_request.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.github/ISSUE_TEMPLATE/feature_request.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.github/ISSUE_TEMPLATE/feature_request.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,20 ****
@@ -15427,7 +15427,7 @@ diff -NcrB ./batsim/.github/ISSUE_TEMPLATE/feature_request.md ./new_batsim/.gith
 - (Add any other context about the feature request here.)
 --- 0 ----
 diff -NcrB ./batsim/.github/pull_request_template.md ./new_batsim/.github/pull_request_template.md
-*** ./batsim/.github/pull_request_template.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.github/pull_request_template.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.github/pull_request_template.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,16 ****
@@ -15449,7 +15449,7 @@ diff -NcrB ./batsim/.github/pull_request_template.md ./new_batsim/.github/pull_r
 - - [ ] Test results are not worse than before. [How to run Batsim tests?](https://batsim.readthedocs.io/en/latest/howto-test.html)
 --- 0 ----
 diff -NcrB ./batsim/.github/workflows/build-docker-containers.yml ./new_batsim/.github/workflows/build-docker-containers.yml
-*** ./batsim/.github/workflows/build-docker-containers.yml	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.github/workflows/build-docker-containers.yml	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.github/workflows/build-docker-containers.yml	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,35 ****
@@ -15490,7 +15490,7 @@ diff -NcrB ./batsim/.github/workflows/build-docker-containers.yml ./new_batsim/.
 -           docker push oarteam/batsim:latest
 --- 0 ----
 diff -NcrB ./batsim/.github/workflows/notify-mattermost.yml ./new_batsim/.github/workflows/notify-mattermost.yml
-*** ./batsim/.github/workflows/notify-mattermost.yml	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.github/workflows/notify-mattermost.yml	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.github/workflows/notify-mattermost.yml	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,56 ****
@@ -15552,7 +15552,7 @@ diff -NcrB ./batsim/.github/workflows/notify-mattermost.yml ./new_batsim/.github
 -         uses: mattermost/action-mattermost-notify@master
 --- 0 ----
 diff -NcrB ./batsim/.gitignore ./new_batsim/.gitignore
-*** ./batsim/.gitignore	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.gitignore	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.gitignore	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,23 ****
@@ -15581,7 +15581,7 @@ diff -NcrB ./batsim/.gitignore ./new_batsim/.gitignore
 - tags
 --- 0 ----
 diff -NcrB ./batsim/.gitlab/issue_templates/bug_report.md ./new_batsim/.gitlab/issue_templates/bug_report.md
-*** ./batsim/.gitlab/issue_templates/bug_report.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.gitlab/issue_templates/bug_report.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.gitlab/issue_templates/bug_report.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,17 ****
@@ -15604,7 +15604,7 @@ diff -NcrB ./batsim/.gitlab/issue_templates/bug_report.md ./new_batsim/.gitlab/i
 - /label ~BUG
 --- 0 ----
 diff -NcrB ./batsim/.gitlab/issue_templates/feature_request.md ./new_batsim/.gitlab/issue_templates/feature_request.md
-*** ./batsim/.gitlab/issue_templates/feature_request.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.gitlab/issue_templates/feature_request.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.gitlab/issue_templates/feature_request.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,13 ****
@@ -15623,7 +15623,7 @@ diff -NcrB ./batsim/.gitlab/issue_templates/feature_request.md ./new_batsim/.git
 - /label ~"Feature request"
 --- 0 ----
 diff -NcrB ./batsim/.gitlab/merge_request_templates/recommended.md ./new_batsim/.gitlab/merge_request_templates/recommended.md
-*** ./batsim/.gitlab/merge_request_templates/recommended.md	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.gitlab/merge_request_templates/recommended.md	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.gitlab/merge_request_templates/recommended.md	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,16 ****
@@ -15645,7 +15645,7 @@ diff -NcrB ./batsim/.gitlab/merge_request_templates/recommended.md ./new_batsim/
 - - [ ] Test results are not worse than before. [How to run Batsim tests?](https://batsim.readthedocs.io/en/latest/howto-test.html)
 --- 0 ----
 diff -NcrB ./batsim/.gitlab-ci.yml ./new_batsim/.gitlab-ci.yml
-*** ./batsim/.gitlab-ci.yml	2023-06-29 03:10:19.552876912 -0400
+*** ./batsim/.gitlab-ci.yml	2023-06-29 05:16:52.956740942 -0400
 --- ./new_batsim/.gitlab-ci.yml	1969-12-31 19:00:00.000000000 -0500
 ***************
 *** 1,70 ****
@@ -15721,7 +15721,7 @@ diff -NcrB ./batsim/.gitlab-ci.yml ./new_batsim/.gitlab-ci.yml
 -     - DO_NOT_CHECK_VERSION=1 nix-shell ./tuto-env-master.nix --command './run_simulation_robin.bash'
 --- 0 ----
 diff -NcrB ./batsim/meson.build ./new_batsim/meson.build
-*** ./batsim/meson.build	2023-06-29 03:10:19.569543861 -0400
+*** ./batsim/meson.build	2023-06-29 05:16:52.986741464 -0400
 --- ./new_batsim/meson.build	2023-06-28 08:03:20.186381119 -0400
 ***************
 *** 26,31 ****
@@ -15735,7 +15735,7 @@ diff -NcrB ./batsim/meson.build ./new_batsim/meson.build
   # - https://releases.llvm.org/11.0.1/projects/libcxx/docs/UsingLibcxx.html#using-filesystem
   # - https://gcc.gnu.org/gcc-9/changes.html
 diff -NcrB ./batsim/src/batsim.cpp ./new_batsim/src/batsim.cpp
-*** ./batsim/src/batsim.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/batsim.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/batsim.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 29,34 ****
@@ -16256,7 +16256,7 @@ diff -NcrB ./batsim/src/batsim.cpp ./new_batsim/src/batsim.cpp
       // others
       std::string sched_config;
 diff -NcrB ./batsim/src/batsim.hpp ./new_batsim/src/batsim.hpp
-*** ./batsim/src/batsim.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/batsim.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/batsim.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 112,117 ****
@@ -16321,7 +16321,7 @@ diff -NcrB ./batsim/src/batsim_tools.hpp ./new_batsim/src/batsim_tools.hpp
 + #endif
 \ No newline at end of file
 diff -NcrB ./batsim/src/context.cpp ./new_batsim/src/context.cpp
-*** ./batsim/src/context.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/context.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/context.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 1,8 ****
@@ -16335,7 +16335,7 @@ diff -NcrB ./batsim/src/context.cpp ./new_batsim/src/context.cpp
       for (auto it : event_lists)
 --- 1,5 ----
 diff -NcrB ./batsim/src/context.hpp ./new_batsim/src/context.hpp
-*** ./batsim/src/context.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/context.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/context.hpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 83,88 ****
@@ -16356,7 +16356,7 @@ diff -NcrB ./batsim/src/context.hpp ./new_batsim/src/context.hpp
       ~BatsimContext();
   };
 diff -NcrB ./batsim/src/events.cpp ./new_batsim/src/events.cpp
-*** ./batsim/src/events.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/events.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/events.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 31,43 ****
@@ -16427,7 +16427,7 @@ diff -NcrB ./batsim/src/events.cpp ./new_batsim/src/events.cpp
       {
           GenericEventData * data = new GenericEventData;
 diff -NcrB ./batsim/src/events.hpp ./new_batsim/src/events.hpp
-*** ./batsim/src/events.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/events.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/events.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 20,25 ****
@@ -16454,7 +16454,7 @@ diff -NcrB ./batsim/src/events.hpp ./new_batsim/src/events.hpp
    * @brief Represents an event
    */
 diff -NcrB ./batsim/src/export.cpp ./new_batsim/src/export.cpp
-*** ./batsim/src/export.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/export.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/export.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 11,16 ****
@@ -16692,7 +16692,7 @@ diff -NcrB ./batsim/src/export.cpp ./new_batsim/src/export.cpp
       for (string & mit : _job_keys)
       {
 diff -NcrB ./batsim/src/ipp.hpp ./new_batsim/src/ipp.hpp
-*** ./batsim/src/ipp.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/ipp.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/ipp.hpp	2023-06-28 08:03:20.246382185 -0400
 ***************
 *** 18,23 ****
@@ -16763,7 +16763,7 @@ diff -NcrB ./batsim/src/ipp.hpp ./new_batsim/src/ipp.hpp
   };
   
 diff -NcrB ./batsim/src/jobs.cpp ./new_batsim/src/jobs.cpp
-*** ./batsim/src/jobs.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/jobs.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/jobs.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 7,16 ****
@@ -17164,7 +17164,7 @@ diff -NcrB ./batsim/src/jobs.cpp ./new_batsim/src/jobs.cpp
       if (json_desc.HasMember("smpi_ranks_to_hosts_mapping"))
       {
 diff -NcrB ./batsim/src/jobs_execution.cpp ./new_batsim/src/jobs_execution.cpp
-*** ./batsim/src/jobs_execution.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/jobs_execution.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/jobs_execution.cpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 10,15 ****
@@ -17310,7 +17310,7 @@ diff -NcrB ./batsim/src/jobs_execution.cpp ./new_batsim/src/jobs_execution.cpp
       send_message("server", IPMessageType::KILLING_DONE, static_cast<void*>(message));
   }
 diff -NcrB ./batsim/src/jobs_execution.hpp ./new_batsim/src/jobs_execution.hpp
-*** ./batsim/src/jobs_execution.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/jobs_execution.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/jobs_execution.hpp	2023-06-28 08:03:20.229715222 -0400
 ***************
 *** 7,12 ****
@@ -17358,7 +17358,7 @@ diff -NcrB ./batsim/src/jobs_execution.hpp ./new_batsim/src/jobs_execution.hpp
   /**
    * @brief Cancels the ptask and subptask Executor associated with this BatTask, if any
 diff -NcrB ./batsim/src/jobs.hpp ./new_batsim/src/jobs.hpp
-*** ./batsim/src/jobs.hpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/jobs.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/jobs.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 224,230 ****
@@ -17427,7 +17427,7 @@ diff -NcrB ./batsim/src/jobs.hpp ./new_batsim/src/jobs.hpp
   
   /**
 diff -NcrB ./batsim/src/job_submitter.cpp ./new_batsim/src/job_submitter.cpp
-*** ./batsim/src/job_submitter.cpp	2023-06-29 03:10:19.572877250 -0400
+*** ./batsim/src/job_submitter.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/job_submitter.cpp	2023-06-28 08:03:20.229715222 -0400
 ***************
 *** 411,417 ****
@@ -17447,7 +17447,7 @@ diff -NcrB ./batsim/src/job_submitter.cpp ./new_batsim/src/job_submitter.cpp
           auto actor = simgrid::s4u::Actor::create(pname.c_str(),
                                                    context->machines[alloc->machine_ids.first_element()]->host,
 diff -NcrB ./batsim/src/machines.cpp ./new_batsim/src/machines.cpp
-*** ./batsim/src/machines.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/machines.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/machines.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 11,16 ****
@@ -17582,7 +17582,7 @@ diff -NcrB ./batsim/src/machines.cpp ./new_batsim/src/machines.cpp
       }
       else
 diff -NcrB ./batsim/src/machines.hpp ./new_batsim/src/machines.hpp
-*** ./batsim/src/machines.hpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/machines.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/machines.hpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 81,86 ****
@@ -17599,7 +17599,7 @@ diff -NcrB ./batsim/src/machines.hpp ./new_batsim/src/machines.hpp
        * @brief Returns whether the Machine has the given role
        * @param[in] role The role whose presence is to be checked
 diff -NcrB ./batsim/src/network.cpp ./new_batsim/src/network.cpp
-*** ./batsim/src/network.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/network.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/network.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 50,56 ****
@@ -17612,7 +17612,7 @@ diff -NcrB ./batsim/src/network.cpp ./new_batsim/src/network.cpp
           long double elapsed_microseconds = static_cast<long double>(chrono::duration <long double, micro> (end - start).count());
 --- 50,55 ----
 diff -NcrB ./batsim/src/profiles.cpp ./new_batsim/src/profiles.cpp
-*** ./batsim/src/profiles.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/profiles.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/profiles.cpp	2023-06-28 08:03:20.236382007 -0400
 ***************
 *** 7,14 ****
@@ -17723,7 +17723,7 @@ diff -NcrB ./batsim/src/profiles.cpp ./new_batsim/src/profiles.cpp
           */
           profile->type = ProfileType::PARALLEL_HOMOGENEOUS_TOTAL_AMOUNT;
 diff -NcrB ./batsim/src/profiles.hpp ./new_batsim/src/profiles.hpp
-*** ./batsim/src/profiles.hpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/profiles.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/profiles.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 100,107 ****
@@ -17804,7 +17804,7 @@ diff -NcrB ./batsim/src/profiles.hpp ./new_batsim/src/profiles.hpp
   
   /**
 diff -NcrB ./batsim/src/protocol.cpp ./new_batsim/src/protocol.cpp
-*** ./batsim/src/protocol.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/protocol.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/protocol.cpp	2023-06-28 08:03:20.239715399 -0400
 ***************
 *** 28,39 ****
@@ -18262,7 +18262,7 @@ diff -NcrB ./batsim/src/protocol.cpp ./new_batsim/src/protocol.cpp
   
       send_message_at_time(timestamp, "server", IPMessageType::SCHED_KILL_JOB, static_cast<void*>(message));
 diff -NcrB ./batsim/src/protocol.hpp ./new_batsim/src/protocol.hpp
-*** ./batsim/src/protocol.hpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/protocol.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/protocol.hpp	2023-06-28 08:03:20.229715222 -0400
 ***************
 *** 127,134 ****
@@ -18359,7 +18359,7 @@ diff -NcrB ./batsim/src/protocol.hpp ./new_batsim/src/protocol.hpp
       // Management functions
       /**
 diff -NcrB ./batsim/src/server.cpp ./new_batsim/src/server.cpp
-*** ./batsim/src/server.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/server.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/server.cpp	2023-06-28 08:03:20.239715399 -0400
 ***************
 *** 8,15 ****
@@ -18692,7 +18692,7 @@ diff -NcrB ./batsim/src/server.cpp ./new_batsim/src/server.cpp
       auto job = allocation->job;
   
 diff -NcrB ./batsim/src/server.hpp ./new_batsim/src/server.hpp
-*** ./batsim/src/server.hpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/server.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/server.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 42,47 ****
@@ -18721,7 +18721,7 @@ diff -NcrB ./batsim/src/server.hpp ./new_batsim/src/server.hpp
    * @brief Server EVENT_OCCURRED handler
    * @param[in,out] data The data associated with the server_process
 diff -NcrB ./batsim/src/workflow.cpp ./new_batsim/src/workflow.cpp
-*** ./batsim/src/workflow.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/workflow.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/workflow.cpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 200,205 ****
@@ -18734,7 +18734,7 @@ diff -NcrB ./batsim/src/workflow.cpp ./new_batsim/src/workflow.cpp
       this->children.clear();
   }
 diff -NcrB ./batsim/src/workload.cpp ./new_batsim/src/workload.cpp
-*** ./batsim/src/workload.cpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/workload.cpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/workload.cpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 7,12 ****
@@ -18820,7 +18820,7 @@ diff -NcrB ./batsim/src/workload.cpp ./new_batsim/src/workload.cpp
       profiles->load_from_json(doc, json_filename);
       jobs->load_from_json(doc, json_filename);
 diff -NcrB ./batsim/src/workload.hpp ./new_batsim/src/workload.hpp
-*** ./batsim/src/workload.hpp	2023-06-29 03:10:19.576210640 -0400
+*** ./batsim/src/workload.hpp	2023-06-29 05:16:52.993408248 -0400
 --- ./new_batsim/src/workload.hpp	2023-06-28 08:03:20.243048793 -0400
 ***************
 *** 11,16 ****
