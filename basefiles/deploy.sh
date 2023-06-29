@@ -226,6 +226,7 @@ if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $PACK = true ];then
     python3 -m pip install meson
     python3 -m pip install ninja
     python3 -m pip install pandas
+    python3 -m pip install numpy
     python3 -m pip install seaborn
     python3 -m pip install shapely
     python3 -m pip install requests
@@ -315,7 +316,16 @@ cd ../
 mkdir python_env && cd python_env
 python3 -m venv ./
 source ./bin/activate
+python3 -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --upgrade pip
+python3 -m pip install meson
+python3 -m pip install ninja
+python3 -m pip install pandas
+python3 -m pip install numpy
+python3 -m pip install seaborn
+python3 -m pip install shapely
 python3 -m pip install requests
+python3 -m pip install venv-pack
+
 cd $basefiles/CharlieCloud_compile
 rm -rf ./download ./boost_1_75_0
 rm -rf ../charliecloud

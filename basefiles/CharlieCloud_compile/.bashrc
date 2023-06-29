@@ -112,7 +112,7 @@ bind '"\eg":kill-line'
 }
 if [[ $INTERACTIVE -eq 1 ]]
 then
-do_binds()
+do_binds
 fi
 
 
