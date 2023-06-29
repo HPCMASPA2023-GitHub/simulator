@@ -59,7 +59,7 @@ case $parallelMode in
                 python3 $basefiles/real_start.py --path $jobPath --method $method --socketCount $socketCount --sim-time $mySimTime
                 ;;
             "docker2")
-                source /home/sim/python_env/bin/activate
+                source /home/sim/simulator/python_env/bin/activate
                 echo "after source"
 
                 ;;

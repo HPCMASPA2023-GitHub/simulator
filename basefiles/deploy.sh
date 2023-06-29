@@ -1,8 +1,12 @@
 #!/bin/bash
-VALID_ARGS=$(getopt -o f:npuxl --long format:,no-internet,package,un-package,prefix:,line-number:,help -- "$@")
+VALID_ARGS=$(getopt -o f:npuxlc --long clean,format:,no-internet,package,un-package,prefix:,line-number:,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
+MY_PATH="$(dirname -- "${BASH_SOURCE[0]}")"
+MY_PATH="$(cd -- "$MY_PATH" && pwd)"
+
+
 FORMAT=false
 NO=false
 PACK=false
@@ -10,10 +14,14 @@ UNPACK=false
 PREFIX=false
 LINE=false
 HELP=false
-
+CLEAN=false
 eval set -- "$VALID_ARGS"
 while true; do
   case "$1" in
+    -c | --clean)
+        CLEAN=true
+        shift 1
+        ;;
     -f | --format)
         FORMAT="$2"
         shift 2
@@ -53,8 +61,7 @@ done
 # if format is not charliecloud but any of -nup is used
 # if format is charliecloud but -n is not used and -up are used
 # if format is charliecloud and -n is used but both -up are used or -n is used but neither -up are used
-echo "PREFIX=$PREFIX"
-echo "LINE=$LINE"
+if [ $CLEAN = false ]; then
 if [ $HELP = true ] || [ $FORMAT = false ] || \
     ([ $FORMAT != 'bare-metal' ] && ( [ $PREFIX != false ] || [ $LINE != false ] )) || \
     ([ $FORMAT != 'charliecloud' ] && [ $FORMAT != 'bare-metal' ] && [ $FORMAT != 'docker' ]) || \
@@ -70,12 +77,17 @@ if [ $HELP = true ] || [ $FORMAT = false ] || \
 
 Usage:
     deploy.sh -f <STR>  [-x][-l]  [--no-internet ( [-p] | [-u] )]
+    deploy.sh --clean
 
-Required Options:
+Required Options 1:
 
     -f, --format <STR>              The format to build things for:
                                     bare-metal | charliecloud | docker
-Optional Options:
+Required Options 2:
+
+    -c, --clean                     Will clean up the basefiles folder from a previous deploy
+
+Optional Options 1:
     -x, --prefix  <STR>             Only used with --format=bare-metal.
                                     The full path to the folder that everything is going to install to
 
@@ -99,9 +111,19 @@ Optional Options:
 EOF
     exit 1
 fi
+fi
+if [ $CLEAN = true ];then
+    basefiles=$MY_PATH
+    rm -rf $basefiles/CharlieCloud_compile/download $basefiles/Charlie_compile/boost_1_75_0
+    rm -rf $basefiles/charliecloud
+    rm -rf $basefiles/Docker_compile/download $basefiles/Docker_compile/boost_1_75_0
+    rm -f $basefiles/deploy.config
+    exit 0
+fi
+
 if [ $FORMAT = 'bare-metal' ];then
 
-    myDir=`pwd`
+    myDir=$MY_PATH
     echo "myDir=$myDir"
     touch $myDir/deploy.config
     line_number=`sed -n 1p $myDir/deploy.config`
@@ -192,10 +214,10 @@ EOF
 exit 0
 fi
 if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $PACK = true ];then
-    basefiles=`pwd`
+    basefiles=$MY_PATH
     deactivate
     cd ../
-    prefix=`pwd`
+    prefix=${MY_PATH%/basefiles}
     mkdir python_env && cd python_env
     python3 -m venv ./
     source ./bin/activate
@@ -242,11 +264,11 @@ if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $PACK = true ];then
     mkdir experiments
     mkdir configs
     cd $prefix/..
-    cp $basefiles/deploy_charliecloud_no_internet.sh ./
+    cp $basefiles/deploy.sh ./
     tar -czf batsim.tar.gz ./$(basename $prefix)
     mkdir -p batsim_packaged
     mv batsim.tar.gz ./batsim_packaged/
-    mv deploy_charliecloud_no_internet.sh ./batsim_packaged/
+    mv deploy.sh ./batsim_packaged/
     echo $(basename $prefix) > ./batsim_packaged/prefixName.txt
     echo "Finished making your packaged directory"
     echo "copy $(dirname $prefix)/batsim_packaged folder over to computer with no internet"
@@ -254,7 +276,7 @@ if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $PACK = true ];then
 exit 0
 fi
 if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $UNPACK = true ];then
-    pack_prefix=`pwd`
+    pack_prefix=$MY_PATH
     prefixName=`cat $pack_prefix/prefixName.txt`
     tar -xf batsim.tar.gz
     prefix=$pack_prefix/$prefixName
@@ -287,7 +309,7 @@ fi
 
 if [ $FORMAT = 'charliecloud' ] && [ $NO = false ]; then
 #!/bin/bash
-basefiles=`pwd`
+basefiles=$MY_PATH
 deactivate
 cd ../
 mkdir python_env && cd python_env
@@ -317,9 +339,10 @@ chmod -R 777 ./boost_1_75_0
 ch-image build --force -t batsim -f Dockerfile ./
 ch-convert batsim ${basefiles%/basefiles}/batsim_ch
 cd ${basefiles%/basefiles}
-mkdir experiments
-mkdir configs
+mkdir -p experiments
+mkdir -p configs
 cd $basefiles
+mv ./charliecloud ../
  cat <<EOF
 *****************************************
         Deployment Finished
