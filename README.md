@@ -1,5 +1,5 @@
 <!-- Required extensions:  codehilite,markdown.extensions.tables,pymdownx.magiclink,pymdownx.betterem,pymdownx.tilde,pymdownx.emoji,pymdownx.tasklist,pymdownx.superfences,pymdownx.saneheaders -->
-$\Huge simulator$
+$\textbf{\Huge simulator}$ <br />
 Our work makes use of Inria's Batsim (https://batsim.readthedocs.io/) simulator.
 
 We have added:
