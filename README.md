@@ -122,7 +122,7 @@ cd /home/USER/batsim_packaged
 ```
 # <a name="run_tests"></a> Run Tests
 
-## <a name="run_tests_works"></a> Everything Works
+## <a name="run_tests_works"></a> Make Sure Everything Works
 
 ### <a name="run_tests_works_bare_metal"></a> Bare-Metal works
 
