@@ -265,5 +265,6 @@ elif parallelMode == "none":
                     print(command,flush=True)
                     import subprocess
                     myFile = open(out,"w")
+                    os.environ["basefiles"]=basefiles
                     output = subprocess.Popen(command, stdout=myFile).communicate()[0]
                     myFile.close()

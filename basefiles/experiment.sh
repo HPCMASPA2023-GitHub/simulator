@@ -2,9 +2,9 @@
 date
 echo "in experiment.sh"
 hostname
-MY_PATH="$(dirname -- "${BASH_SOURCE[0]}")"
-MY_PATH="$(cd -- "$MY_PATH" && pwd)"
-basefiles=$MY_PATH
+#MY_PATH="$(dirname -- "${BASH_SOURCE[0]}")"
+#MY_PATH="$(cd -- "$MY_PATH" && pwd)"
+MY_PATH=$basefiles
 source $basefiles/batsim_environment.sh
 echo "after source"
 parallelMode="$1"
