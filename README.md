@@ -139,11 +139,21 @@ cd /home/USER/batsim_packaged
 
 ##### <a name="run_tests_verify_bare_metal_parallel"></a> Parallel
 
-##### <a name="run_tests_verify_bare_metal_serial"</a> Serial
+##### <a name="run_tests_verify_bare_metal_serial"></a> Serial
 
 #### <a name="run_tests_verify_docker"></a> Docker Verification
 
-#### <a name="run_tests_verify_charliecloud"></a> CharlieCloud Verification
+##### <a name="run_tests_verify_docker_parallel"></a> Parallel
+
+##### <a name="run_tests_verify_docker_serial"></a> Serial
+
+
+#### <a name="run_tests_verify_charliecloud"></a> CharlieCloud Verification'
+
+##### <a name="run_tests_verify_charliecloud_parallel"></a> Parallel
+
+##### <a name="run_tests_verify_charliecloud_serial"></a> Serial
+
 
 
 
