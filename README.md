@@ -106,6 +106,7 @@ cd simulator/basefiles
 - obtain the code
 - change directories
 - deploy package
+- change directories
 - scp folder
 - ssh to remote
 - change directories
@@ -114,85 +115,41 @@ cd simulator/basefiles
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
 ./deploy.sh -f charliecloud --no-internet --package
+cd ../../
 scp -r user@remote.org ./batsim_packaged /home/USER/
 ssh user@remote.org
 cd /home/USER/batsim_packaged
 ./deploy.sh -f charliecloud --no-internet --un-package
 ```
+## <a name="run_tests"></a> Run Tests
+
+### <a name="run_tests_works"></a> Everything Works
+
+#### <a name="run_tests_works_bare_metal"></a> Bare-Metal works
+
+#### <a name="run_tests_works_docker"></a> Docker works
+
+#### <a name="run_tests_works_charliecloud_with_internet"></a> CharlieCloud with Internet works
+
+#### <a name="run_tests_works_charliecloud_without_internet"></a> CharlieCloud without Internet works
+
+### <a name="run_tests_verify"></a> Verifying Paper
+
+#### <a name="run_tests_verify_bare_metal"></a> Bare-Metal Verification
+
+##### <a name="run_tests_verify_bare_metal_parallel"></a> Parallel
+
+##### <a name="run_tests_verify_bare_metal_serial"</a> Serial
+
+#### <a name="run_tests_verify_docker"></a> Docker Verification
+
+#### <a name="run_tests_verify_charliecloud"></a> CharlieCloud Verification
 
 
 
-clone this repo:<br/>
-```git clone https://github.com/hpec-2021-ccu-lanl/simulator.git``` <br/>
-enter directory:<br/>
-```cd simulator```<br/>
-build the docker and name the image "simulator": <br/>
-```docker build . -t simulator```<br/>
 
 
 
-
-## <a name="run_docker"></a>How to run the docker
-
-create the docker container based off the "simulator" image and name it "batsim_docker":<br/>
-```docker create --name batsim_docker -t simulator```<br/>
-start the docker container: <br/>
-```docker start batsim_docker```<br/>
-start an interactive shell:<br/>
-```docker exec -it batsim_docker /bin/bash```
-
-
-
-
-## <a name="test_docker"></a>Test the batsim_docker
-
-Before we test our docker, please bear with us on some confusing terminology:
-
-This needs clarification. An "experiment", as far as the config file is concerned, is a json element that
-has an input and an output.  You can make multiple experiments in one config file.  Below, the "experiment" is "test" and all data for that experiment will be in the folder "test".<br/>
-
- Each "job", as it relates to the config file, is one set of parameters used for a simulation.  For example, a simulation having a cluster with 1500 nodes vs a simulation having a cluster with 1600 nodes are two different "jobs".  Similarly two simulations both having 1500 nodes but differing on SMTBF are two different "jobs".  The confusion here is that "jobs" in this sense are titled "experiment_#" and so are their folder that comes under the "experiment" folder.<br />
-
- "Runs" are simulations in the same "experiment" that have the exact same parameters and so come under the same "job" and are used for averaging purposes.  To further complicate things, there are the "simulated jobs".  These are part of the workloads that the simulator is running.<br />
-
-## <a name="config"></a>Ok, that is out of the way
-Test the batsim_docker to see if it gives you the correct results.  This will make sure the docker is running properly, but will also give you a chance to see how the process
-of running simulations goes.  We will use a config file "test_docker.config".<br/>
-```
-{  "test":{
-            "input": {
-                        "node-sweep":{
-                                "range":[1490]
-                        },
-                        "SMTBF-sweep":{
-                                "compute-SMTBF-from-NMTBF":true,
-                                "formula":"128736000 * (1/i)",
-                                "range":[1,8]
-                        },
-                        "checkpoint-sweep":{
-                                "range":["optimal"]
-                        },
-                        "performance-sweep":{
-                                "range":[1.0]
-                        },
-                        "checkpointing-on":true,
-                        "synthetic-workload":{
-                                "number-of-jobs":30000,
-                                "number-of-resources":"/home/sim/basefiles/workload_types/wl2.csv:0:csv",
-                                "duration-time":"/home/sim/basefiles/workload_types/wl2.csv:1:h:csv",
-                                "submission-time":"0:fixed",
-                                "wallclock-limit":-1,
-                                "dump-time":"3%",
-                                "read-time":"2%"
-                        }
-          },
-          "output": {
-                        "AAE":true,
-                        "avg-makespan":1
-          }
-   }
-}
-```
 
 ### <a name="intro_to_config"></a>Just a real quick intro to this config file...
 - We are sweeping over nodes, but really there is no sweep, as we used a fixed "range" and in that list of nodes there
