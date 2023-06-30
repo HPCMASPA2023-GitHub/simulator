@@ -1,5 +1,5 @@
 <!-- Required extensions:  codehilite,markdown.extensions.tables,pymdownx.magiclink,pymdownx.betterem,pymdownx.tilde,pymdownx.emoji,pymdownx.tasklist,pymdownx.superfences,pymdownx.saneheaders -->
-# simulator
+$\Huge simulator$
 Our work makes use of Inria's Batsim (https://batsim.readthedocs.io/) simulator.
 
 We have added:
@@ -10,7 +10,7 @@ We have added:
 - some work with cores
 - other useful additions
 
-These were added to 4 algorithms:
+These were added to 4 scheduling algorithms:
 
 - fcfs_fast2
 - easy_bf_fast2
@@ -24,20 +24,21 @@ Scripts are provided to apply patches to the original Batsim source and run expe
 Analysis of the simulation data is mostly up to you, but there are some helpful jupyter notebooks to faciliate this by looking at our code and modifying it for your needs.  However, scripts for the analysis of data obtained from running the example configs that were used in our article are provided.  These can be run as-is.
 
 ## Table of Contents
-- [Deploy Methods](#build_methods)
-- [Deploy How To](#deploy_how_to)
-    - [bare-metal](#deploy_bare_metal)
-    - [Docker](#deploy_docker)
-    - [CharlieCloud with Internet](#deploy_charliecloud_with_internet)
-    - [CharlieCloud without Internet](#deploy_charliecloud_without_internet)
+- [Deployment](#deployment)
+    - [Deploy Methods](#build_methods)
+    - [Deploy: How To](#deploy_how_to)
+        - [Bare-Metal](#deploy_bare_metal)
+        - [Docker](#deploy_docker)
+        - [CharlieCloud with Internet](#deploy_charliecloud_with_internet)
+        - [CharlieCloud without Internet](#deploy_charliecloud_without_internet)
 - [Run Tests](#run_tests)
-    - [Everything Works](#run_tests_works)
-        - [bare-metal works](#run_tests_works_bare_metal)
+    - [Make Sure Everything Works](#run_tests_works)
+        - [Bare-Metal works](#run_tests_works_bare_metal)
         - [Docker works](#run_tests_works_docker)
         - [CharlieCloud with Internet works](#run_tests_works_charliecloud_with_internet)
         - [CharlieCloud without Internet works](#run_tests_works_charliecloud_without_internet)
     - [Verifying Paper](#run_tests_verify)
-        - [bare-metal verification](#run_tests_verify_bare_metal)
+        - [Bare-Metal verification](#run_tests_verify_bare_metal)
             - [parallel](#run_tests_verify_bare_metal_parallel)
             - [serial](#run_tests_verify_bare_metal_serial)
         - [Docker verification](#run_tests_verify_docker)
@@ -46,13 +47,10 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
         - [CharlieCloud verification](#run_tests_verify_charliecloud)
             - [parallel](#run_tests_verify_charliecloud_parallel)
             - [serial](#run_tests_verify_charliecloud_serial)
-  - [Basic Steps](#basic_steps)
-- [Explanation Of total_makespan.csv](#total_makespan)
-- [Steps To Run Simulations](#steps_to_run)
-  - [How To Edit Config File](#edit_config)
-  - [Example](#fig4_leftsub_wl4)
-- [Monte Carlo](#monte_carlo_start)
+- [Further Reading](#further_reading)
+    - [Config Files](#config_files)
 
+# <a name="Deployment"></a> Deployment
 ## <a name="build_methods"></a> Deploy Methods
 
 There are 4 methods of building and deploying our batsim applications.
@@ -61,6 +59,7 @@ There are 4 methods of building and deploying our batsim applications.
     - will compile and install everything you need into a directory
 - docker
     - will compile and install everything you need into a docker container
+    - currently there is no option of parallelism with this method
 - charliecloud with internet
     - charliecloud is a container technology that works when docker is not an option (think clusters without docker)
     - will compile and install everything you need into a directory
@@ -71,7 +70,7 @@ There are 4 methods of building and deploying our batsim applications.
 
 ## <a name="deploy_how_to"></a> Deploy How To...
 
-### <a name="deploy_bare_metal"></a> bare-metal
+### <a name="deploy_bare_metal"></a> Bare-Metal
 - obtain the code
 - change directories
 - deploy
@@ -116,36 +115,36 @@ git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
 ./deploy.sh -f charliecloud --no-internet --package
 cd ../../
-scp -r user@remote.org ./batsim_packaged /home/USER/
+scp -r ./batsim_packaged user@remote.org:/home/USER/
 ssh user@remote.org
 cd /home/USER/batsim_packaged
 ./deploy.sh -f charliecloud --no-internet --un-package
 ```
-## <a name="run_tests"></a> Run Tests
+# <a name="run_tests"></a> Run Tests
 
-### <a name="run_tests_works"></a> Everything Works
+## <a name="run_tests_works"></a> Everything Works
 
-#### <a name="run_tests_works_bare_metal"></a> Bare-Metal works
+### <a name="run_tests_works_bare_metal"></a> Bare-Metal works
 
-#### <a name="run_tests_works_docker"></a> Docker works
+### <a name="run_tests_works_docker"></a> Docker works
 
-#### <a name="run_tests_works_charliecloud_with_internet"></a> CharlieCloud with Internet works
+### <a name="run_tests_works_charliecloud_with_internet"></a> CharlieCloud with Internet works
 
-#### <a name="run_tests_works_charliecloud_without_internet"></a> CharlieCloud without Internet works
+### <a name="run_tests_works_charliecloud_without_internet"></a> CharlieCloud without Internet works
 
-### <a name="run_tests_verify"></a> Verifying Paper
+## <a name="run_tests_verify"></a> Verifying Paper
 
-#### <a name="run_tests_verify_bare_metal"></a> Bare-Metal Verification
+### <a name="run_tests_verify_bare_metal"></a> Bare-Metal Verification
 
-##### <a name="run_tests_verify_bare_metal_parallel"></a> Parallel
+#### <a name="run_tests_verify_bare_metal_parallel"></a> Parallel
 
-##### <a name="run_tests_verify_bare_metal_serial"></a> Serial
+#### <a name="run_tests_verify_bare_metal_serial"></a> Serial
 
-#### <a name="run_tests_verify_docker"></a> Docker Verification
+### <a name="run_tests_verify_docker"></a> Docker Verification
 
-##### <a name="run_tests_verify_docker_parallel"></a> Parallel
+#### <a name="run_tests_verify_docker_parallel"></a> Parallel
 
-##### <a name="run_tests_verify_docker_serial"></a> Serial
+#### <a name="run_tests_verify_docker_serial"></a> Serial
 
 
 #### <a name="run_tests_verify_charliecloud"></a> CharlieCloud Verification'
