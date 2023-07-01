@@ -199,6 +199,7 @@ elif [ $P_METHOD = 'none' ]; then
             $prefix/charliecloud/charliecloud/bin/ch-run $prefix/batsim_ch --bind ${prefix}:/mnt/prefix --bind ${FOLDER1_DIR}:/mnt/FOLDER1 --bind ${FILE1_DIR}:/mnt/FILE1 --write --set-env=HOME=/home/sim -- /bin/bash -c "source /home/sim/.bashrc; cd /mnt/prefix/basefiles;source /home/sim/simulator/python_env/bin/activate; python3 generate_config.py -i /mnt/FILE1/$FILE1_BASE -o /mnt/FOLDER1/$FOLDER1_BASE --output-config"
             ;;
         'bare-metal')
+            python3 $basefiles/generate_config.py -i $FILE1 -o $FOLDER1 --basefiles ${basefiles}  --output-config
             ;;
         'docker')
             prefix=/home/sim/simulator

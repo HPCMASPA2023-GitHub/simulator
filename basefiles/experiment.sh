@@ -24,7 +24,8 @@ case $parallelMode in
             "bare-metal" | "charliecloud")   
                 for i in `seq 0 1 $(( $srunCount - 1 ))`;do
                     echo "real_start.py" && date
-                    srun --ntasks=1 -c 1 --output ${jobPathA[$i]}/output/slurm-%j.out --job-name="${folder}_${experimentA[$i]}_${jobA[$i]}j_${idA[$i]}i_${runA[$i]}r" --export=USER,basefiles=$basefiles,jobPath=${jobPathA[$i]},socketCount=${socketCountA[$i]},mySimTime=$mySimTime experiment.sh "sbatch" "$method" &
+                    outputPath=`echo "${jobPathA[$i]}" | sed "s@:PATH:@@g"`
+                    srun --ntasks=1 -c 1 --output ${outputPath}/output/slurm-%j.out --job-name="${folder}_${experimentA[$i]}_${jobA[$i]}j_${idA[$i]}i_${runA[$i]}r" --export=USER=$USER,basefiles=$basefiles,jobPath=${jobPathA[$i]},socketCount=${socketCountA[$i]},mySimTime=$mySimTime experiment.sh "sbatch" "$method" &
                 done
                 wait
                 ;;
@@ -58,14 +59,7 @@ case $parallelMode in
                 echo "python3 $basefiles/real_start.py --path $jobPath --method $method --socketCount $socketCount --sim-time $mySimTime"
                 python3 $basefiles/real_start.py --path $jobPath --method $method --socketCount $socketCount --sim-time $mySimTime
                 ;;
-            "docker2")
-                source /home/sim/simulator/python_env/bin/activate
-                echo "after source"
 
-                ;;
-            "charliecloud2")
-                USER=$USER python3 $basefiles/real_start.py --path $jobPath --method $method --socketCount $socketCount --sim-time $mySimTime
-                ;;
         esac
 esac
 echo "real_start.py" && date

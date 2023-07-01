@@ -257,6 +257,8 @@ if [ $FORMAT = 'charliecloud' ] && [ $NO = true ] && [ $PACK = true ];then
     wget --no-check-certificate https://sourceforge.net/projects/boost/files/boost/1.75.0/boost_1_75_0.tar.gz/download
     tar -xf ./download
     chmod -R 777 ./boost_1_75_0
+    export CH_IMAGE_STORAGE=`pwd`/$USER.ch
+    rm -rf $CH_IMAGE_STORAGE
     ch-image delete batsim
     ch-image build --force --no-cache -t batsim -f Dockerfile ./
     ch-convert batsim $prefix/batsim_ch.tar.gz
@@ -346,6 +348,8 @@ cd $basefiles/CharlieCloud_compile
 wget --no-check-certificate https://sourceforge.net/projects/boost/files/boost/1.75.0/boost_1_75_0.tar.gz/download
 tar -xf ./download
 chmod -R 777 ./boost_1_75_0
+export CH_IMAGE_STORAGE=`pwd`/$USER.ch
+rm -rf $CH_IMAGE_STORAGE
 ch-image delete batsim
 ch-image build --force --no-cache -t batsim -f Dockerfile ./
 ch-convert batsim ${basefiles%/basefiles}/batsim_ch
