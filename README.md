@@ -45,6 +45,7 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
     - [CharlieCloud works](#run_tests_works_charliecloud)
 - [Verifying Paper](#run_tests_verify)
     - [Crash Course to myBatchTasks.sh](#crash_course)
+    - [Squeue Monitoring](#squeue)
     - [Bare-Metal verification](#run_tests_verify_bare_metal)
         - [parallel](#run_tests_verify_bare_metal_parallel)
         - [serial](#run_tests_verify_bare_metal_serial)
@@ -54,6 +55,7 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
     - [CharlieCloud verification](#run_tests_verify_charliecloud)
         - [parallel](#run_tests_verify_charliecloud_parallel)
         - [serial](#run_tests_verify_charliecloud_serial)
+    - [Analysis](#analysis)
 - [Further Reading](#further_reading)
     - [Config Files](#config_files)
 
@@ -268,12 +270,15 @@ While we invite you to get the same results we did by running our simulations, t
     - With enough runs they would converge
     - You should get similar results as us with the 47 runs achieved from our config files, though not exact
 
+<!-- ---------------------  Crash Course ------------------------------ -->
+
+
 <a name="crash_course"></a>
 ## Crash Course To myBatchTasks.sh
 
 <details>
 
-You run our simulations using a script called myBatchTasks.sh
+You run our simulations using a script called myBatchTasks.sh <br />
 For help:
 ```
 cd simualtor/basefiles
@@ -283,7 +288,7 @@ cd simualtor/basefiles
 
 - The most important info to give it is the config file and the output folder
 - If you provide just the name of the config file or just the name of the output folder, it will assume you are using the default
-configs folder and the default experiments folder respectively.
+'configs' folder and the default 'experiments' folder respectively.
 - You may not have space on these locations (particularly the output folder) so you can pass absolute paths to these locations.
 - With the output folder **Make Sure**:
     - if using default locations (no slashes), that that folder does not exist in simulator/experiments/
@@ -314,6 +319,7 @@ configs folder and the default experiments folder respectively.
     - The paper uses 611 simulations.  If you are running the paper.config and want to spin up more simulations of something else, then add like 1,000 to the socket-start
         - So your socket-start would then be 11000
         - You must do your own book-keeping of sockets used
+
 ### WallClock-Limit
 
 - Self explanatory in the output of --help
@@ -321,14 +327,75 @@ configs folder and the default experiments folder respectively.
 
 </details>
 
+<!-- ---------------------  Squeue Monitoring ------------------------------ -->
+
+<a name="squeue"></a>
+## Squeue Monitoring
+
+<details>
+
+We use a certain format passed to squeue to see which simulations are still running.<br />
+It is advised you do the same.  Add the following to your .bashrc :<br />
+```
+function squeue ()
+{
+    if [[ $1 == "-s" ]]
+    then
+        /usr/bin/squeue --format="%.18i %.9P %.8u %.10M %.9l %.9N %.120j" "$@"
+    else
+        /usr/bin/squeue --format="%.18i %.9P %.8j %.8u %.8T %.10M %.9l %.6D %R %.120k" "$@"
+    fi
+}
+```
+
+To see the sbatch jobs use `squeue` <br />
+To see the tasks use `squeue -s`
+
+</details>
+
+<!-- ---------------------  Verify Methods ------------------------------ -->
+
 <a name="run_tests_verify_bare_metal"></a>
 ## Bare-Metal Verification
 
 <a name="run_tests_verify_bare_metal_parallel"></a>
 ### Parallel
 
+<details>
+
+1. change directories
+2. edit batsim_environment.sh if you have not already
+3. determine number of tasks to run on each node
+4. run myBatchTasks.sh filling in for `##`
+5. monitor simulations using [squeue monitoring](#squeue)
+6. [run analysis](#analysis)
+
+```
+cd /path/to/simulator/basefiles
+#edit batsim_environment.sh if needed
+./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -m bare-metal -p tasks -t ##
+```
+
+</details>
+
 <a name="run_tests_verify_bare_metal_serial"></a>
 ### Serial
+
+<details>
+
+1. change directories
+2. edit batsim_environment.sh if you have not already
+3. run myBatchTasks.sh
+4. wait for a very long time (years)
+5. [run analysis](#analysis)
+
+```
+cd /path/to/simulator/basefiles
+#edit batsim_environment.sh if needed
+./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -m bare-metal -p none
+```
+
+</details>
 
 <a name="run_tests_verify_docker"></a>
 ## Docker Verification
@@ -336,8 +403,43 @@ configs folder and the default experiments folder respectively.
 <a name="run_tests_verify_docker_parallel"></a>
 ### Parallel
 
+<details>
+
+** Not an option at this time **
+
+</details>
+
 <a name="run_tests_verify_docker_serial"></a>
 ### Serial
+
+<details>
+
+1. start up docker container
+    a. if already created use 'docker start'
+    b. if not already created (from the tests) use 'docker run'
+2. change directories (shouldn't need to)
+3. edit batsim_environment.sh if you have not already
+4. run myBatchTasks.sh
+5. wait for a very long time (years)
+6. [run analysis](#analysis)
+
+#### a.
+```
+docker start -i sim_test
+```
+
+#### b.
+```
+docker run -it --name sim_test simulator_compile:latest
+```
+
+```
+inside docker>  cd /home/sim/simulator/basefiles
+inside docker>  #edit batsim_environment.sh if you haven't
+inside docker>  ./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -m docker -p none
+```
+
+</details>
 
 
 <a name="run_tests_verify_charliecloud"></a>
@@ -346,8 +448,48 @@ configs folder and the default experiments folder respectively.
 <a name="run_tests_verify_charliecloud_parallel"></a>
 ### Parallel
 
+<details>
+
+1. change directories
+2. edit batsim_environment.sh if you have not already
+3. determine number of tasks to run on each node
+4. run myBatchTasks.sh filling in for `##`
+5. monitor simulations using [squeue monitoring](#squeue)
+6. [run analysis](#analysis)
+
+```
+cd /path/to/simulator/basefiles
+#edit batsim_environment.sh if needed
+./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -m charliecloud -p tasks -t ##
+```
+
+</details>
+
 <a name="run_tests_verify_charliecloud_serial"></a>
 ### Serial
+
+<details>
+
+1. change directories
+2. edit batsim_environment.sh if you have not already
+3. run myBatchTasks.sh
+4. wait for a very long time (years)
+5. [run analysis](#analysis)
+
+```
+cd /path/to/simulator/basefiles
+#edit batsim_environment.sh if needed
+./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -m charliecloud -p none
+```
+
+</details>
+
+
+<!-- ---------------------  Analysis ------------------------------ -->
+
+<a name="analysis"></a>
+## Analysis
+
 
 
 
