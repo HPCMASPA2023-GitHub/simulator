@@ -79,7 +79,7 @@ Requirements (not docker method):
 - patch (bare-metal)
 - typical build system
 
-Requirements (docker method)
+Requirements (docker method):
 - linux os
 - git
 - docker running and working
@@ -279,7 +279,7 @@ You should see two SUCCESS messages
 While we invite you to get the same results we did by running our simulations, there are some things to consider
 
 - We used a 12 node cluster with 30 cores per node and 377GB RAM per node
-    - In order to not run out of memory we used 26 tasks per node to limit memory usage
+    - In order to not run out of memory we used 26 tasks per node to limit memory usage.  Feel free to limit it even more.
 - The simulations took at least 4 days total on our cluster
     - Of course it all depends on your cluster
 - It is a bit ridiculous to think of doing it serially
@@ -307,6 +307,7 @@ cd simualtor/basefiles
 - If you provide just the name of the config file or just the name of the output folder, it will assume you are using the default
 'configs' folder and the default 'experiments' folder respectively.
 - You may not have space on these locations (particularly the output folder) so you can pass absolute paths to these locations.
+    - 15GB is necessary for verifying our paper
 - With the output folder **Make Sure**:
     - if using default locations (no slashes), that that folder does not exist in simulator/experiments/
     - if using absolute locations, that the leaf of the output folder does not exist
@@ -510,6 +511,34 @@ cd /path/to/simulator/basefiles
 <a name="analysis"></a>
 ## Analysis
 
+<details>
+
+### CharlieCloud and Bare-Metal
+
+1. change directories
+2. run analysis script
+3. browse folders
+    1. total_waiting_time
+        1. comparisons 
+            1. WD = 1 month; 2,4,8 days
+            2. Binned
+            3. Overall
+        2. graphs
+4. use image viewer to view pngs
+
+```
+cd /path/to/simulator/basefiles
+source ../python_env/bin/activate
+# you may have chosen a different location for the sim's data to go when invoking 'myBatchTasks.sh'.
+# If this is the case use that path for --folder.
+python3 ./tests/analysis.py --folder /path/to/simulator/experiments/paper
+```
+
+Now `/path/to/simulator/basefiles/tests/paper_analysis` will house your various graphs
+
+
+
+</details>
 
 
 
@@ -523,7 +552,21 @@ cd /path/to/simulator/basefiles
 <a name="config_files"></a>
 ## Config Files
 
-If you would like to run other experiments, feel free to 
+If you would like to run other experiments, feel free to learn about our simulator and how to write a config file.
+```
+cd /path/to/simulator/basefiles
+source ../python_env/bin/activate
+python3 generate_config.py --help
+```
+
+You should see that you can pass it `--config-info <type>`
+
+Once you are satisfied with your config file
+
+Try running it using the 'myBatchTasks.sh' script
+
+
+
 
 
 
