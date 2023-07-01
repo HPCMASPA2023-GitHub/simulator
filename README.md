@@ -44,6 +44,7 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
     - [Docker works](#run_tests_works_docker)
     - [CharlieCloud works](#run_tests_works_charliecloud)
 - [Verifying Paper](#run_tests_verify)
+    - [Crash Course to myBatchTasks.sh](#crash_course)
     - [Bare-Metal verification](#run_tests_verify_bare_metal)
         - [parallel](#run_tests_verify_bare_metal_parallel)
         - [serial](#run_tests_verify_bare_metal_serial)
@@ -267,8 +268,61 @@ While we invite you to get the same results we did by running our simulations, t
     - With enough runs they would converge
     - You should get similar results as us with the 47 runs achieved from our config files, though not exact
 
+<a name="crash_course"></a>
+## Crash Course To myBatchTasks.sh
+
+<details>
+
+You run our simulations using a script called myBatchTasks.sh
+For help:
+```
+cd simualtor/basefiles
+./myBatchTasks.sh --help
+```
+### File and Output Folder
+
+- The most important info to give it is the config file and the output folder
+- If you provide just the name of the config file or just the name of the output folder, it will assume you are using the default
+configs folder and the default experiments folder respectively.
+- You may not have space on these locations (particularly the output folder) so you can pass absolute paths to these locations.
+- With the output folder **Make Sure**:
+    - if using default locations (no slashes), that that folder does not exist in simulator/experiments/
+    - if using absolute locations, that the leaf of the output folder does not exist
+
+### Tasks Per Node
+
+- Again, we used this property to limit how many simulations would run on a node and thus limit its memory usage
+    - You will also want to use it to limit simulations to less than or equal to the amount of cores on your nodes
+
+### Method
+
+- Very important, this says how you deployed batsim.
+    - Basically, for verifying the paper, you should only be using charliecloud or bare-metal
+    - charliecloud is default
+
+### Parallel-Method
+
+- sets the type of parallel method.  
+    - I suggest keeping this as 'tasks', the default.
+
+### Socket-Start
+
+- Batsim uses sockets to communicate with its sister program 'batsched'
+- You need to use a different socket for each simulation
+- If you only run myBatchTasks.sh once and you leave it till all jobs complete you have nothing to worry about
+    - If you spin up some more simulations after myBatchTasks.sh returns control to the user you will need to figure how many simulations you currently have running
+    - The paper uses 611 simulations.  If you are running the paper.config and want to spin up more simulations of something else, then add like 1,000 to the socket-start
+        - So your socket-start would then be 11000
+        - You must do your own book-keeping of sockets used
+### WallClock-Limit
+
+- Self explanatory in the output of --help
+
+
+</details>
+
 <a name="run_tests_verify_bare_metal"></a>
-# Bare-Metal Verification
+## Bare-Metal Verification
 
 <a name="run_tests_verify_bare_metal_parallel"></a>
 ### Parallel
