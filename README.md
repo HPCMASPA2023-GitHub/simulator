@@ -92,9 +92,9 @@ There are 4 methods of building and deploying our batsim applications.
 
 <details>
 
-- obtain the code
-- change directories
-- deploy
+1. obtain the code
+2. change directories
+3. deploy
 ```
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
@@ -108,9 +108,9 @@ cd simulator/basefiles
 
 <details>
 
-- obtain the code
-- change directories
-- deploy
+1. obtain the code
+2. change directories
+3. deploy
 ```
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
@@ -123,9 +123,9 @@ cd simulator/basefiles
 ### CharlieCloud with Internet
 <details>
 
-- obtain the code
-- change directories
-- deploy
+1. obtain the code
+2. change directories
+3. deploy
 ```
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
@@ -138,14 +138,14 @@ cd simulator/basefiles
 
 <details>
 
-- obtain the code
-- change directories
-- deploy package
-- change directories
-- scp folder
-- ssh to remote
-- change directories
-- unpackage
+1. obtain the code
+2. change directories
+3. deploy package
+4. change directories
+5. scp folder
+6. ssh to remote
+7. change directories
+8. unpackage
 ```
 git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
@@ -174,12 +174,12 @@ cd /home/USER/batsim_packaged
 ## Bare-Metal works
 <details>
 
-- change directories
-- edit basefiles/batsim_environment.sh
-- run test_serial script
-- view result
-- run test_parallel script
-- view result
+1. change directories
+2. edit basefiles/batsim_environment.sh
+3. run test_serial script
+4. view result
+5. run test_parallel script
+6. view result
 ```
 cd /path/to/simulator/basefiles
 edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simulator  (don't include basefiles in the path)
@@ -194,9 +194,9 @@ You should see two SUCCESS messages
 ## Docker works
 <details>
 
-- create and run a container from your simulator_compile image
-- run test_serial script
-- view result
+1. create and run a container from your simulator_compile image
+2. run test_serial script
+3. view result
 
 ```
 docker run -it --name sim_test simulator_compile:latest
@@ -209,14 +209,15 @@ You should see a SUCCESS message
 
 <a name="run_tests_works_charliecloud"></a> 
 ## CharlieCloud works
+
 <details>
 
-- change directories
-- edit basefiles/batsim_environment.sh
-- run test_serial script
-- view result
-- run test_parallel script
-- view result
+1. change directories
+2. edit basefiles/batsim_environment.sh
+3. run test_serial script
+4. view result
+5. run test_parallel script
+6. view result
 ```
 cd /path/to/simulator/basefiles
 edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simulator  (don't include basefiles in the path)
