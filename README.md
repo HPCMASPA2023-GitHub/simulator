@@ -91,6 +91,7 @@ There are 4 methods of building and deploying our batsim applications.
 ###  Bare-Metal
 
 <details>
+
 - obtain the code
 - change directories
 - deploy
@@ -106,6 +107,7 @@ cd simulator/basefiles
 ### Docker
 
 <details>
+
 - obtain the code
 - change directories
 - deploy
@@ -114,11 +116,13 @@ git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
 ./deploy.sh -f docker
 ```
+
 </details>
 
 <a name="deploy_charliecloud_with_internet"></a> 
 ### CharlieCloud with Internet
 <details>
+
 - obtain the code
 - change directories
 - deploy
@@ -127,11 +131,13 @@ git clone https://github.com/HPCMASPA2023-GitHub/simulator.git
 cd simulator/basefiles
 ./deploy.sh -f charliecloud
 ```
+
 </details>
 <a name="deploy_charliecloud_without_internet"></a> 
 ### CharlieCloud without Internet
 
 <details>
+
 - obtain the code
 - change directories
 - deploy package
@@ -150,6 +156,7 @@ ssh user@remote.org
 cd /home/USER/batsim_packaged
 ./deploy.sh -f charliecloud --no-internet --un-package
 ```
+
 </details>
 
 
@@ -166,6 +173,7 @@ cd /home/USER/batsim_packaged
 <a name="run_tests_works_bare_metal"></a> 
 ## Bare-Metal works
 <details>
+
 - change directories
 - edit basefiles/batsim_environment.sh
 - run test_serial script
@@ -179,11 +187,13 @@ edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simul
 ```
 
 You should see two SUCCESS messages
+
 </details>
 
 <a name="run_tests_works_docker"></a> 
 ## Docker works
 <details>
+
 - create and run a container from your simulator_compile image
 - run test_serial script
 - view result
@@ -194,11 +204,13 @@ inside docker> ./tests/docker/tests_serial.sh
 
 ```
 You should see a SUCCESS message
+
 </details>
 
 <a name="run_tests_works_charliecloud"></a> 
 ## CharlieCloud works
 <details>
+
 - change directories
 - edit basefiles/batsim_environment.sh
 - run test_serial script
@@ -212,6 +224,7 @@ edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simul
 ./tests/charliecloud/tests_parallel.sh
 ```
 You should see two SUCCESS messages
+
 </details>
 
 
