@@ -348,8 +348,8 @@ function squeue ()
 }
 ```
 
-To see the sbatch jobs use `squeue` <br />
-To see the tasks use `squeue -s`
+To see the 'sbatch jobs' use `squeue` <br />
+To see the 'srun tasks' use `squeue -s`
 
 </details>
 
@@ -415,8 +415,8 @@ cd /path/to/simulator/basefiles
 <details>
 
 1. start up docker container
-    a. if already created use 'docker start'
-    b. if not already created (from the tests) use 'docker run'
+    1. if already created use 'docker start'
+    2. if not already created (from the tests) use 'docker run'
 2. change directories (shouldn't need to)
 3. edit batsim_environment.sh if you have not already
 4. run myBatchTasks.sh
