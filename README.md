@@ -171,8 +171,18 @@ cd /home/USER/batsim_packaged
 <a name="run_tests_works"></a> 
 # Make Sure Everything Works
 
+You can make sure your particular deployment works by looking at the section of your deployment method
+and running the commands contained there.
+
+Keep in mind that parallel tests assume the following:
+
+- You are on a cluster running SLURM
+- You have access to at least two (2) nodes
+
+
 <a name="run_tests_works_bare_metal"></a> 
 ## Bare-Metal works
+
 <details>
 
 1. change directories
@@ -183,7 +193,7 @@ cd /home/USER/batsim_packaged
 6. view result
 ```
 cd /path/to/simulator/basefiles
-edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simulator  (don't include basefiles in the path)
+edit ./batsim_environment.sh   # make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
 ./tests/bare_metal/tests_serial.sh
 ```
 
@@ -195,13 +205,19 @@ You should see two SUCCESS messages
 ## Docker works
 <details>
 
-1. create and run a container from your simulator_compile image
-2. run test_serial script
-3. view result
+1. create and run a container from your "simulator_compile" image
+2. change directories (should already be in the correct directory)
+3. edit basefiles/batsim_environment.sh 
+4. run test_serial script
+5. view result
+6. exit docker
 
 ```
 docker run -it --name sim_test simulator_compile:latest
+inside docker> cd /home/sim/simulator/basefiles
+inside docker> # edit ./batsim_environment.sh  # prefix should be /home/sim/simulator
 inside docker> ./tests/docker/tests_serial.sh
+inside docker> exit
 
 ```
 You should see a SUCCESS message
@@ -221,7 +237,7 @@ You should see a SUCCESS message
 6. view result
 ```
 cd /path/to/simulator/basefiles
-edit ./batsim_environment.sh      # make sure you point prefix to /path/to/simulator  (don't include basefiles in the path)
+edit ./batsim_environment.sh   # make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
 ./tests/charliecloud/tests_serial.sh
 ./tests/charliecloud/tests_parallel.sh
 ```
@@ -237,24 +253,48 @@ You should see two SUCCESS messages
 <a name="run_tests_verify"></a>
 # Verifying Paper
 
-## <a name="run_tests_verify_bare_metal"></a> Bare-Metal Verification
+<a name="run_tests_verify_bare_metal"></a>
+# Bare-Metal Verification
 
-### <a name="run_tests_verify_bare_metal_parallel"></a> Parallel
+<a name="run_tests_verify_bare_metal_parallel"></a>
+### Parallel
 
-### <a name="run_tests_verify_bare_metal_serial"></a> Serial
+<a name="run_tests_verify_bare_metal_serial"></a>
+### Serial
 
-## <a name="run_tests_verify_docker"></a> Docker Verification
+<a name="run_tests_verify_docker"></a>
+## Docker Verification
 
-### <a name="run_tests_verify_docker_parallel"></a> Parallel
+<a name="run_tests_verify_docker_parallel"></a>
+### Parallel
 
-### <a name="run_tests_verify_docker_serial"></a> Serial
+<a name="run_tests_verify_docker_serial"></a>
+### Serial
 
 
-### <a name="run_tests_verify_charliecloud"></a> CharlieCloud Verification'
+<a name="run_tests_verify_charliecloud"></a>
+## CharlieCloud Verification
 
-#### <a name="run_tests_verify_charliecloud_parallel"></a> Parallel
+<a name="run_tests_verify_charliecloud_parallel"></a>
+### Parallel
 
-#### <a name="run_tests_verify_charliecloud_serial"></a> Serial
+<a name="run_tests_verify_charliecloud_serial"></a>
+### Serial
+
+
+
+<!-- ------------------------------------------------------------   Further Reading ----------------------------------------------- -->
+***
+
+
+<a name="further_reading"></a>
+# Further Reading
+
+<a name="config_files"></a>
+## Config Files
+
+If you would like to run other experiments, feel free to 
+
 
 
 
