@@ -58,7 +58,7 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
 
 
 <!-- ----------------------------------------------------------------  Deployment --------------------------------------------- -->
-
+***
 
 
 <a name="deployment"></a>
@@ -133,6 +133,7 @@ cd simulator/basefiles
 ```
 
 </details>
+
 <a name="deploy_charliecloud_without_internet"></a> 
 ### CharlieCloud without Internet
 
@@ -233,8 +234,8 @@ You should see two SUCCESS messages
 ***
 
 
-<a name="run_tests_verify"></a> 
-#Verifying Paper
+<a name="run_tests_verify"></a>
+# Verifying Paper
 
 ## <a name="run_tests_verify_bare_metal"></a> Bare-Metal Verification
 
