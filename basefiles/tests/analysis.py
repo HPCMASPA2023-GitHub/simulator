@@ -6,11 +6,25 @@ import seaborn as sns
 import warnings
 import json
 import sys
+import numpy as np
 
 
 usage="""
 Usage:
-    python3 analysis.py --folder /path/to/simulator/experiments/paper
+    python3 analysis.py --folder /path/to/simulator/experiments/paper ( --all | --outliers | --non-outliers |--comparisons )
+    python3 analysis.py --help
+Required:
+    --folder            absolute path to the folder where the simulation's data for paper.config was output to
+
+Required Option: (choose one)
+    --all               output all graphs
+
+    --outliers          output only graphs including outliers, plus comparisons
+
+    --non-outliers      output only graphs with non-outliers, plus comparisons
+
+    --comparisons       output only comparison graphs (much faster)
+
 """
 
 scriptPath=str(os.path.dirname(os.path.abspath(__file__)))
@@ -18,15 +32,20 @@ output_folder=f"{scriptPath}/paper_analysis/"
 
 
 
-
-if (len(sys.argv) != 3) or (sys.argv[1] != "--folder"):
+if sys.argv[1]=="--help":
+    print(usage)
+    sys.exit(1)
+if (len(sys.argv) != 4) or (sys.argv[1] != "--folder"):
     print(usage)
     sys.exit(1)
 if not os.path.exists(sys.argv[2]):
     print(f"folder: {sys.argv[2]} : folder not found")
     sys.exit(1)
+if not (sys.argv[3] in [ "--all", "--outliers", "--non-outliers" , "--comparisons" ] ):
+    print(f" last option to analysis.py not valid: {sys.argv[3]}")
+    sys.exit(1)
 else:
-
+    graph_option=sys.argv[3]
 
     folder1=sys.argv[2]
     database = pd.read_csv(folder1+"/grizzly_workloads_db.csv",header=0,sep="|")
@@ -606,13 +625,22 @@ else:
             else:
                 filename = output_folder +"/"+metric+"/graphs/"+f"t_{row['time']}_subD_{row['subdivisions']}_subU_{row['subdivisions-unit']}.png"
                 plt.savefig(filename, facecolor=(1.0,1.0,1.0),dpi=300)
+            plt.close()
 
     metric = "total_waiting_time"
     import os
     os.makedirs(output_folder+"/"+metric,exist_ok=True)
     os.makedirs(output_folder+"/"+metric+"/graphs",exist_ok=True)
-    plotMyGraphs(cutOutliersTF=True,runs=[1,47])
-    plotMyGraphs(cutOutliersTF=False,runs=[1,47],data_also=True)
+    if graph_option == "--all":
+        plotMyGraphs(cutOutliersTF=True,runs=[1,47])
+        plotMyGraphs(cutOutliersTF=False,runs=[1,47],data_also=True)
+    elif graph_option == "--outliers":
+        plotMyGraphs(cutOutliersTF=False,runs=[1,47],data_also=True)
+    elif graph_option == "--non-outliers":
+        plotMyGraphs(cutOutliersTF=True,runs=[1,47],data_also=True)
+    elif graph_option == "--comparisons":
+        plotMyGraphs(cutOutliersTF=True,runs=[1,47],data_only=True)
+
 
 
     metric="total_waiting_time"
@@ -681,6 +709,7 @@ else:
         plt.tight_layout()
         plt.savefig(f"{rootfolder}/overall_t_{i}.png",dpi=300,facecolor=(1.0,1.0,1.0))
         plt.figure(figsize=(10,10))
+        plt.close()
 
     metric = "total_waiting_time"
     rootfolder=output_folder+"/"+metric+"/comparisons/"
@@ -740,6 +769,7 @@ else:
             plt.rc('ytick',labelsize=12)
             plt.axhline(y=100,xmax=8,linestyle="dashed",color="red")
             plt.savefig(f"{rootfolder}{foldername}/compare_t_{k}.png",dpi=300,facecolor=(1.0,1.0,1.0))
+            plt.close()
             plt.figure(figsize=(10,10))
         count2+=1
 

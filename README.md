@@ -100,7 +100,7 @@ There are 4 methods of building and deploying our batsim applications.
     - will compile and install everything you need into a directory
 - charliecloud without internet
     - charliecloud is a container technology that works when docker is not an option (think clusters without docker)
-    - meant to be run where you have internet
+    - meant to be run where you have internet and copy folder (3.5GB) to cluster without internet
         - will compile and install everything you need and will be packaged into a directory to be copied to your setup without internet
 
 </details>
@@ -532,10 +532,33 @@ cd /path/to/simulator/basefiles
 source ../python_env/bin/activate
 # you may have chosen a different location for the sim's data to go when invoking 'myBatchTasks.sh'.
 # If this is the case use that path for --folder.
-python3 ./tests/analysis.py --folder /path/to/simulator/experiments/paper
+# run python3 ./tests/analysis.py --help for options
+python3 ./tests/analysis.py --folder /path/to/simulator/experiments/paper --comparisons
 ```
 
 Now `/path/to/simulator/basefiles/tests/paper_analysis` will house your various graphs
+
+#### Browsing Folders
+
+```
+.../paper_analysis/total_waiting_time/graphs:
+    if --all,--outliers, --non-outliers is selected you will graphs here
+    When --all or --non-outliers is selected you will have graphs with cut_ in front of the graph name
+        These cut out any values past 2 standard deviations of the mean
+    When --all or --outliers is selected you will have graphs without cut_ in front of the graph name
+        These are graphs as-is.  They may not show much in terms of resolution since they include more extreme data
+
+
+.../paper_analysis/total_waiting_time/comparisons:
+    Comparisons are made regardless of the option given
+
+    .../comparisons/comparisons_overall/
+        Overall mean of the waiting times as the WD Units go from 1 to 8 subdivisions
+
+    .../comparisons/<WD Unit>/
+        Binned means of the waiting times in a certain WD Unit
+
+```
 
 
 
