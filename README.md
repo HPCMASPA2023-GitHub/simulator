@@ -68,6 +68,22 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
 <a name="deployment"></a>
 # Deployment
 
+Requirements (not docker method):
+- linux os
+- gcc >= 8.0 (charliecloud simply needs to be compiled with charliecloud method.  Could be lower version)
+- cmake >= 3.15.4  (maybe previous versions)
+- python >= 3.6
+- make
+- build
+- git
+- patch (bare-metal)
+- typical build system
+
+Requirements (docker method)
+- linux os
+- git
+- docker running and working
+
 <a name="build_methods"></a>
 ## Deploy Methods
 <details>
