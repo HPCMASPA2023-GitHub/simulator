@@ -427,7 +427,7 @@ cd /path/to/simulator/basefiles
 
 <details>
 
-** Not an option at this time **
+**Not an option at this time**
 
 </details>
 
@@ -542,7 +542,7 @@ Now `/path/to/simulator/basefiles/tests/paper_analysis` will house your various 
 
 ```
 .../paper_analysis/total_waiting_time/graphs:
-    if --all,--outliers, --non-outliers is selected you will graphs here
+    if --all,--outliers, --non-outliers is selected you will have graphs here
     When --all or --non-outliers is selected you will have graphs with cut_ in front of the graph name
         These cut out any values past 2 standard deviations of the mean
     When --all or --outliers is selected you will have graphs without cut_ in front of the graph name
