@@ -5,10 +5,12 @@ line_number=$i
 cd $downloads_prefix
 git clone https://github.com/oar-team/batsim.git
 cd $downloads_prefix/batsim
+git checkout tags/v4.0.0 -b our_v4
 patch -p2 < $basefiles_prefix/batsim.patch
 cd $downloads_prefix
 git clone https://github.com/oar-team/batsched.git
 cd $downloads_prefix/batsched
+git checkout tags/v1.4.0 -b our_v1_4
 patch -p2 < $basefiles_prefix/batsched.patch
 echo "gobin=$GOBIN     gopath=$GOPATH     goroot=$GOROOT    go111module=$GO111MODULE"
 cd $downloads_prefix

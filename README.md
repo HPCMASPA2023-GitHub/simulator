@@ -68,11 +68,12 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
 <a name="deployment"></a>
 # Deployment
 
-Requirements (not docker method):
+Requirements (bare-metal and charliecloud):
 - linux os
-- gcc >= 8.0 (charliecloud simply needs to be compiled with charliecloud method.  Could be lower version)
+- gcc >= 8.0 (bare-metal needs c++17, charliecloud method may allow for previous versions)
 - cmake >= 3.15.4  (maybe previous versions)
 - python >= 3.6
+- pip3
 - make
 - build
 - git
