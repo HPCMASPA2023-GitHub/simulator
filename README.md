@@ -256,6 +256,17 @@ You should see two SUCCESS messages
 <a name="run_tests_verify"></a>
 # Verifying Paper
 
+While we invite you to get the same results we did by running our simulations, there are some things to consider
+
+- We used a 12 node cluster with 30 cores per node and 377GB RAM per node
+    - In order to not run out of memory we used 26 tasks per node to limit memory usage
+- The simulations took at least 4 days total on our cluster
+    - Of course it all depends on your cluster
+- It is a bit ridiculous to think of doing it serially
+- While it has been our intention to add seeds to our config files for random computations to become deterministic, at the time of this writing it is not deterministic.
+    - With enough runs they would converge
+    - You should get similar results as us with the 47 runs achieved from our config files, though not exact
+
 <a name="run_tests_verify_bare_metal"></a>
 # Bare-Metal Verification
 
