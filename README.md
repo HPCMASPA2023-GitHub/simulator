@@ -46,15 +46,16 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
 - [Verifying Paper](#run_tests_verify)
     - [Crash Course to myBatchTasks.sh](#crash_course)
     - [Squeue Monitoring](#squeue)
-    - [Bare-Metal verification](#run_tests_verify_bare_metal)
-        - [parallel](#run_tests_verify_bare_metal_parallel)
-        - [serial](#run_tests_verify_bare_metal_serial)
-    - [Docker verification](#run_tests_verify_docker)
-        - [parallel](#run_tests_verify_docker_parallel)
-        - [serial](#run_tests_verify_docker_serial)
-    - [CharlieCloud verification](#run_tests_verify_charliecloud)
-        - [parallel](#run_tests_verify_charliecloud_parallel)
-        - [serial](#run_tests_verify_charliecloud_serial)
+    - [Verifcation Methods](#run_tests_verify_methods)
+        - [Bare-Metal verification](#run_tests_verify_bare_metal)
+            - [parallel](#run_tests_verify_bare_metal_parallel)
+            - [serial](#run_tests_verify_bare_metal_serial)
+        - [Docker verification](#run_tests_verify_docker)
+            - [parallel](#run_tests_verify_docker_parallel)
+            - [serial](#run_tests_verify_docker_serial)
+        - [CharlieCloud verification](#run_tests_verify_charliecloud)
+            - [parallel](#run_tests_verify_charliecloud_parallel)
+            - [serial](#run_tests_verify_charliecloud_serial)
     - [Analysis](#analysis)
 - [Further Reading](#further_reading)
     - [Config Files](#config_files)
@@ -355,11 +356,14 @@ To see the 'srun tasks' use `squeue -s`
 
 <!-- ---------------------  Verify Methods ------------------------------ -->
 
+<a name="run_tests_verify_methods"></a>
+## Verification Methods
+
 <a name="run_tests_verify_bare_metal"></a>
-## Bare-Metal Verification
+### Bare-Metal Verification
 
 <a name="run_tests_verify_bare_metal_parallel"></a>
-### Parallel
+#### Parallel
 
 <details>
 
@@ -379,7 +383,7 @@ cd /path/to/simulator/basefiles
 </details>
 
 <a name="run_tests_verify_bare_metal_serial"></a>
-### Serial
+#### Serial
 
 <details>
 
@@ -398,10 +402,10 @@ cd /path/to/simulator/basefiles
 </details>
 
 <a name="run_tests_verify_docker"></a>
-## Docker Verification
+### Docker Verification
 
 <a name="run_tests_verify_docker_parallel"></a>
-### Parallel
+#### Parallel
 
 <details>
 
@@ -410,7 +414,7 @@ cd /path/to/simulator/basefiles
 </details>
 
 <a name="run_tests_verify_docker_serial"></a>
-### Serial
+#### Serial
 
 <details>
 
@@ -423,12 +427,12 @@ cd /path/to/simulator/basefiles
 5. wait for a very long time (years)
 6. [run analysis](#analysis)
 
-#### a.
+##### i.
 ```
 docker start -i sim_test
 ```
 
-#### b.
+##### ii.
 ```
 docker run -it --name sim_test simulator_compile:latest
 ```
@@ -443,10 +447,10 @@ inside docker>  ./myBatchTasks.sh -f `pwd`/tests/configs/paper.config -o paper -
 
 
 <a name="run_tests_verify_charliecloud"></a>
-## CharlieCloud Verification
+### CharlieCloud Verification
 
 <a name="run_tests_verify_charliecloud_parallel"></a>
-### Parallel
+#### Parallel
 
 <details>
 
@@ -466,7 +470,7 @@ cd /path/to/simulator/basefiles
 </details>
 
 <a name="run_tests_verify_charliecloud_serial"></a>
-### Serial
+#### Serial
 
 <details>
 
