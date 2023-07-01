@@ -62,10 +62,9 @@ Analysis of the simulation data is mostly up to you, but there are some helpful 
 
 
 <a name="deployment"></a>
-
 # Deployment
 
-<a name="build_methods"></a> Deploy Methods
+<a name="build_methods"></a>
 ## Deploy Methods
 <details>
 There are 4 methods of building and deploying our batsim applications.
@@ -84,9 +83,14 @@ There are 4 methods of building and deploying our batsim applications.
         - will compile and install everything you need and will be packaged into a directory to be copied to your setup without internet
 
 </details>
-## <a name="deploy_how_to"></a> Deploy: How To...
 
-### <a name="deploy_bare_metal"></a> Bare-Metal
+<a name="deploy_how_to"></a> 
+## Deploy: How To...
+
+<details>
+
+<a name="deploy_bare_metal"></a>
+###  Bare-Metal
 - obtain the code
 - change directories
 - deploy
@@ -136,7 +140,7 @@ ssh user@remote.org
 cd /home/USER/batsim_packaged
 ./deploy.sh -f charliecloud --no-internet --un-package
 ```
-
+</details>
 
 
 
