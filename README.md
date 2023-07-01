@@ -193,8 +193,10 @@ Keep in mind that parallel tests assume the following:
 6. view result
 ```
 cd /path/to/simulator/basefiles
-edit ./batsim_environment.sh   # make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
+# edit ./batsim_environment.sh   
+# make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
 ./tests/bare_metal/tests_serial.sh
+./tests/bare_metal/tests_parallel.sh
 ```
 
 You should see two SUCCESS messages
@@ -237,7 +239,8 @@ You should see a SUCCESS message
 6. view result
 ```
 cd /path/to/simulator/basefiles
-edit ./batsim_environment.sh   # make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
+# edit ./batsim_environment.sh   
+# make sure you point prefix to /path/to/simulator (don't include basefiles in the path)
 ./tests/charliecloud/tests_serial.sh
 ./tests/charliecloud/tests_parallel.sh
 ```
