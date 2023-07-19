@@ -16,3 +16,5 @@ if [[ $line_number -gt 96 ]]
 then
     source $python_prefix/bin/activate
 fi
+export CFLAGS=-Wno-error
+export CXXFLAGS=-Wno-error
